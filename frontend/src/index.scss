@@ -1,0 +1,46 @@
+html, body {
+  padding: 0;
+  margin: 0;
+  background: #f0eff2 !important;
+}
+
+#root {
+  padding: 24px;
+}
+
+.flex {
+  display: flex;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.non-login-container {
+  width: 600px;
+  margin: 300px auto;
+}
+
+.warningMsg {
+  color: red;
+}
