@@ -1,11 +1,17 @@
-html, body {
+html,
+body {
   padding: 0;
   margin: 0;
   background: #f0eff2 !important;
+  --header-height: 64px;
 }
 
 #root {
-  padding: 24px;
+  // padding: 24px;
+}
+
+button {
+  cursor: pointer;
 }
 
 .flex {
@@ -43,4 +49,22 @@ html, body {
 
 .warningMsg {
   color: red;
+}
+
+.main-layout-container {
+  .sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    height: var(--header-height);
+    background: #fff;
+    border-color: #f0f2f5;
+    font-weight: 400;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.12);
+  }
+  .main-content {
+    width: 1240px;
+    margin: 0 auto;
+    padding: 16px 0;
+  }
 }
