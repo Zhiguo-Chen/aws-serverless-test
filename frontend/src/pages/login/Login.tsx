@@ -1,22 +1,38 @@
-import React, { useState } from "react";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input, Flex, Card } from "antd";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Form, Input, Flex, Card } from 'antd';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+const apiUrl = process.env.REACT_APP_API_URL;
+const authTokenKey = process.env.REACT_APP_AUTH_TOKEN || 'authToken';
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const handleSubmit = () => {
-    console.log("======");
-    axios
-      .post("http://localhost:4000/api/login", { email, password })
-      .then((res) => console.log(res));
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  useEffect(() => {
+    console.log(apiUrl);
+  }, []);
+  const handleSubmit = async () => {
+    const response = await axios.post(`${apiUrl}/api/login`, {
+      email,
+      password,
+    });
+    console.log(response);
+    const { token } = response.data;
+    if (token) {
+      localStorage.setItem(authTokenKey, token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      navigate('/main/add-product');
+    }
+    // alert('Login successful!');
   };
 
   return (
     <div className="flex justify-center non-login-container">
       <Card
-        style={{ width: "100%", display: "flex" }}
+        style={{ width: '100%', display: 'flex' }}
         className="justify-center"
       >
         <Form
@@ -27,7 +43,7 @@ const Login: React.FC = () => {
         >
           <Form.Item
             name="username"
-            rules={[{ required: true, message: "Please input your Username!" }]}
+            rules={[{ required: true, message: 'Please input your Username!' }]}
           >
             <Input
               prefix={<UserOutlined />}
@@ -38,7 +54,7 @@ const Login: React.FC = () => {
           </Form.Item>
           <Form.Item
             name="password"
-            rules={[{ required: true, message: "Please input your Password!" }]}
+            rules={[{ required: true, message: 'Please input your Password!' }]}
           >
             <Input
               prefix={<LockOutlined />}
@@ -61,7 +77,7 @@ const Login: React.FC = () => {
             <Button block type="primary" htmlType="submit">
               Log in
             </Button>
-            or <a href="">Register now!</a>
+            or <a href="/register">Register now!</a>
           </Form.Item>
         </Form>
       </Card>
