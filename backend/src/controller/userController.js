@@ -6,8 +6,6 @@ const register = async (req, res) => {
   try {
     const { name, email, phone, password } = req.body;
 
-    // const hashedPassword = await bcrypt.hash(password, 10);
-
     const customer = await Customers.create({
       name,
       email,
