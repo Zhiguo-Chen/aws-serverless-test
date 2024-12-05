@@ -1,7 +1,8 @@
-import type { FormProps } from 'antd';
 import { Button, Card, Form, Input } from 'antd';
-import React, { useState } from 'react';
 import axios from 'axios';
+import React, { useState } from 'react';
+
+const apiUrl = process.env.REACT_APP_API_URL;
 
 type FieldType = {
   name: string;
@@ -32,7 +33,7 @@ const Register: React.FC = () => {
       return;
     }
     axios
-      .post('http://localhost:4000/api/register', {
+      .post(`${apiUrl}/api/register`, {
         name,
         email,
         phone,
