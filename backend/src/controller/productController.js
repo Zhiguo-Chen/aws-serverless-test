@@ -1,4 +1,4 @@
-const { Product } = require('../models/productModel');
+const { Product } = require('../models');
 
 const addProduct = async (req, res) => {
   try {
@@ -16,4 +16,8 @@ const addProduct = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+
+module.exports = {
+  addProduct,
 };
