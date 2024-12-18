@@ -8,6 +8,7 @@ const apiUrl = process.env.REACT_APP_API_URL;
 const authTokenKey = process.env.REACT_APP_AUTH_TOKEN || 'authToken';
 
 const Login: React.FC = () => {
+  const [form] = Form.useForm();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,18 +16,28 @@ const Login: React.FC = () => {
     console.log(apiUrl);
   }, []);
   const handleSubmit = async () => {
-    const response = await axios.post(`${apiUrl}/api/login`, {
-      email,
-      password,
-    });
-    console.log(response);
-    const { token } = response.data;
-    if (token) {
-      localStorage.setItem(authTokenKey, token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      navigate('/main/add-product');
+    try {
+      const response = await axios.post(`${apiUrl}/api/login`, {
+        email,
+        password,
+      });
+      if (response.status === 200) {
+        const { token } = response.data;
+        if (token) {
+          localStorage.setItem(authTokenKey, token);
+          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          navigate('/main/view-products');
+        }
+      } else {
+        console.log('Login failed:');
+        setEmail('');
+        setPassword('');
+      }
+      console.log(response);
+    } catch (error) {
+      console.error('Login failed:', error);
+      form.setFieldsValue({ username: '', password: '' });
     }
-    // alert('Login successful!');
   };
 
   return (
@@ -37,6 +48,7 @@ const Login: React.FC = () => {
       >
         <Form
           name="login"
+          form={form}
           initialValues={{ remember: true }}
           style={{ maxWidth: 360 }}
           onFinish={handleSubmit}
