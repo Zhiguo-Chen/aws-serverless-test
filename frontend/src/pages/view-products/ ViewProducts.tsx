@@ -11,9 +11,6 @@ const ViewProducts = () => {
         const response = await axiosInstance.get('/api/get-products');
         console.log(response.data);
         setProducts(response.data);
-        setTimeout(() => {
-          console.log(products);
-        });
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
