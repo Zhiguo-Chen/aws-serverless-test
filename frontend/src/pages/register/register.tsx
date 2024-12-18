@@ -1,6 +1,7 @@
 import { Button, Card, Form, Input } from 'antd';
 import axios from 'axios';
 import React, { useState } from 'react';
+import { Checkbox } from 'antd';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -10,6 +11,7 @@ type FieldType = {
   phone: string;
   password: string;
   confirmPassword: string;
+  isSeller: boolean;
 };
 
 type ErrorFieldType = {
@@ -20,15 +22,30 @@ type ErrorFieldType = {
   confirmPasswordError?: string;
 };
 
+const tailFormItemLayout = {
+  wrapperCol: {
+    xs: {
+      span: 24,
+      offset: 0,
+    },
+    sm: {
+      span: 16,
+      offset: 8,
+    },
+  },
+};
+
 const Register: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [isSeller, setIsSeller] = useState(false);
   // set Errors
   const [errors, setErrors] = useState<ErrorFieldType>({});
   const handleSubmit = () => {
+    console.log('isSeller', isSeller);
     if (!validateForm()) {
       return;
     }
@@ -38,6 +55,7 @@ const Register: React.FC = () => {
         email,
         phone,
         password,
+        isSeller
       })
       .then((res) => console.log(res));
   };
@@ -117,6 +135,19 @@ const Register: React.FC = () => {
           {errors.confirmPasswordError && (
             <span className="warningMsg">{errors.confirmPasswordError}!</span>
           )}
+          {/* <Form.Item<FieldType> label="Merchant">
+            <Checkbox></Checkbox>
+          </Form.Item> */}
+          <Form.Item<FieldType>
+            name="isSeller"
+            valuePropName="checked"
+            label={null}
+            {...tailFormItemLayout}
+          >
+            <Checkbox onChange={(e) => setIsSeller(e.target.checked)}>
+              Seller
+            </Checkbox>
+          </Form.Item>
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
             <Button type="primary" htmlType="submit" className="full-width">
               Register

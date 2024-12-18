@@ -1,5 +1,5 @@
-const { DataTypes, Model } = require("sequelize");
-const sequelize = require("../config/database");
+const { DataTypes, Model } = require('sequelize');
+const sequelize = require('../config/database');
 
 class Payment extends Model {}
 
@@ -7,27 +7,27 @@ Payment.init(
   {
     amount: {
       type: DataTypes.FLOAT,
-      allowNull: false
+      allowNull: false,
     },
     status: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     paymentMethod: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     paymentDate: {
       type: DataTypes.DATE,
-      allowNull: false
-    }
+      allowNull: false,
+    },
   },
   {
     sequelize,
-    modelName: "Payment",
-    tableName: "payments",
-    timestamps: true
-  }
+    modelName: 'Payment',
+    tableName: 'Payments',
+    timestamps: true,
+  },
 );
 
 module.exports = Payment;

@@ -1,24 +1,29 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { Customers } = require('../models');
+const { User } = require('../models');
 
 const register = async (req, res) => {
   try {
-    const { name, email, phone, password } = req.body;
+    const { name, email, phone, password, isSeller } = req.body;
+    console.log('====');
+    console.log(req.body);
+    console.log('====');
 
-    const customer = await Customers.create({
+    const user = await User.create({
       name,
       email,
       phone,
       password,
+      isSeller,
     });
+    console.log(user);
     res.status(201).json({
-      message: 'Customer registered successfully',
-      customer,
+      message: 'user registered successfully',
+      user,
     });
   } catch (error) {
     res.status(500).json({
-      message: 'Error registering customer',
+      message: 'Error registering user',
       error,
     });
   }
@@ -28,19 +33,19 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const customer = await Customers.findOne({ where: { email } });
+    const user = await User.findOne({ where: { email } });
 
-    if (!customer) {
-      return res.status(404).json({ message: 'Customer not found' });
+    if (!user) {
+      return res.status(404).json({ message: 'user not found' });
     }
 
-    const isPasswordValid = await bcrypt.compare(password, customer.password);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid password' });
     }
     const token = jwt.sign(
-      { id: customer.id },
+      { id: user.id },
       process.env.JWT_SECRET || 'SECRET_KEY',
       {
         expiresIn: '1h',
@@ -48,12 +53,12 @@ const login = async (req, res) => {
     );
 
     res.status(200).json({
-      message: 'Customer logged in successfully',
+      message: 'user logged in successfully',
       token,
     });
   } catch (error) {
     res.status(500).json({
-      message: 'Error logging in customer',
+      message: 'Error logging in user',
       error,
     });
   }
