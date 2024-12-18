@@ -30,7 +30,6 @@ const getAllProducts = async (req, res) => {
 const getProductsByUser = async (req, res) => {
   try {
     const params = req.user;
-    console.log(req.user.id);
     const products = await Product.findAll({ where: { user_id: req.user.id } });
     res.status(200).json(products);
   } catch (error) {

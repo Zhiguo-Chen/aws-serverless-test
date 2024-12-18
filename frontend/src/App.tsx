@@ -31,7 +31,7 @@ const App = () => {
         <Route
           path="/"
           element={
-            <Navigate to={isAuthenticated ? '/main/get-products' : '/login'} />
+            <Navigate to={isAuthenticated ? '/main/view-products' : '/login'} />
           }
         />
         <Route path="/login" element={<Login />} />

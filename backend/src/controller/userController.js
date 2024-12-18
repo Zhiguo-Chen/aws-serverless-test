@@ -5,9 +5,6 @@ const { User } = require('../models');
 const register = async (req, res) => {
   try {
     const { name, email, phone, password, isSeller } = req.body;
-    console.log('====');
-    console.log(req.body);
-    console.log('====');
 
     const user = await User.create({
       name,
@@ -16,7 +13,6 @@ const register = async (req, res) => {
       password,
       isSeller,
     });
-    console.log(user);
     res.status(201).json({
       message: 'user registered successfully',
       user,

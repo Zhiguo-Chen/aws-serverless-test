@@ -4,7 +4,6 @@ import { Avatar, MenuProps, Dropdown } from 'antd';
 
 const Header = () => {
   const handleEditProducts = () => {
-    console.log('edit products');
     navigate('/main/my-products');
   };
   const items: MenuProps['items'] = [
