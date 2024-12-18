@@ -1,5 +1,5 @@
-const { DataTypes, Model } = require("sequelize");
-const sequelize = require("../config/database");
+const { DataTypes, Model } = require('sequelize');
+const sequelize = require('../config/database');
 
 class Product extends Model {}
 
@@ -7,30 +7,35 @@ Product.init(
   {
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     price: {
       type: DataTypes.DECIMAL(10, 2),
-      allowNull: false
+      allowNull: false,
     },
     description: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
     },
     image: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     stock: {
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+    },
+    user_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: { model: 'Users', key: 'id' },
     },
   },
   {
     sequelize,
-    modelName: "Product",
-    tableName: "products",
-    timestamps: true // createdAt: false, updatedAt: false
-  }
+    modelName: 'Product',
+    tableName: 'Products',
+    timestamps: true, // createdAt: false, updatedAt: false
+  },
 );
 
 module.exports = Product;

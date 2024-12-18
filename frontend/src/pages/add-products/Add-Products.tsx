@@ -28,12 +28,6 @@ const AddProducts: React.FC = () => {
     const fetchData = async () => {
       try {
         console.log('Fetching user info...');
-        const token = localStorage.getItem('authToken');
-        if (!token) {
-          console.log('No token found');
-          return;
-        }
-
         const response = await axiosInstance.get('/api/get-categories');
         console.log(response.data);
         setCategory(response.data);
@@ -60,7 +54,7 @@ const AddProducts: React.FC = () => {
       price,
       description,
       stock,
-      image: pic_human,
+      image,
       category_id: selectedCategory,
     };
     console.log(data);
@@ -128,6 +122,9 @@ const AddProducts: React.FC = () => {
             value={stock}
             onChange={(e) => setStock(e || 0)}
           />
+        </Form.Item>
+        <Form.Item name="image" label="Image Url" rules={[{ required: true }]}>
+          <Input value={image} onChange={(e) => setImage(e.target.value)} />
         </Form.Item>
         <Form.Item {...tailLayout}>
           <Space>

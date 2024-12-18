@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { Customers } = require('../models');
+const { User } = require('../models');
 
 const authenticationToken = async (req, res, next) => {
   console.log('authenticationToken', req.headers);
@@ -17,12 +17,12 @@ const authenticationToken = async (req, res, next) => {
     console.log('=========', process.env.JWT_SECRET);
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'SECRET_KEY');
     console.log('decoded', decoded);
-    const customer = await Customers.findByPk(decoded.id);
-    console.log('customer', customer);
-    if (!customer) {
-      return res.status(403).json({ message: 'can not find customer' });
+    const user = await User.findByPk(decoded.id);
+    console.log('user', user);
+    if (!user) {
+      return res.status(403).json({ message: 'can not find user' });
     }
-    req.customer = customer;
+    req.user = user;
     next();
   } catch (err) {
     console.log('err', err);
