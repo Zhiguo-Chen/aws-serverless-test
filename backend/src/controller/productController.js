@@ -1,4 +1,4 @@
-const { Product } = require('../models');
+const { Product, Category } = require('../models');
 
 const addProduct = async (req, res) => {
   try {
@@ -20,7 +20,9 @@ const addProduct = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.findAll();
+    const products = await Product.findAll({
+      include: [{ model: Category }],
+    });
     res.status(200).json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });
