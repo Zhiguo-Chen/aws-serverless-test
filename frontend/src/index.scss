@@ -50,6 +50,16 @@ button {
   display: grid;
 }
 
+.flex-gap,
+.grid-gap {
+  gap: 1rem;
+}
+
+.flex-gap-05,
+.grid-gap-05 {
+  gap: 0.5rem;
+}
+
 .auto-fit {
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   gap: 1rem;
@@ -96,8 +106,66 @@ button {
 
 ul {
   list-style-type: none;
+  margin: 0;
 }
 
 .ant-card {
   height: 100%;
+}
+
+.padding-1 {
+  padding: 1rem;
+}
+
+.ant-card-body {
+  height: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-elipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@for $i from 1 through 5 {
+  .text-elipsis-#{$i} {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: $i; /* Number of lines before ellipsis */
+    -webkit-box-orient: vertical;
+    max-height: 3em; /* Fallback max height, assuming 1.5em per line */
+    line-height: 1.5; /* Adjust based on your line height */
+    text-overflow: ellipsis;
+  }
+}
+
+.product-image-container {
+  border: 1px solid #f0f2f5;
+  height: 260px;
+}
+
+.product-bricks-name {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #0f1111;
+  line-height: 1.5rem;
+  height: 3rem;
+}
+
+.product-bricks-price {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0f1111;
+  line-height: 1.75rem;
+}
+
+.product-bricks-category {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: #0f1111;
+  line-height: 1.25rem;
 }
