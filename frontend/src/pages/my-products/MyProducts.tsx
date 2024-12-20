@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { axiosInstance } from '../../auth/axiosInstance';
-import ListProducts from '../list-pruducts/List-Pruducts';
+import ListProducts, { Product } from '../list-pruducts/List-Pruducts';
 
 const MyProducts = () => {
-  const [products, setProducts] = useState<any>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
