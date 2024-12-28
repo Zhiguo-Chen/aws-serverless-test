@@ -15,6 +15,7 @@ import { setupInterceptors } from './auth/axiosInstance';
 import ListProducts from './pages/list-pruducts/List-Pruducts';
 import ViewProducts from './pages/view-products/ ViewProducts';
 import MyProducts from './pages/my-products/MyProducts';
+import MainPageLayout from './pages/MainPageLayout/MainPageLayout';
 
 const authTokenKey = process.env.REACT_APP_AUTH_TOKEN || 'authToken';
 
@@ -36,6 +37,7 @@ const App = () => {
         />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/main-page" element={<MainPageLayout />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/main" element={<MainLayout />}>
             <Route path="add-product" element={<AddProducts />} />
