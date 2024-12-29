@@ -22,6 +22,9 @@ import BestSelling from './BestSelling/BestSelling';
 import SpecialPromotional from './SpecialPromotional/SpecialPromotional';
 import ExploreProducts from './ExploreProducts/ExploreProducts';
 import NewArrival from './NewArrival/NewArrival';
+import CustomerBenefits from './CustomerBenefits/CustomerBenefits';
+import { ReactComponent as ArrowUpIcon } from '../../assets/icons/icons_arrow-up.svg';
+import Footer from './Footer/Footer';
 
 interface MainPageLayoutProps {}
 
@@ -62,6 +65,9 @@ const items: MenuProps['items'] = [
 ];
 
 const MainPageLayout: FC<MainPageLayoutProps> = () => {
+  const handleScroll2Top = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
   return (
     <div className="main-container">
       <div className="top-banner">
@@ -107,11 +113,18 @@ const MainPageLayout: FC<MainPageLayoutProps> = () => {
         <div className="new-arrival-container bottom-padding">
           <NewArrival />
         </div>
-        <div className="customer-benefits-container">
-          This is Customer Benefits
+        <div className="customer-benefits-container flex justify-center">
+          <CustomerBenefits />
+        </div>
+        <div className="scroll-to-top-container position-relative">
+          <div className="icon-button" onClick={handleScroll2Top}>
+            <ArrowUpIcon />
+          </div>
         </div>
       </div>
-      <footer className="footer-container content-width">This is footer</footer>
+      <footer className="footer-container">
+        <Footer />
+      </footer>
     </div>
   );
 };
