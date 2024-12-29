@@ -2,12 +2,17 @@ html,
 body {
   padding: 0;
   margin: 0;
-  background: #f0eff2 !important;
+  // background: #f0eff2 !important;
   --header-height: 64px;
+  font-family: 'Roboto', sans-serif;
 }
 
 #root {
   // padding: 24px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 
 button {
@@ -34,6 +39,18 @@ button {
   align-items: center;
 }
 
+.align-baseline {
+  align-items: baseline;
+}
+
+.align-end {
+  align-items: flex-end;
+}
+
+.align-start {
+  align-items: flex-start;
+}
+
 .flex-column {
   flex-direction: column;
 }
@@ -44,6 +61,7 @@ button {
 
 .flex-1 {
   flex: 1;
+  overflow: hidden;
 }
 
 .grid {
@@ -55,9 +73,24 @@ button {
   gap: 1rem;
 }
 
+.flex-gap-2,
+.grid-gap-2 {
+  gap: 2rem;
+}
+
 .flex-gap-05,
 .grid-gap-05 {
   gap: 0.5rem;
+}
+
+.flex-gap-075,
+.grid-gap-075 {
+  gap: 0.75rem;
+}
+
+.flex-gap-15,
+.grid-gap-15 {
+  gap: 1.5rem;
 }
 
 .auto-fit {
@@ -131,6 +164,19 @@ ul {
   white-space: nowrap;
 }
 
+.regular-font {
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.light-font {
+  font-weight: lighter;
+}
+
+.hover-underline:hover {
+  text-decoration: underline;
+}
+
 @for $i from 1 through 5 {
   .text-elipsis-#{$i} {
     overflow: hidden;
@@ -144,8 +190,19 @@ ul {
 }
 
 .product-image-container {
-  border: 1px solid #f0f2f5;
   height: 260px;
+}
+
+.product-image-container::after {
+  position: absolute;
+  content: '';
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  opacity: 0.03;
+  pointer-events: none;
 }
 
 .product-bricks-name {
@@ -168,4 +225,26 @@ ul {
   font-weight: 400;
   color: #0f1111;
   line-height: 1.25rem;
+}
+
+.position-relative {
+  position: relative;
+}
+
+.position-absolute {
+  position: absolute;
+}
+
+.max-width-full {
+  max-width: 100%;
+}
+
+.margin-right {
+  margin-right: 1rem;
+}
+
+.position-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
