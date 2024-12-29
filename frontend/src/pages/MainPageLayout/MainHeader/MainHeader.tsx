@@ -3,6 +3,7 @@ import { ReactComponent as CartIcon } from '../../../assets/icons/Cart1.svg';
 import { MenuProps, Tabs, Input } from 'antd';
 import type { TabsProps } from 'antd';
 import { FC } from 'react';
+import { ReactComponent as SearchIcon } from '../../../assets/icons/search.svg';
 
 const { Search } = Input;
 const MainHeader = () => {
@@ -41,12 +42,22 @@ const MainHeader = () => {
           indicator={{ align: 'end' }}
         />
       </div>
-      <div>
+      {/* <div>
         <Search
           placeholder="What are you looking for?"
           onSearch={onSearch}
           size="large"
           style={{ width: 250 }}
+        />
+      </div> */}
+      <div className="search-input flex align-center">
+        <Input
+          placeholder="What are you looking for?"
+          suffix={
+            <span className="suffix-icon">
+              <SearchIcon />
+            </span>
+          }
         />
       </div>
       <div className="flex flex-gap">
