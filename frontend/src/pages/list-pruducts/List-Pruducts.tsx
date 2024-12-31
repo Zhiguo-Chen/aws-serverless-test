@@ -2,7 +2,6 @@ import { Card } from 'antd';
 import { AppstoreOutlined, BarsOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import ProductBrick from '../../components/ProductBrick/ProductBrick';
-import ProductItem from '../../components/ProductItem/ProductItem';
 
 export interface Product {
   category_id: number;
@@ -12,9 +11,11 @@ export interface Product {
   image: string;
   name: string;
   price: number;
+  oldPrice?: number;
   stock: number;
   updatedAt: Date;
   user_id: string;
+  score?: number;
   Category: {
     id: number;
     name: string;
@@ -82,11 +83,11 @@ const ListProducts = ({
                   {isGrid ?? <div>{product.name}</div>}
                 </div>
               </Card> */}
-              {isGrid ? (
+              {/* {isGrid ? (
                 <ProductBrick product={product} />
               ) : (
                 <ProductItem product={product} />
-              )}
+              )} */}
             </li>
           );
         })}

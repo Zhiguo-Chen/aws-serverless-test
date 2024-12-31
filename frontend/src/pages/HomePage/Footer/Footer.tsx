@@ -106,7 +106,7 @@ const Footer: React.FC = () => {
       </div>
       <div className="footer-bottom">
         <div className="footer-copyright">
-          © Copyright Rimel 2022. All right reserved
+          © Copyright Rimel 2025. All right reserved
         </div>
       </div>
     </footer>

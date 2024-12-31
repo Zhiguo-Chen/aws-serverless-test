@@ -5,6 +5,7 @@ import bookself from '../../../assets/images/sam-moghadam-khamseh.png';
 import Icon, { StarFilled } from '@ant-design/icons';
 import { ReactComponent as WishlistIcon } from '../../../assets/icons/Wishlist2.svg';
 import { ReactComponent as EyeIcon } from '../../../assets/icons/eye.svg';
+import ProductItem from '../../../components/ProductItem/ProductItem';
 
 const BestSelling = () => {
   const totalStars = 5;
@@ -60,9 +61,9 @@ const BestSelling = () => {
       </div>
       <div className="flex flex-gap-2 sales-container">
         {productsList.map((product: any, index: any) => (
-          <div key={index} className="sales-item">
-            <div className="image-bg flex justify-center align-center position-relative">
-              <img src={product.image} alt={`Sale ${index}`} />
+          <ProductItem
+            product={product}
+            actionButtonPlace={
               <div className="action-button-container flex flex-column flex-gap-05">
                 <button>
                   <WishlistIcon />
@@ -71,42 +72,10 @@ const BestSelling = () => {
                   <EyeIcon />
                 </button>
               </div>
-              <button className="add-to-cart">Add To Cart</button>
-            </div>
-            <div className="product-info-container flex flex-column flex-gap-05">
-              <div className="product-name-container">{product.name}</div>
-              <div className="flex flex-gap-075">
-                <div className="price">${product.price}</div>
-                {product.oldPrice > 0 && (
-                  <div className="old-price">${product.oldPrice}</div>
-                )}
-              </div>
-              <div>
-                {/* <StarFilled style={{ color: '#FFAD33' }} /> */}
-                {Array.from({ length: totalStars }, (_, index) => {
-                  if (index < product.score) {
-                    return (
-                      <StarFilled
-                        key={index}
-                        style={{ color: '#FFAD33', marginRight: '4px' }}
-                      />
-                    );
-                  } else {
-                    return (
-                      <StarFilled
-                        key={index}
-                        style={{ color: '#D1D4DB', marginRight: '4px' }}
-                      />
-                    );
-                  }
-                })}
-                {
-                  // for(let i = 0; i < totalStars; i++) {
-                  // }
-                }
-              </div>
-            </div>
-          </div>
+            }
+            isSocreShow={true}
+            key={index}
+          />
         ))}
       </div>
     </div>
