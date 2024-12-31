@@ -16,6 +16,10 @@ import ListProducts from './pages/list-pruducts/List-Pruducts';
 import ViewProducts from './pages/view-products/ ViewProducts';
 import MyProducts from './pages/my-products/MyProducts';
 import MainPageLayout from './pages/MainPageLayout/MainPageLayout';
+import SignUp from './pages/SignUp/SignUp';
+import NewLogin from './pages/NewLogin/NewLogin';
+import HomePage from './pages/HomePage/Home';
+import AboutPage from './pages/About/About';
 
 const authTokenKey = process.env.REACT_APP_AUTH_TOKEN || 'authToken';
 
@@ -38,11 +42,17 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/main-page" element={<MainPageLayout />} />
+        <Route path="/signup" element={<SignUp />} />
         <Route element={<ProtectedRoute />}>
-          <Route path="/main" element={<MainLayout />}>
-            <Route path="add-product" element={<AddProducts />} />
+          <Route path="/main" element={<MainPageLayout />}>
+            <Route path="home" element={<HomePage />} />
+            <Route path="about" element={<AboutPage />} />
+            <Route path="sign-up" element={<SignUp />} />
+            <Route path="new-login" element={<NewLogin />} />
+
+            {/* <Route path="add-product" element={<AddProducts />} />
             <Route path="view-products" element={<ViewProducts />} />
-            <Route path="my-products" element={<MyProducts />} />
+            <Route path="my-products" element={<MyProducts />} /> */}
           </Route>
         </Route>
       </Routes>
