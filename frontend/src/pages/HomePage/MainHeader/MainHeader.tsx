@@ -4,11 +4,27 @@ import { MenuProps, Tabs, Input } from 'antd';
 import type { TabsProps } from 'antd';
 import { FC } from 'react';
 import { ReactComponent as SearchIcon } from '../../../assets/icons/search.svg';
+import { useNavigate } from 'react-router-dom';
 
 const { Search } = Input;
 const MainHeader = () => {
+  const navigate = useNavigate();
   const onChange = (key: string) => {
     console.log(key);
+    switch (key) {
+      case '1':
+        navigate('/main/home');
+        break;
+      case '2':
+        navigate('/main/contact');
+        break;
+      case '3':
+        navigate('/main/about');
+        break;
+      case '4':
+        navigate('/main/sign-up');
+        break;
+    }
   };
 
   const onSearch = () => {};

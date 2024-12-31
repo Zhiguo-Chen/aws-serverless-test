@@ -1,14 +1,14 @@
+import { StarFilled } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
+import { ReactComponent as EyeIcon } from '../../../assets/icons/eye.svg';
 import { ReactComponent as LeftArrowIcon } from '../../../assets/icons/Vector_left.svg';
 import { ReactComponent as RightArrowIcon } from '../../../assets/icons/Vector_right.svg';
+import { ReactComponent as WishlistIcon } from '../../../assets/icons/Wishlist2.svg';
 import chair from '../../../assets/images/chair.png';
 import controller from '../../../assets/images/controller.png';
 import keyBoard from '../../../assets/images/keyBoard.png';
 import monitor from '../../../assets/images/monitor.png';
-import { ReactComponent as WishlistIcon } from '../../../assets/icons/Wishlist2.svg';
-import { ReactComponent as EyeIcon } from '../../../assets/icons/eye.svg';
-import { ReactComponent as StarIcon } from '../../../assets/icons/Star.svg';
-import Icon, { StarFilled } from '@ant-design/icons';
+import ProductItem from '../../../components/ProductItem/ProductItem';
 
 const TodaysSales = () => {
   const initialDays = 4;
@@ -113,12 +113,17 @@ const TodaysSales = () => {
       </div>
       <div className="flex flex-gap-2 sales-container">
         {productsList.map((product: any, index: any) => (
-          <div key={index} className="sales-item">
-            <div className="image-bg flex justify-center align-center position-relative">
-              <img src={product.image} alt={`Sale ${index}`} />
+          <ProductItem
+            product={product}
+            labelPlace={
               <label className="discount-info text-center">
-                -{Math.ceil((1 - product.price / product.oldPrice) * 100)}%
+                {product.oldPrice && product.oldPrice > 0
+                  ? -Math.ceil((1 - product.price / product.oldPrice) * 100) +
+                    '%'
+                  : ''}
               </label>
+            }
+            actionButtonPlace={
               <div className="action-button-container flex flex-column flex-gap-05">
                 <button>
                   <WishlistIcon />
@@ -127,40 +132,10 @@ const TodaysSales = () => {
                   <EyeIcon />
                 </button>
               </div>
-              <button className="add-to-cart">Add To Cart</button>
-            </div>
-            <div className="product-info-container flex flex-column flex-gap-05">
-              <div className="product-name-container">{product.name}</div>
-              <div className="flex flex-gap-075">
-                <div className="price">${product.price}</div>
-                <div className="old-price">${product.oldPrice}</div>
-              </div>
-              <div>
-                {/* <StarFilled style={{ color: '#FFAD33' }} /> */}
-                {Array.from({ length: totalStars }, (_, index) => {
-                  if (index < product.score) {
-                    return (
-                      <StarFilled
-                        key={index}
-                        style={{ color: '#FFAD33', marginRight: '4px' }}
-                      />
-                    );
-                  } else {
-                    return (
-                      <StarFilled
-                        key={index}
-                        style={{ color: '#D1D4DB', marginRight: '4px' }}
-                      />
-                    );
-                  }
-                })}
-                {
-                  // for(let i = 0; i < totalStars; i++) {
-                  // }
-                }
-              </div>
-            </div>
-          </div>
+            }
+            isSocreShow={true}
+            key={index}
+          />
         ))}
       </div>
       <div className="flex justify-center full-width view-all-container">
