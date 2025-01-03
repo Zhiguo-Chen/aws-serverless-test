@@ -6,6 +6,7 @@ import Icon, { StarFilled } from '@ant-design/icons';
 import { ReactComponent as WishlistIcon } from '../../../assets/icons/Wishlist2.svg';
 import { ReactComponent as EyeIcon } from '../../../assets/icons/eye.svg';
 import ProductItem from '../../../components/ProductItem/ProductItem';
+import SectionName from '../../../components/SectionName/SectionName';
 
 const BestSelling = () => {
   const totalStars = 5;
@@ -48,10 +49,7 @@ const BestSelling = () => {
       <div className="flex justify-between align-end">
         <div className="flex align-end">
           <div className="section-info-container">
-            <div className="section-title-container flex align-center flex-gap">
-              <div className="title-bar"></div>
-              <div className="section-title">This Month</div>
-            </div>
+            <SectionName title="This Month" />
             <div className="flash-sales-title">Best Selling Products</div>
           </div>
         </div>

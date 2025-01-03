@@ -2,6 +2,7 @@ import ps5 from '../../../assets/images/ps5-slim.png';
 import womanHat from '../../../assets/images/attractive-woman-wearing-hat.png';
 import speakers from '../../../assets/images/amazon-echo-png-clipart.png';
 import gucci from '../../../assets/images/gucci.png';
+import SectionName from '../../../components/SectionName/SectionName';
 
 const NewArrival = () => {
   const product1 = {
@@ -33,10 +34,7 @@ const NewArrival = () => {
       <div className="flex justify-between align-end">
         <div className="flex align-end">
           <div className="section-info-container">
-            <div className="section-title-container flex align-center flex-gap">
-              <div className="title-bar"></div>
-              <div className="section-title">Featured</div>
-            </div>
+            <SectionName title="Featured" />
             <div className="flash-sales-title">New Arrival</div>
           </div>
         </div>
