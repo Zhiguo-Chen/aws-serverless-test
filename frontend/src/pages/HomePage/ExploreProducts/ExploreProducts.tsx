@@ -13,6 +13,7 @@ import { ReactComponent as EyeIcon } from '../../../assets/icons/eye.svg';
 import { ReactComponent as StarIcon } from '../../../assets/icons/Star.svg';
 import { ReactComponent as WishlistIcon } from '../../../assets/icons/Wishlist2.svg';
 import ProductItem from '../../../components/ProductItem/ProductItem';
+import SectionName from '../../../components/SectionName/SectionName';
 
 const ExploreProducts = () => {
   const totalStars = 5;
@@ -87,10 +88,7 @@ const ExploreProducts = () => {
       <div className="flex justify-between align-end">
         <div className="flex align-end">
           <div className="section-info-container">
-            <div className="section-title-container flex align-center flex-gap">
-              <div className="title-bar"></div>
-              <div className="section-title">Our Products</div>
-            </div>
+            <SectionName title="Our Products" />
             <div className="flash-sales-title">Explore Our Products</div>
           </div>
         </div>

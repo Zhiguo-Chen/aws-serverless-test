@@ -1,9 +1,9 @@
-import { ReactComponent as WishlistIcon } from '../../../assets/icons/Wishlist.svg';
-import { ReactComponent as CartIcon } from '../../../assets/icons/Cart1.svg';
+import { ReactComponent as WishlistIcon } from '../../assets/icons/Wishlist.svg';
+import { ReactComponent as CartIcon } from '../../assets/icons/Cart1.svg';
 import { MenuProps, Tabs, Input } from 'antd';
 import type { TabsProps } from 'antd';
 import { FC } from 'react';
-import { ReactComponent as SearchIcon } from '../../../assets/icons/search.svg';
+import { ReactComponent as SearchIcon } from '../../assets/icons/search.svg';
 import { useNavigate } from 'react-router-dom';
 
 const { Search } = Input;
@@ -46,6 +46,12 @@ const MainHeader = () => {
       label: 'Sign Up',
     },
   ];
+  const handleWishlistClick = (e: React.MouseEvent) => {
+    navigate('/main/wishlist');
+  };
+  const handleCartClick = (e: React.MouseEvent) => {
+    navigate('/main/cart');
+  };
   return (
     <div className="header-content-container content-width flex align-center justify-between">
       <h3 className="header-title">Exclusive</h3>
@@ -83,11 +89,13 @@ const MainHeader = () => {
           width="32px"
           height="32px"
           className="cursor-pointer"
+          onClick={handleWishlistClick}
         ></WishlistIcon>
         <CartIcon
           width="32px"
           height="32px"
           className="cursor-pointer"
+          onClick={handleCartClick}
         ></CartIcon>
       </div>
     </div>
