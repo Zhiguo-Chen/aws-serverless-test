@@ -20,6 +20,10 @@ import SignUp from './pages/SignUp/SignUp';
 import NewLogin from './pages/NewLogin/NewLogin';
 import HomePage from './pages/HomePage/Home';
 import AboutPage from './pages/About/About';
+import WishlistPage from './pages/WishlistPage/WishlistPage';
+import Cart from './pages/Cart/Cart';
+import ProductDetail from './pages/ProductDetail/ProductDetail';
+import Contact from './pages/Contact/Contact';
 
 const authTokenKey = process.env.REACT_APP_AUTH_TOKEN || 'authToken';
 
@@ -49,7 +53,13 @@ const App = () => {
             <Route path="about" element={<AboutPage />} />
             <Route path="sign-up" element={<SignUp />} />
             <Route path="new-login" element={<NewLogin />} />
-
+            <Route path="wishlist" element={<WishlistPage />} />
+            <Route path="cart" element={<Cart />} />
+            <Route
+              path=":productId/product-detail"
+              element={<ProductDetail />}
+            />
+            <Route path="contact" element={<Contact />} />
             {/* <Route path="add-product" element={<AddProducts />} />
             <Route path="view-products" element={<ViewProducts />} />
             <Route path="my-products" element={<MyProducts />} /> */}

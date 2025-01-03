@@ -9,6 +9,7 @@ import controller from '../../../assets/images/controller.png';
 import keyBoard from '../../../assets/images/keyBoard.png';
 import monitor from '../../../assets/images/monitor.png';
 import ProductItem from '../../../components/ProductItem/ProductItem';
+import SectionName from '../../../components/SectionName/SectionName';
 
 const TodaysSales = () => {
   const initialDays = 4;
@@ -72,10 +73,7 @@ const TodaysSales = () => {
       <div className="flex justify-between align-end">
         <div className="flex align-end">
           <div className="section-info-container">
-            <div className="section-title-container flex align-center flex-gap">
-              <div className="title-bar"></div>
-              <div className="section-title">Today’s</div>
-            </div>
+            <SectionName title="Today’s" />
             <div className="flash-sales-title">Flash Sales</div>
           </div>
           <div className="flex align-end flex-gap">

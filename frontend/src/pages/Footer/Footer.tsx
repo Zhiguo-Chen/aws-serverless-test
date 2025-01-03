@@ -1,10 +1,10 @@
 import React from 'react';
 import './Footer.scss';
 import { Input } from 'antd';
-import googlePlay from '../../../assets/images/google-play-store.png';
-import appStore from '../../../assets/images/appstore.png';
-import qrCode from '../../../assets/images/QrCode.png';
-import { ReactComponent as SuffixIcon } from '../../../assets/icons/input-icon.svg';
+import googlePlay from '../../assets/images/google-play-store.png';
+import appStore from '../../assets/images/appstore.png';
+import qrCode from '../../assets/images/QrCode.png';
+import { ReactComponent as SuffixIcon } from '../../assets/icons/input-icon.svg';
 
 const Footer: React.FC = () => {
   return (
