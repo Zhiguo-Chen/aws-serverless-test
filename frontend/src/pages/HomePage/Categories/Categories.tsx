@@ -8,6 +8,7 @@ import { ReactComponent as CameraIcon } from '../../../assets/icons/Category-Cam
 import { ReactComponent as HeadphoneIcon } from '../../../assets/icons/Category-Headphone.svg';
 import { ReactComponent as GamepadIcon } from '../../../assets/icons/Category-Gamepad.svg';
 import Icon, { CameraOutlined } from '@ant-design/icons';
+import SectionName from '../../../components/SectionName/SectionName';
 
 const Categories = () => {
   const categoriesList = [
@@ -60,10 +61,7 @@ const Categories = () => {
       <div className="flex justify-between align-end">
         <div className="flex align-end">
           <div className="section-info-container">
-            <div className="section-title-container flex align-center flex-gap">
-              <div className="title-bar"></div>
-              <div className="section-title">Categories</div>
-            </div>
+            <SectionName title="Categories" />
             <div className="flash-sales-title">Browse By Category</div>
           </div>
         </div>
