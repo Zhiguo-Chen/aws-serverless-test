@@ -49,6 +49,7 @@ const ProductItem: FC<ProductItemProps> = ({
                 );
               }
             })}
+            <span className="reviews">({product.reviews})</span>
           </div>
         )}
       </div>
