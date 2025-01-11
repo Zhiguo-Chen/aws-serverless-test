@@ -20,6 +20,7 @@ export interface Product {
     id: number;
     name: string;
   };
+  reviews?: number;
 }
 
 const ListProducts = ({

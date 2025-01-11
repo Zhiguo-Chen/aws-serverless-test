@@ -107,6 +107,10 @@ button {
   height: 100%;
 }
 
+.border-box {
+  box-sizing: border-box;
+}
+
 .non-login-container {
   width: 600px;
   margin: 300px auto;
@@ -247,4 +251,31 @@ ul {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.font-size-large {
+  font-size: 24px;
+}
+
+.font-size-regular {
+  font-size: 16px;
+}
+
+.font-size-small {
+  font-size: 14px;
+}
+
+.font-size-x-small {
+  font-size: 12px;
+}
+
+.font-weight-lighter {
+  font-weight: lighter;
+}
+
+.font-weight-normal {
+  font-weight: normal;
+}
+
+.divider {
+  border-bottom: 1px solid var(--line-color);
 }
