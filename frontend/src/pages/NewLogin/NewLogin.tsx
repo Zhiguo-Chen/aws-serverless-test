@@ -1,11 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Input, Button } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './NewLogin.scss';
+import axios from 'axios';
+
+const apiUrl = process.env.REACT_APP_API_URL;
+const authTokenKey = process.env.REACT_APP_AUTH_TOKEN || 'authToken';
 
 const NewLogin: React.FC = () => {
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
+  const navigate = useNavigate();
+  const [form] = Form.useForm();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const handleSubmit = async () => {
+    console.log('email', email);
+    console.log('password', password);
+    if (!email || !password) {
+      alert('Please fill in all fields');
+      return;
+    }
+    try {
+      const response = await axios.post(`${apiUrl}/api/login`, {
+        email,
+        password,
+      });
+      if (response.status === 200) {
+        const { token } = response.data;
+        if (token) {
+          localStorage.setItem(authTokenKey, token);
+          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          navigate('/main/home');
+        }
+      } else {
+        console.log('Login failed:');
+        setEmail('');
+        setPassword('');
+      }
+      console.log(response);
+    } catch (error) {
+      console.error('Login failed:', error);
+      form.setFieldsValue({ username: '', password: '' });
+    }
   };
 
   return (
@@ -20,7 +55,8 @@ const NewLogin: React.FC = () => {
 
             <Form
               name="login"
-              onFinish={onFinish}
+              onFinish={handleSubmit}
+              form={form}
               layout="vertical"
               className="login-form"
             >
@@ -33,7 +69,11 @@ const NewLogin: React.FC = () => {
                   },
                 ]}
               >
-                <Input placeholder="Email or Phone Number" />
+                <Input
+                  placeholder="Email or Phone Number"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </Form.Item>
 
               <Form.Item
@@ -42,7 +82,11 @@ const NewLogin: React.FC = () => {
                   { required: true, message: 'Please input your password!' },
                 ]}
               >
-                <Input.Password placeholder="Password" />
+                <Input.Password
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
               </Form.Item>
 
               <div className="form-actions">
