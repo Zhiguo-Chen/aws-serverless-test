@@ -96,7 +96,7 @@ button {
 .auto-fit {
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   gap: 1rem;
-  padding: 1rem;
+  // padding: 1rem;
 }
 
 .full-width {
@@ -144,6 +144,7 @@ button {
 ul {
   list-style-type: none;
   margin: 0;
+  padding: 0;
 }
 
 .ant-card {
@@ -278,4 +279,8 @@ ul {
 
 .divider {
   border-bottom: 1px solid var(--line-color);
+}
+
+.child-page-padding {
+  padding: 80px 0 140px 0;
 }

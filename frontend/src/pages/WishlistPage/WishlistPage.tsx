@@ -96,7 +96,7 @@ const WishlistPage = () => {
     },
   ];
   return (
-    <div className="wishlist-page flex flex-column flex-1">
+    <div className="wishlist-page child-page-padding flex flex-column flex-1">
       <div className="wishlist-page-container flex flex-column">
         <div className="wishlist-page-title flex justify-between align-center">
           <div>Wishlist ({productsList.length})</div>

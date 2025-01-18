@@ -24,6 +24,8 @@ import WishlistPage from './pages/WishlistPage/WishlistPage';
 import Cart from './pages/Cart/Cart';
 import ProductDetail from './pages/ProductDetail/ProductDetail';
 import Contact from './pages/Contact/Contact';
+import ProductList from './pages/ProductList/ProductList';
+import ByCategory from './pages/ByCategory/ByCategory';
 
 const authTokenKey = process.env.REACT_APP_AUTH_TOKEN || 'authToken';
 
@@ -39,20 +41,19 @@ const App = () => {
       <Routes>
         <Route
           path="/"
-          element={
-            <Navigate to={isAuthenticated ? '/main/view-products' : '/login'} />
-          }
+          element={<Navigate to={isAuthenticated ? '/main/home' : '/login'} />}
         />
-        <Route path="/login" element={<Login />} />
+        {/* <Route path="/login" element={<Login />} /> */}
         <Route path="/register" element={<Register />} />
         <Route path="/main-page" element={<MainPageLayout />} />
         <Route path="/signup" element={<SignUp />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/main" element={<MainPageLayout />}>
             <Route path="home" element={<HomePage />} />
+            <Route path=":categoryId/category" element={<ByCategory />} />
             <Route path="about" element={<AboutPage />} />
             <Route path="sign-up" element={<SignUp />} />
-            <Route path="new-login" element={<NewLogin />} />
+            <Route path="login" element={<NewLogin />} />
             <Route path="wishlist" element={<WishlistPage />} />
             <Route path="cart" element={<Cart />} />
             <Route

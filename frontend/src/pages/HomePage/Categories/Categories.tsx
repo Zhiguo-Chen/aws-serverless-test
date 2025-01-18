@@ -9,8 +9,10 @@ import { ReactComponent as HeadphoneIcon } from '../../../assets/icons/Category-
 import { ReactComponent as GamepadIcon } from '../../../assets/icons/Category-Gamepad.svg';
 import Icon, { CameraOutlined } from '@ant-design/icons';
 import SectionName from '../../../components/SectionName/SectionName';
+import { useNavigate } from 'react-router-dom';
 
 const Categories = () => {
+  const navigate = useNavigate();
   const categoriesList = [
     {
       icon: (
@@ -55,6 +57,10 @@ const Categories = () => {
       categoryId: 'aaa',
     },
   ];
+  const handleCategoryClick = (categoryId: string) => {
+    // navigate to category page
+    navigate(`/main/${categoryId}/category/`);
+  };
   useEffect(() => {}, []);
   return (
     <div className="categories-component-container">
@@ -81,6 +87,7 @@ const Categories = () => {
           <div
             key={index}
             className="category-item-container flex align-center justify-center cursor-pointer"
+            onClick={() => handleCategoryClick(category.categoryId)}
           >
             <div className="text-center">
               <div className="category-icon-container">{category.icon}</div>

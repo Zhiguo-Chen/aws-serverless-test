@@ -22,7 +22,7 @@ const ProductBrick: FC<ProductBrickProps> = ({ product }) => {
         <div className="product-bricks-price">${product.price}</div>
         <div>
           <Tag bordered={false} color="orange">
-            {product.Category.name}
+            {product?.Category?.name}
           </Tag>
         </div>
       </div>
