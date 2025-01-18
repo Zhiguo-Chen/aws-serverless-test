@@ -42,7 +42,7 @@ const Cart: React.FC = () => {
   };
 
   return (
-    <div className="cart-page flex-1">
+    <div className="cart-page child-page-padding flex-1">
       <div className="breadcrumb-container">
         <Breadcrumb
           items={[{ title: <Link to="/">Home</Link> }, { title: 'Cart' }]}

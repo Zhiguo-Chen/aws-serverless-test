@@ -4,19 +4,19 @@ import { useState } from 'react';
 import ProductBrick from '../../components/ProductBrick/ProductBrick';
 
 export interface Product {
-  category_id: number;
-  createdAt: Date;
-  description: string;
-  id: number;
+  category_id?: number;
+  createdAt?: Date;
+  description?: string;
+  id?: number;
   image: string;
   name: string;
   price: number;
   oldPrice?: number;
-  stock: number;
-  updatedAt: Date;
-  user_id: string;
-  score?: number;
-  Category: {
+  stock?: number;
+  updatedAt?: Date;
+  user_id?: string;
+  score: number;
+  Category?: {
     id: number;
     name: string;
   };
