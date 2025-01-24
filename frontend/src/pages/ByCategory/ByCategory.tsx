@@ -13,6 +13,8 @@ const ByCategory = () => {
       oldPrice: 160,
       score: 5,
       reviews: 88,
+      description:
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quia.',
     },
     {
       image: keyBoard,
@@ -21,6 +23,8 @@ const ByCategory = () => {
       oldPrice: 1160,
       score: 4,
       reviews: 75,
+      description:
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quia.',
     },
     {
       image: monitor,
@@ -29,6 +33,8 @@ const ByCategory = () => {
       oldPrice: 400,
       score: 5,
       reviews: 99,
+      description:
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quia.',
     },
     {
       image: chair,
@@ -37,12 +43,17 @@ const ByCategory = () => {
       oldPrice: 400,
       score: 4,
       reviews: 99,
+      description:
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quia.',
     },
   ];
-  const handleOnProductClick = (product: any) => {
-    
-  }
-  return <ProductList productsList={productsList} onProductClick={handleOnProductClick} />;
+  const handleOnProductClick = (product: any) => {};
+  return (
+    <ProductList
+      productsList={productsList}
+      onProductClick={handleOnProductClick}
+    />
+  );
 };
 
 export default ByCategory;
