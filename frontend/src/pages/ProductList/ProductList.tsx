@@ -7,6 +7,7 @@ import { ReactComponent as WishlistIcon } from '../../assets/icons/Wishlist2.svg
 import { Breadcrumb } from 'antd';
 import { Link } from 'react-router-dom';
 import './ProductList.scss';
+import ProductListItem from '../../components/ProductListItem/ProductListItem';
 
 const ProductList = ({
   productsList,
@@ -55,31 +56,35 @@ const ProductList = ({
           isGrid ? 'grid auto-fit grid-gap-2 ' : 'flex flex-column flex-gap '
         }
       >
-        {productsList.map((product: any, index: any) => (
-          <ProductItem
-            product={product}
-            labelPlace={
-              <label className="discount-info text-center">
-                {product.oldPrice && product.oldPrice > 0
-                  ? -Math.ceil((1 - product.price / product.oldPrice) * 100) +
-                    '%'
-                  : ''}
-              </label>
-            }
-            actionButtonPlace={
-              <div className="action-button-container flex flex-column flex-gap-05">
-                <button>
-                  <WishlistIcon />
-                </button>
-                <button>
-                  <EyeIcon />
-                </button>
-              </div>
-            }
-            isSocreShow={true}
-            key={index}
-          />
-        ))}
+        {productsList.map((product: any, index: any) =>
+          isGrid ? (
+            <ProductItem
+              product={product}
+              labelPlace={
+                <label className="discount-info text-center">
+                  {product.oldPrice && product.oldPrice > 0
+                    ? -Math.ceil((1 - product.price / product.oldPrice) * 100) +
+                      '%'
+                    : ''}
+                </label>
+              }
+              actionButtonPlace={
+                <div className="action-button-container flex flex-column flex-gap-05">
+                  <button>
+                    <WishlistIcon />
+                  </button>
+                  <button>
+                    <EyeIcon />
+                  </button>
+                </div>
+              }
+              isSocreShow={true}
+              key={index}
+            />
+          ) : (
+            <ProductListItem product={product} isSocreShow={true} key={index} />
+          ),
+        )}
       </ul>
     </div>
   );
