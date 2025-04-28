@@ -26,6 +26,10 @@ import ProductDetail from './pages/ProductDetail/ProductDetail';
 import Contact from './pages/Contact/Contact';
 import ProductList from './pages/ProductList/ProductList';
 import ByCategory from './pages/ByCategory/ByCategory';
+import NotFound from './pages/NotFound/NotFound';
+import ProductList2 from './pages/product-management/ProductsList2';
+import ProductForm from './pages/product-management/ProductForm';
+import ManageLayout from './pages/product-management/manage-layout';
 
 const authTokenKey = process.env.REACT_APP_AUTH_TOKEN || 'authToken';
 
@@ -41,19 +45,23 @@ const App = () => {
       <Routes>
         <Route
           path="/"
-          element={<Navigate to={isAuthenticated ? '/main/home' : '/login'} />}
+          element={
+            <Navigate to={isAuthenticated ? '/main/home' : '/main/login'} />
+          }
         />
         {/* <Route path="/login" element={<Login />} /> */}
         <Route path="/register" element={<Register />} />
         <Route path="/main-page" element={<MainPageLayout />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/main" element={<MainPageLayout />}>
+          <Route path="login" element={<NewLogin />} />
+        </Route>
         <Route element={<ProtectedRoute />}>
           <Route path="/main" element={<MainPageLayout />}>
             <Route path="home" element={<HomePage />} />
             <Route path=":categoryId/category" element={<ByCategory />} />
             <Route path="about" element={<AboutPage />} />
             <Route path="sign-up" element={<SignUp />} />
-            <Route path="login" element={<NewLogin />} />
             <Route path="wishlist" element={<WishlistPage />} />
             <Route path="cart" element={<Cart />} />
             <Route
@@ -61,10 +69,22 @@ const App = () => {
               element={<ProductDetail />}
             />
             <Route path="contact" element={<Contact />} />
+            {/* <Route path="add-product" element={<AddProducts />} /> */}
+            {/* <Route path="product-list-2" element={<ProductList2 />} />
+            <Route path="product-list/new" element={<ProductForm />} />
+            <Route path="product-list/edit/:id" element={<ProductForm />} /> */}
             {/* <Route path="add-product" element={<AddProducts />} />
             <Route path="view-products" element={<ViewProducts />} />
             <Route path="my-products" element={<MyProducts />} /> */}
           </Route>
+          <Route path="/management" element={<ManageLayout />}>
+            <Route path="product-list" element={<ProductList2 />} />
+            <Route path="product-list/new" element={<ProductForm />} />
+            <Route path="product-list/edit/:id" element={<ProductForm />} />
+          </Route>
+        </Route>
+        <Route path="*" element={<MainPageLayout />}>
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </div>

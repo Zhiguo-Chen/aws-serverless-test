@@ -1,24 +1,52 @@
+// backend/app.js
 const express = require('express');
-const route = require('./route/routes');
-const sequelize = require('./config/database');
 const cors = require('cors');
-require('dotenv').config();
+const helmet = require('helmet');
+const morgan = require('morgan');
+const path = require('path');
+const fs = require('fs');
+const { sequelize } = require('./models');
+
+// 导入路由
+const productRoutes = require('./routes/productRoutes');
+
+const publicDir = path.join(__dirname, 'public');
+if (!fs.existsSync(publicDir)) {
+  fs.mkdirSync(publicDir);
+}
 
 const app = express();
 
+app.use('/public', express.static(publicDir));
+
+// 中间件
 app.use(cors());
+app.use(helmet());
+app.use(morgan('dev'));
 app.use(express.json());
-app.use('/api', route);
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 
-const startServer = async () => {
-  try {
-    await sequelize.sync({ alter: true });
-    app.listen(4000, () => {
-      console.log('Server is running on port 4000');
-    });
-  } catch (error) {
-    console.error(error);
-  }
-};
+// 路由
+app.use('/api', productRoutes);
 
-startServer();
+// 数据库同步
+sequelize
+  .sync({ force: false })
+  .then(() => {
+    console.log('Database synced');
+  })
+  .catch((err) => {
+    console.error('Database sync error:', err);
+  });
+
+// 错误处理中间件
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something went wrong!' });
+});
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

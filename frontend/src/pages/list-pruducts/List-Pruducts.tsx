@@ -12,15 +12,18 @@ export interface Product {
   name: string;
   price: number;
   oldPrice?: number;
+  originalPrice?: number;
   stock?: number;
   updatedAt?: Date;
   user_id?: string;
   score: number;
+  averageRating?: number;
   Category?: {
     id: number;
     name: string;
   };
   reviews?: number;
+  reviewCount?: number;
 }
 
 const ListProducts = ({
