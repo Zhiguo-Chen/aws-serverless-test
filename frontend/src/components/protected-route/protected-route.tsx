@@ -7,7 +7,7 @@ const ProtectedRoute = () => {
   const isAuthenticated = localStorage.getItem(authTokenKey); // Or use a context/global state for authentication
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/main/login" />;
   }
 
   return <Outlet />;

@@ -1,38 +1,36 @@
-const User = require('./User');
-const Product = require('./Product');
-const Orders = require('./Order');
-const Category = require('./Category');
-const Cart = require('./Cart');
-const Payments = require('./Payment');
+// models/index.js
+const { Sequelize, DataTypes, Model } = require('sequelize');
+const sequelize = require('../config/database');
+const fs = require('fs');
+const path = require('path');
 
-User.hasMany(Orders, { foreignKey: 'user_id' });
-Orders.belongsTo(User, { foreignKey: 'user_id' });
+const basename = path.basename(__filename);
+const db = {};
 
-User.hasMany(Product, { foreignKey: 'user_id' });
-Product.belongsTo(User, { foreignKey: 'user_id' });
+// 自动加载所有模型文件
+fs.readdirSync(__dirname)
+  .filter((file) => {
+    return (
+      file.indexOf('.') !== 0 &&
+      file !== basename &&
+      file.slice(-3) === '.js' &&
+      file.indexOf('.test.js') === -1
+    );
+  })
+  .forEach((file) => {
+    console.log(file);
+    const model = require(path.join(__dirname, file))(sequelize, DataTypes);
+    db[model.name] = model;
+  });
 
-Product.belongsTo(Category, { foreignKey: 'category_id' });
-Category.hasMany(Product, { foreignKey: 'category_id' });
+// 设置模型关联
+Object.keys(db).forEach((modelName) => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
 
-Product.belongsToMany(Orders, { through: 'OrderXProduct' });
-Orders.belongsToMany(Product, { through: 'OrderXProduct' });
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
 
-Product.belongsTo(Category, { foreignKey: 'category_id' });
-
-Orders.hasOne(Payments, { foreignKey: 'order_id' });
-Payments.belongsTo(Orders, { foreignKey: 'order_id' });
-
-User.hasOne(Cart, { foreignKey: 'user_id' });
-Cart.belongsTo(User, { foreignKey: 'user_id' });
-
-Cart.belongsToMany(Product, { through: 'CartXProduct' });
-Product.belongsToMany(Cart, { through: 'CartXProduct' });
-
-module.exports = {
-  User,
-  Product,
-  Orders,
-  Category,
-  Cart,
-  Payments,
-};
+module.exports = db;

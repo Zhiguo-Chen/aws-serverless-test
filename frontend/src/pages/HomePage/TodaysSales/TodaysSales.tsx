@@ -10,16 +10,19 @@ import keyBoard from '../../../assets/images/keyBoard.png';
 import monitor from '../../../assets/images/monitor.png';
 import ProductItem from '../../../components/ProductItem/ProductItem';
 import SectionName from '../../../components/SectionName/SectionName';
+import { getProducts } from '../../../api/products';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api';
 
 const TodaysSales = () => {
   const initialDays = 4;
   const totalStars = 5;
-  const productsList = [
+  let productsList = [
     {
       image: controller,
       name: 'HAVIT HV-G92 Gamepad',
       price: 120,
-      oldPrice: 160,
+      originalPrice: 160,
       score: 5,
       reviews: 88,
     },
@@ -27,7 +30,7 @@ const TodaysSales = () => {
       image: keyBoard,
       name: 'AK-900 Wired Keyboard',
       price: 960,
-      oldPrice: 1160,
+      originalPrice: 1160,
       score: 4,
       reviews: 75,
     },
@@ -35,7 +38,7 @@ const TodaysSales = () => {
       image: monitor,
       name: 'IPS LCD Gaming Monitor',
       price: 370,
-      oldPrice: 400,
+      originalPrice: 400,
       score: 5,
       reviews: 99,
     },
@@ -43,20 +46,38 @@ const TodaysSales = () => {
       image: chair,
       name: 'S-Series Comfort Chair ',
       price: 375,
-      oldPrice: 400,
+      originalPrice: 400,
       score: 4,
       reviews: 99,
     },
   ];
+  const [products, setProducts] = useState<any[]>([]);
 
   const [timeLeft, setTimeLeft] = useState(initialDays * 24 * 60 * 60); // Convert days to seconds
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setTimeLeft(timeLeft - 1);
-    }, 1000);
+    // const intervalId = setInterval(() => {
+    //   setTimeLeft(timeLeft - 1);
+    // }, 1000);
 
-    return () => clearInterval(intervalId);
+    // return () => clearInterval(intervalId);
+    const getAllProducts = async () => {
+      const response = await getProducts();
+      const data = response.data as Array<any>;
+      setProducts(
+        data
+          .filter((prd) => prd.isFlashSale)
+          .map((prd) => ({
+            ...prd,
+            image: `${API_URL}/public${prd.imageUrl}`,
+            price: parseInt(prd.price),
+          })),
+      );
+      setTimeout(() => {
+        console.log(products);
+      });
+    };
+    getAllProducts();
   }, [timeLeft]);
 
   const calculateTimeLeft = (_seconds: any) => {
@@ -110,14 +131,15 @@ const TodaysSales = () => {
         </div>
       </div>
       <div className="flex flex-gap-2 sales-container">
-        {productsList.map((product: any, index: any) => (
+        {products.map((product: any, index: any) => (
           <ProductItem
             product={product}
             labelPlace={
               <label className="discount-info text-center">
-                {product.oldPrice && product.oldPrice > 0
-                  ? -Math.ceil((1 - product.price / product.oldPrice) * 100) +
-                    '%'
+                {product.originalPrice && product.originalPrice > 0
+                  ? -Math.ceil(
+                      (1 - product.price / product.originalPrice) * 100,
+                    ) + '%'
                   : ''}
               </label>
             }

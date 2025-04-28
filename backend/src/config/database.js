@@ -1,5 +1,5 @@
-const { Sequelize, DataTypes, Model } = require("sequelize");
-const { pg } = require("pg");
+const { Sequelize, DataTypes, Model } = require('sequelize');
+const { pg } = require('pg');
 // Option 1: Passing a connection URI
 // const sequelize = new Sequelize('sqlite::memory:') // Example for sqlite
 // const sequelize = new Sequelize('postgres://user:pass@example.com:5432/dbname') // Example for postgres
@@ -11,11 +11,11 @@ const { pg } = require("pg");
 // });
 
 // Option 3: Passing parameters separately (other dialects)
-const sequelize = new Sequelize("E-Commerce", "postgres", "welcome321", {
-  host: "localhost",
-  dialect: "postgres",
+const sequelize = new Sequelize('E-Commerce', 'postgres', 'welcome321', {
+  host: 'localhost',
+  dialect: 'postgres',
   dialectModule: pg,
-  port: 5433
+  port: 5433,
 });
 
 // const User = sequelize.define(
