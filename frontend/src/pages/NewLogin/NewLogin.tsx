@@ -29,7 +29,7 @@ const NewLogin: React.FC = () => {
         if (token) {
           localStorage.setItem(authTokenKey, token);
           axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-          navigate('/main/home');
+          navigate('/management/product-list');
         }
       } else {
         console.log('Login failed:');

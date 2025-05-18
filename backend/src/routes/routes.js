@@ -1,12 +1,12 @@
 const express = require('express');
-const { register, login } = require('../controller/userController');
+const { register, login } = require('../controllers/userController');
 const authenticationToken = require('../middlewares/auth');
-const { listAllCategory } = require('../controller/categoryController');
+const { listAllCategory } = require('../controllers/categoryController');
 const {
   addProduct,
   getAllProducts,
   getProductsByUser,
-} = require('../controller/productController');
+} = require('../controllers/productController_bk');
 
 const router = express.Router();
 

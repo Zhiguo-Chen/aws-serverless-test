@@ -1,10 +1,12 @@
-import coat from '../../../assets/images/The-North-Face-x-Gucci-coat.png';
-import bag from '../../../assets/images/Gucci-Savoy-medium-duffle-bag.png';
-import cpu_cooler from '../../../assets/images/argb-1-500x500.png';
-import bookself from '../../../assets/images/sam-moghadam-khamseh.png';
-import Icon, { StarFilled } from '@ant-design/icons';
+import { message } from 'antd';
+import { useEffect, useState } from 'react';
+import { getProducts } from '../../../api/products';
 import { ReactComponent as WishlistIcon } from '../../../assets/icons/Wishlist2.svg';
 import { ReactComponent as EyeIcon } from '../../../assets/icons/eye.svg';
+import bag from '../../../assets/images/Gucci-Savoy-medium-duffle-bag.png';
+import coat from '../../../assets/images/The-North-Face-x-Gucci-coat.png';
+import cpu_cooler from '../../../assets/images/argb-1-500x500.png';
+import bookself from '../../../assets/images/sam-moghadam-khamseh.png';
 import ProductItem from '../../../components/ProductItem/ProductItem';
 import SectionName from '../../../components/SectionName/SectionName';
 
@@ -44,6 +46,24 @@ const BestSelling = () => {
       reviews: 99,
     },
   ];
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const response = await getProducts();
+      console.log(response.data);
+      setProducts(response.data);
+    } catch (error) {
+      message.error('Failed to fetch products');
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="categories-component-container">
       <div className="flex justify-between align-end">

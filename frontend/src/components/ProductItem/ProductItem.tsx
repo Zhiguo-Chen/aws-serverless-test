@@ -28,12 +28,12 @@ const ProductItem: FC<ProductItemProps> = ({
         <div className="product-name-container">{product.name}</div>
         <div className="flex flex-gap-075">
           <div className="price">${product.price}</div>
-          <div className="old-price">${product.oldPrice}</div>
+          <div className="old-price">${product.originalPrice}</div>
         </div>
         {isSocreShow && (
           <div>
             {Array.from({ length: totalStars }, (_, index) => {
-              if (product.score && index < product.score) {
+              if (product.averageRating && index < product.averageRating) {
                 return (
                   <StarFilled
                     key={index}
@@ -49,7 +49,7 @@ const ProductItem: FC<ProductItemProps> = ({
                 );
               }
             })}
-            <span className="reviews">({product.reviews})</span>
+            <span className="reviews">({product.reviewCount})</span>
           </div>
         )}
       </div>
