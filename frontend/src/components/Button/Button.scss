@@ -1,0 +1,73 @@
+.custom-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  background-color: #db4444;
+  color: white;
+
+  // Size variants
+  &.button-small {
+    height: 32px;
+    padding: 0 12px;
+    font-size: 14px;
+  }
+
+  &.button-middle {
+    height: 40px;
+    padding: 0 16px;
+    font-size: 16px;
+  }
+
+  &.button-large {
+    height: 48px;
+    padding: 0 24px;
+    font-size: 18px;
+  }
+
+  // Block button
+  &.button-block {
+    width: 100%;
+  }
+
+  // Hover state
+  &:hover {
+    background-color: darken(#db4444, 10%);
+  }
+
+  // Disabled state
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  // Active state
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+// 响应式调整
+@media (max-width: 768px) {
+  .custom-button {
+    &.button-small {
+      height: 28px;
+      font-size: 12px;
+    }
+
+    &.button-middle {
+      height: 36px;
+      font-size: 14px;
+    }
+
+    &.button-large {
+      height: 44px;
+      font-size: 16px;
+    }
+  }
+}
