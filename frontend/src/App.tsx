@@ -30,6 +30,7 @@ import NotFound from './pages/NotFound/NotFound';
 import ProductList2 from './pages/product-management/ProductsList2';
 import ProductForm from './pages/product-management/ProductForm';
 import ManageLayout from './pages/product-management/manage-layout';
+import ChatWidget from './components/chat-widget/ChatWidget';
 
 const authTokenKey = process.env.REACT_APP_AUTH_TOKEN || 'authToken';
 
@@ -87,6 +88,7 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
+      <ChatWidget />
     </div>
   );
 };

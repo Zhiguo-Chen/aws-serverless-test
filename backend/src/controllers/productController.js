@@ -17,9 +17,6 @@ exports.createProduct = async (req, res) => {
       isFlashSale,
       flashSaleEndsAt,
     } = req.body;
-    console.log('++++++++++++++++');
-    console.log(req.body.category);
-    console.log('++++++++++++++++');
 
     const categoryRecord = await Category.findOne({
       where: { name: category },
