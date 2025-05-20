@@ -8,6 +8,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const categoryRoutes = require('./categoryRoutes');
+const { chat } = require('../controllers/chatController');
 
 const uploadDir = path.join(__dirname, '../public/uploads');
 if (!fs.existsSync(uploadDir)) {
@@ -41,6 +42,7 @@ router.post(
   upload.single('image'),
   productController.createProduct,
 );
+router.post('/chat', upload.single('image'), chat);
 router.put(
   '/products/:id',
   upload.single('image'),

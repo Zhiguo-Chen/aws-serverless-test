@@ -20,5 +20,6 @@ router.use('/add-product', authenticationToken, addProduct);
 router.use('/get-products', authenticationToken, getAllProducts);
 router.use('/get-my-products', authenticationToken, getProductsByUser);
 router.use('/get-categories', authenticationToken, listAllCategory);
+router.use('/chat', authenticationToken, chat);
 
 module.exports = router;
