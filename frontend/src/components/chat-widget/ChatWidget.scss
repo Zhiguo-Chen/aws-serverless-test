@@ -1,0 +1,86 @@
+.chat-widget-fab {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 56px;
+  height: 56px;
+  background: #24292f;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s;
+}
+.chat-widget-fab.open {
+  background: #57606a;
+}
+.chat-widget-dialog {
+  position: fixed;
+  bottom: 100px;
+  right: 32px;
+  width: 350px;
+  height: 80vh; /* Set height to 80% of viewport */
+  max-height: 80vh; /* Ensure it doesn't exceed 80% */
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  z-index: 1001;
+}
+.chat-widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background: #24292f;
+  color: #fff;
+  border-radius: 12px 12px 0 0;
+}
+.chat-widget-close {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.chat-widget-messages {
+  flex: 1;
+  padding: 12px;
+  overflow-y: auto;
+  background: #f6f8fa;
+}
+.chat-widget-msg {
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  max-width: 80%;
+}
+.chat-widget-msg.user {
+  background: #d1e7dd;
+  align-self: flex-end;
+}
+.chat-widget-msg.bot {
+  background: #e2e3e5;
+  align-self: flex-start;
+}
+.chat-widget-footer {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-top: 1px solid #eee;
+  background: #fff;
+  border-radius: 0 0 12px 12px;
+}
+.chat-widget-footer input[type='text'] {
+  flex: 1;
+  margin: 0 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}

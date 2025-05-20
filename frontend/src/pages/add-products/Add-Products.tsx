@@ -57,6 +57,8 @@ const AddProducts: React.FC = () => {
       image,
       category_id: selectedCategory,
     };
+    console.log(image);
+    return;
     console.log(data);
     const response = await axiosInstance.post('/api/add-product', data);
     console.log(response.data);

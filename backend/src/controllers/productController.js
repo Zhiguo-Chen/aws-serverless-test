@@ -17,9 +17,6 @@ exports.createProduct = async (req, res) => {
       isFlashSale,
       flashSaleEndsAt,
     } = req.body;
-    console.log('++++++++++++++++');
-    console.log(req.body.category);
-    console.log('++++++++++++++++');
 
     const categoryRecord = await Category.findOne({
       where: { name: category },
@@ -31,6 +28,7 @@ exports.createProduct = async (req, res) => {
 
     let imageUrl = null;
     if (req.file) {
+      console.log('File uploaded:', req.file);
       imageUrl = `/uploads/${req.file.filename}`;
     }
 
@@ -70,6 +68,7 @@ exports.updateProduct = async (req, res) => {
     }
 
     if (req.file) {
+      console.log('File uploaded:', req.file);
       updates.imageUrl = `/uploads/${req.file.filename}`;
       // 删除旧图片
       const product = await Product.findByPk(id);
