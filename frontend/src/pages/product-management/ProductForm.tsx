@@ -28,18 +28,6 @@ const { TextArea } = Input;
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api';
 
-const categories = [
-  "Women's Fashion",
-  "Men's Fashion",
-  'Electronics',
-  'Home & Lifestyle',
-  'Medicine',
-  'Sports & Outdoor',
-  "Baby's & Toys",
-  'Groceries & Pets',
-  'Health & Beauty',
-];
-
 const normFile = (e: any) => {
   if (Array.isArray(e)) {
     return e;
