@@ -50,7 +50,7 @@ const NewLogin: React.FC = () => {
 
         <div className="login-form-container">
           <div className="form-inner">
-            <h1>Log in to My E-commerce......</h1>
+            <h1>Log in to My E-commerce</h1>
             <p className="subtitle">Enter your details below</p>
 
             <Form
