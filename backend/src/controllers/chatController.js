@@ -9,12 +9,8 @@ const openai = new OpenAI({
 
 export const chat = async (req, res) => {
   try {
-    console.log('==========');
-    console.log(req.body);
-    console.log('==========');
     const { message } = req.body;
     let imageBase64 = null;
-    console.log(message);
     if (req.file) {
       console.log('Chat File uploaded:', req.file);
       imageBase64 = fs.readFileSync(req.file.path, { encoding: 'base64' });
