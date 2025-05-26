@@ -1,9 +1,9 @@
-// backend/controllers/productController.js
-const { Product, Category, sequelize } = require('../models');
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import db from '../models/index.js';
 
-exports.createProduct = async (req, res) => {
+const createProduct = async (req, res) => {
+  const { Product, Category } = db;
   try {
     const {
       name,
@@ -55,7 +55,8 @@ exports.createProduct = async (req, res) => {
   }
 };
 
-exports.updateProduct = async (req, res) => {
+const updateProduct = async (req, res) => {
+  const { Product } = db;
   try {
     const { id } = req.params;
     const updates = req.body;
@@ -97,7 +98,8 @@ exports.updateProduct = async (req, res) => {
   }
 };
 
-exports.getProducts = async (req, res) => {
+const getProducts = async (req, res) => {
+  const { Product, Category, sequelize } = db;
   try {
     const products = await Product.findAll({
       include: [
@@ -144,7 +146,8 @@ exports.getProducts = async (req, res) => {
   }
 };
 
-exports.getProductById = async (req, res) => {
+const getProductById = async (req, res) => {
+  const { Product, Category, sequelize } = db;
   try {
     const { id } = req.params;
     const product = await Product.findByPk(id, {
@@ -202,7 +205,8 @@ exports.getProductById = async (req, res) => {
   }
 };
 
-exports.deleteProduct = async (req, res) => {
+const deleteProduct = async (req, res) => {
+  const { Product } = db;
   try {
     const { id } = req.params;
     const product = await Product.findByPk(id);
@@ -210,6 +214,8 @@ exports.deleteProduct = async (req, res) => {
     if (product) {
       // 删除关联的图片
       if (product.imageUrl) {
+        // 修正 __dirname 为 ES Module 兼容写法
+        const __dirname = path.dirname(new URL(import.meta.url).pathname);
         const imagePath = path.join(__dirname, '../public', product.imageUrl);
         if (fs.existsSync(imagePath)) {
           fs.unlinkSync(imagePath);
@@ -222,6 +228,15 @@ exports.deleteProduct = async (req, res) => {
       res.status(404).json({ error: 'Product not found' });
     }
   } catch (error) {
+    console.error('Error deleting product:', error);
     res.status(500).json({ error: error.message });
   }
+};
+
+export default {
+  createProduct,
+  updateProduct,
+  getProducts,
+  getProductById,
+  deleteProduct,
 };

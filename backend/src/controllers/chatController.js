@@ -9,8 +9,9 @@ const openai = new OpenAI({
 
 export const chat = async (req, res) => {
   try {
-    console.log('JWT_SECRET:', process.env.JWT_SECRET);
-    console.log('OPENAI_API_KEY: ', process.env.OPENAI_API_KEY);
+    console.log('==========');
+    console.log(req.body);
+    console.log('==========');
     const { message } = req.body;
     let imageBase64 = null;
     console.log(message);

@@ -1,12 +1,12 @@
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const { User } = require('../models');
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import db from '../models/index.js';
 
 const register = async (req, res) => {
   try {
     const { name, email, phone, password, isSeller } = req.body;
 
-    const user = await User.create({
+    const user = await db.User.create({
       name,
       email,
       phone,
@@ -29,7 +29,7 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ where: { email } });
+    const user = await db.User.findOne({ where: { email } });
 
     if (!user) {
       return res.status(404).json({ message: 'user not found' });
@@ -53,6 +53,7 @@ const login = async (req, res) => {
       token,
     });
   } catch (error) {
+    console.error('Login error:', error);
     res.status(500).json({
       message: 'Error logging in user',
       error,
@@ -60,7 +61,4 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = {
-  register,
-  login,
-};
+export { register, login };

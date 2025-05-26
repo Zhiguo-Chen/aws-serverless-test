@@ -1,16 +1,18 @@
-// backend/routes/productRoutes.js
-const express = require('express');
-const router = express.Router();
-const productController = require('../controllers/productController');
-const { register, login } = require('../controllers/userController');
-const authenticationToken = require('../middlewares/auth');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
-const categoryRoutes = require('./categoryRoutes');
-const { chat } = require('../controllers/chatController');
+import express from 'express';
+import fs from 'fs';
+import multer from 'multer';
+import path from 'path';
+import { chat } from '../controllers/chatController.js';
+import productController from '../controllers/productController.js';
+import { login } from '../controllers/userController.js';
+import authenticationToken from '../middlewares/auth.js';
+import categoryRoutes from './categoryRoutes.js';
 
-const uploadDir = path.join(__dirname, '../public/uploads');
+const router = express.Router();
+const uploadDir = path.join(
+  path.dirname(new URL(import.meta.url).pathname),
+  '../public/uploads',
+);
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -24,7 +26,6 @@ const storage = multer.diskStorage({
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
-
 const upload = multer({ storage });
 
 // 登录路由
@@ -42,14 +43,16 @@ router.post(
   upload.single('image'),
   productController.createProduct,
 );
-router.post('/chat', upload.single('image'), chat);
+router.get('/products', productController.getProducts);
+router.get('/products/:id', productController.getProductById);
 router.put(
   '/products/:id',
   upload.single('image'),
   productController.updateProduct,
 );
-router.get('/products', productController.getProducts);
-router.get('/products/:id', productController.getProductById);
 router.delete('/products/:id', productController.deleteProduct);
 
-module.exports = router;
+// 聊天相关路由
+router.post('/chat', upload.single('image'), chat);
+
+export default router;
