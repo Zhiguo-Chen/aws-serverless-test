@@ -30,6 +30,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 // 路由
 app.use('/api', productRoutes);
 
+// 健康检查路由
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: Date.now() });
+});
+
 // 数据库同步
 sequelize
   .sync({ force: false })
