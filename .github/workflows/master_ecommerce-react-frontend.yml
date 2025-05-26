@@ -27,9 +27,6 @@ jobs:
         run: |
           echo "REACT_APP_API_URL=${{ vars.REACT_APP_API_URL }}" >> frontend/.env.production
           echo "REACT_APP_AUTH_TOKEN=${{ vars.REACT_APP_AUTH_TOKEN }}" >> frontend/.env.production
-        env:
-          REACT_APP_API_URL: ${{ environments.Production.variables.REACT_APP_API_URL }}
-          REACT_APP_AUTH_TOKEN: ${{ environments.Production.variables.REACT_APP_AUTH_TOKEN }}
 
       - name: Build React app
         run: |
