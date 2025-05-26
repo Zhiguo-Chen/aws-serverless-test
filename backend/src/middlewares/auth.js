@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken');
-const { User } = require('../models');
+import jwt from 'jsonwebtoken';
+import db from '../models/index.js';
 
 const authenticationToken = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -12,7 +12,7 @@ const authenticationToken = async (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'SECRET_KEY');
-    const user = await User.findByPk(decoded.id);
+    const user = await db.User.findByPk(decoded.id);
     if (!user) {
       return res.status(403).json({ message: 'can not find user' });
     }
@@ -24,4 +24,4 @@ const authenticationToken = async (req, res, next) => {
   }
 };
 
-module.exports = authenticationToken;
+export default authenticationToken;
