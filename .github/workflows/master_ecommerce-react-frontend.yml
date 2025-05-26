@@ -50,18 +50,14 @@ jobs:
       contents: read
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
           name: react-app
-          path: build
-
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_13BE8F4B062E4EFCAD7BC1D450E452F4 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_5D597978D96F4F26B35E09E50C89F07B }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_094E2928AFF444A58AB3722E2DC77A68 }}
+          path: build-artifact
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -69,4 +65,4 @@ jobs:
         with:
           app-name: 'ecommerce-react-frontend'
           slot-name: 'Production'
-          package: build
+          package: build-artifact
