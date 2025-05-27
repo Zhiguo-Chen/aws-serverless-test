@@ -1,12 +1,16 @@
-const express = require('express');
+import express from 'express';
+import {
+  getAllCategories,
+  createCategory,
+} from '../controllers/categoryController.js';
+import authenticationToken from '../middlewares/auth.js';
+
 const router = express.Router();
-const categoryController = require('../controllers/categoryController');
-const authenticationToken = require('../middlewares/auth');
 
 // 公开路由
-router.get('/', categoryController.getAllCategories);
+router.get('/', getAllCategories);
 
 // 需要认证的路由
-router.post('/', authenticationToken, categoryController.createCategory);
+router.post('/', authenticationToken, createCategory);
 
-module.exports = router;
+export default router;
