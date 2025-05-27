@@ -1,15 +1,15 @@
-// backend/app.js
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const morgan = require('morgan');
-const path = require('path');
-const fs = require('fs');
-const { sequelize } = require('./models');
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import path from 'path';
+import fs from 'fs';
+import db, { loadModels } from './models/index.js';
 
 // 导入路由
-const productRoutes = require('./routes/productRoutes');
+import productRoutes from './routes/productRoutes.js';
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const publicDir = path.join(__dirname, 'public');
 if (!fs.existsSync(publicDir)) {
   fs.mkdirSync(publicDir);
@@ -51,7 +51,28 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
+// 启动函数
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+const start = async () => {
+  await loadModels();
+  db.sequelize
+    .sync({ force: false })
+    .then(() => {
+      console.log('Database synced');
+    })
+    .catch((err) => {
+      console.error('Database sync error:', err);
+    });
+
+  // 错误处理中间件
+  app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ error: 'Something went wrong!' });
+  });
+
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
+
+start();

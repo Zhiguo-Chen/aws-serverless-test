@@ -1,6 +1,7 @@
-const { Category } = require('../models');
+import db from '../models/index.js';
 
-exports.listAllCategory = async (req, res) => {
+export const listAllCategory = async (req, res) => {
+  const { Category } = db;
   try {
     const category = await Category.findAll();
     return res.status(200).json(category);
@@ -9,7 +10,8 @@ exports.listAllCategory = async (req, res) => {
   }
 };
 
-exports.getAllCategories = async (req, res) => {
+export const getAllCategories = async (req, res) => {
+  const { Category } = db;
   try {
     const categories = await Category.findAll({
       where: { isActive: true },
@@ -21,7 +23,8 @@ exports.getAllCategories = async (req, res) => {
   }
 };
 
-exports.createCategory = async (req, res) => {
+export const createCategory = async (req, res) => {
+  const { Category } = db;
   try {
     const category = await Category.create(req.body);
     res.status(201).json(category);
@@ -29,7 +32,3 @@ exports.createCategory = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-
-// module.exports = {
-//   listAllCategory,
-// };
