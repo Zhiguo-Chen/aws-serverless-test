@@ -35,6 +35,22 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: Date.now() });
 });
 
+// 数据库同步
+sequelize
+  .sync({ force: false })
+  .then(() => {
+    console.log('Database synced');
+  })
+  .catch((err) => {
+    console.error('Database sync error:', err);
+  });
+
+// 错误处理中间件
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something went wrong!' });
+});
+
 // 启动函数
 const PORT = process.env.PORT || 4000;
 const start = async () => {
