@@ -1,14 +1,37 @@
 import React from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Checkbox } from 'antd';
 import { GoogleOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import beatsnoop from '../../assets/images/beatsnoop.png';
 import { ReactComponent as GoogleIcon } from '../../assets/icons/Icon-Google.svg';
 import './SignUp.scss';
+import axios from 'axios';
+
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const SignUp: React.FC = () => {
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
+  const navigate = useNavigate();
+  const [form] = Form.useForm();
+  const onFinish = async (values: any) => {
+    console.log('values', values);
+    try {
+      const response = await axios.post(`${apiUrl}/api/register`, values);
+      if (response.status === 201) {
+        navigate('/main/login');
+      } else {
+        console.log('Login failed:');
+      }
+      console.log(response);
+    } catch (error) {
+      console.error('Login failed:', error);
+      form.setFieldsValue({
+        name: '',
+        password: '',
+        email: '',
+        phone: '',
+        isSeller: false,
+      });
+    }
   };
 
   return (
@@ -24,6 +47,7 @@ const SignUp: React.FC = () => {
             <Form
               name="signup"
               onFinish={onFinish}
+              form={form}
               layout="vertical"
               className="signup-form"
             >
@@ -35,15 +59,25 @@ const SignUp: React.FC = () => {
               </Form.Item>
 
               <Form.Item
-                name="emailOrPhone"
+                name="email"
+                rules={[
+                  { required: true, message: 'Please input your email!' },
+                  { type: 'email', message: 'Please enter a valid email!' },
+                ]}
+              >
+                <Input placeholder="Email" />
+              </Form.Item>
+
+              <Form.Item
+                name="phone"
                 rules={[
                   {
                     required: true,
-                    message: 'Please input your email or phone number!',
+                    message: 'Please input your phone number!',
                   },
                 ]}
               >
-                <Input placeholder="Email or Phone Number" />
+                <Input placeholder="Phone Number" />
               </Form.Item>
 
               <Form.Item
@@ -53,6 +87,10 @@ const SignUp: React.FC = () => {
                 ]}
               >
                 <Input.Password placeholder="Password" />
+              </Form.Item>
+
+              <Form.Item name="isSeller" valuePropName="checked">
+                <Checkbox>Register as Seller</Checkbox>
               </Form.Item>
 
               <Form.Item>
@@ -73,7 +111,7 @@ const SignUp: React.FC = () => {
               </Form.Item>
 
               <div className="login-link">
-                Already have account? <Link to="/main/new-login">Log in</Link>
+                Already have account? <Link to="/main/login">Log in</Link>
               </div>
             </Form>
           </div>
