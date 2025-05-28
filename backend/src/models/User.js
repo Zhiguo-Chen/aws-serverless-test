@@ -37,22 +37,23 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       tableName: 'users',
-    },
-    {
-      sequelize,
-      modelName: 'User',
-      tableName: 'Users',
-      timestamps: true,
       hooks: {
         beforeCreate: async (user) => {
-          user.id = uuidv4();
-          const salt = await bcrypt.genSalt(10);
-          user.password = await bcrypt.hash(user.password, salt);
+          if (user.password && !user.password.startsWith('$2a$')) {
+            // 只在未加密时加密
+            const salt = await bcrypt.genSalt(10);
+            user.password = await bcrypt.hash(user.password, salt);
+          }
         },
-
         beforeUpdate: async (user) => {
-          const salt = await bcrypt.genSalt(10);
-          user.password = await bcrypt.hash(user.password, salt);
+          if (
+            user.changed('password') &&
+            user.password &&
+            !user.password.startsWith('$2a$')
+          ) {
+            const salt = await bcrypt.genSalt(10);
+            user.password = await bcrypt.hash(user.password, salt);
+          }
         },
       },
     },

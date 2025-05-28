@@ -35,16 +35,6 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: Date.now() });
 });
 
-// 数据库同步
-sequelize
-  .sync({ force: false })
-  .then(() => {
-    console.log('Database synced');
-  })
-  .catch((err) => {
-    console.error('Database sync error:', err);
-  });
-
 // 错误处理中间件
 app.use((err, req, res, next) => {
   console.error(err.stack);

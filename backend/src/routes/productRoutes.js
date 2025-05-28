@@ -4,7 +4,7 @@ import multer from 'multer';
 import path from 'path';
 import { chat } from '../controllers/chatController.js';
 import productController from '../controllers/productController.js';
-import { login } from '../controllers/userController.js';
+import { login, register } from '../controllers/userController.js';
 import authenticationToken from '../middlewares/auth.js';
 import categoryRoutes from './categoryRoutes.js';
 
@@ -30,6 +30,9 @@ const upload = multer({ storage });
 
 // 登录路由
 router.post('/login', login);
+
+// 注册路由
+router.post('/register', register);
 
 // 在适当位置添加
 router.use('/categories', categoryRoutes);
