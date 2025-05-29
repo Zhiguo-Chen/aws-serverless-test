@@ -6,6 +6,10 @@ This is a repo of E-Commerce that includes backend server and front-end client.
 
 [Demo site](https://my-demo.camdvr.org)
 
+## Design
+
+[Figma UX Design](https://www.figma.com/design/e2UDLjUpFvJGUyHOTZPsF1/Full-E-Commerce-Website-UI-UX-Design--Community-?node-id=1-3&p=f)
+
 ---
 
 - Backend: Node.js + Express + Sequelize + PostgreSQL
