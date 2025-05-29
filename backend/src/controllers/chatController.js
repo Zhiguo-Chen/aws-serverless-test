@@ -2,6 +2,7 @@ import OpenAI from 'openai';
 import { inspect } from 'util';
 import fs from 'fs';
 import 'dotenv/config';
+import { grokService } from '../services/grok.js';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -28,12 +29,15 @@ export const chat = async (req, res) => {
         ],
       });
     }
-    const response = await openai.responses.create({
-      model: 'gpt-4o-mini',
-      input: inputPayload,
-    });
+    // const response = await openai.responses.create({
+    //   model: 'gpt-4o-mini',
+    //   input: inputPayload,
+    // });
 
-    res.status(200).json({ response: response.output_text });
+    const { result } = await grokService(message);
+    res.status(200).json({ response: result });
+
+    // res.status(200).json({ response: response.output_text });
   } catch (error) {
     console.error('Error in chat controller:', error);
     res.status(500).json({ error });
