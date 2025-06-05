@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import './ChatWidget.scss';
 import { axiosInstance } from '../../auth/axiosInstance';
 
-const MODELS = ['gpt-3.5', 'gpt-4', 'custom-model'];
+const MODELS = ['gemini-2.0-flash', 'gpt-4o-mini'];
 
 const ChatWidget = () => {
   const [open, setOpen] = useState(false);
@@ -11,6 +11,7 @@ const ChatWidget = () => {
   );
   const [input, setInput] = useState('');
   const [model, setModel] = useState(MODELS[0]);
+  const [sessionId, setSessionId] = useState(null);
   const [file, setFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -29,18 +30,28 @@ const ChatWidget = () => {
     // Call chat API and add bot response to messages
     try {
       const formData = new FormData();
+      setInput('');
       formData.append('message', input);
       formData.append('model', model);
       if (file) {
         formData.append('image', file);
       }
-      setInput('');
+      if (sessionId) {
+        formData.append('sessionId', sessionId);
+      }
+      console.log(file);
+      // Dynamically import to avoid import at top
+      // const { createChat } = await import('../../api/chat');
       console.log(formData);
+      setFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
       const response = await axiosInstance.post('/api/chat', formData);
       console.log(response);
       const botMessage = response?.data?.response || 'No response from bot.';
+      if (response.data.sessionId) {
+        setSessionId(response.data.sessionId);
+      }
       setMessages((prev) => [...prev, { role: 'bot', content: botMessage }]);
-      // setFile(null);
     } catch (err: any) {
       setMessages((prev) => [
         ...prev,
@@ -101,23 +112,76 @@ const ChatWidget = () => {
               </div>
             ))}
           </div>
-          <div className="chat-widget-footer">
-            <input
-              type="file"
-              accept="image/*"
-              ref={fileInputRef}
-              style={{ display: 'none' }}
-              onChange={handleFileSubmit}
-            />
-            <button onClick={() => fileInputRef.current?.click()}>📎</button>
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your message..."
-              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            />
-            <button onClick={handleSend}>Send</button>
+          <div
+            className="chat-widget-footer"
+            style={{ display: 'flex', flexDirection: 'column' }}
+          >
+            {file && file.type.startsWith('image/') && (
+              <div
+                className="chat-widget-image-preview"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: 8,
+                }}
+              >
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt="preview"
+                  style={{
+                    maxWidth: 80,
+                    maxHeight: 80,
+                    marginRight: 8,
+                    borderRadius: 4,
+                    border: '1px solid #eee',
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFile(null);
+                    if (fileInputRef.current) fileInputRef.current.value = '';
+                  }}
+                  style={{
+                    border: 'none',
+                    background: 'transparent',
+                    color: '#f5222d',
+                    cursor: 'pointer',
+                    fontSize: 18,
+                  }}
+                  title="Delete image"
+                >
+                  ×
+                </button>
+              </div>
+            )}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '100%',
+                gap: 8,
+              }}
+            >
+              <input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                onChange={handleFileSubmit}
+              />
+              <button onClick={() => fileInputRef.current?.click()}>📎</button>
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Type your message..."
+                style={{ flex: 1 }}
+                onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+              />
+              <button onClick={handleSend}>Send</button>
+            </div>
           </div>
         </div>
       )}

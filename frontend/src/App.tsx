@@ -88,7 +88,7 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
-      <ChatWidget />
+      {isAuthenticated && <ChatWidget />}
     </div>
   );
 };
