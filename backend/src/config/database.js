@@ -12,7 +12,7 @@ const sequelize = new Sequelize(
     dialect: 'postgres',
     dialectModule: pg,
     dialectOptions: {
-      ssl: true, // 尝试启用 SSL
+      ssl: process.env.DB_SSL === 'true' ? true : false,
     },
   },
 );
