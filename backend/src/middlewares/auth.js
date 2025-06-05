@@ -16,7 +16,7 @@ const authenticationToken = async (req, res, next) => {
     if (!user) {
       return res.status(403).json({ message: 'can not find user' });
     }
-    req.user = user;
+    req.user = user ? user.get({ plain: true }) : null;
     next();
   } catch (err) {
     console.log('err', err);
