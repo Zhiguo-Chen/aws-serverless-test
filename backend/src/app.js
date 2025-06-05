@@ -8,6 +8,7 @@ import db, { loadModels } from './models/index.js';
 
 // 导入路由
 import productRoutes from './routes/productRoutes.js';
+import './config/mongodb.js';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const publicDir = path.join(__dirname, 'public');
