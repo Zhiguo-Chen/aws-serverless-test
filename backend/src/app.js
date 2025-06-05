@@ -21,7 +21,26 @@ const app = express();
 app.use('/public', express.static(publicDir));
 
 // 中间件
-app.use(cors());
+const corsOptions = {
+  // 在这里放入您所有前端应用的URL
+  origin: [
+    'https://my-demo.camdvr.org',
+    'https://icy-sky-08145be00.6.azurestaticapps.net',
+    'http://localhost:3001',
+    'http://127.0.0.1:3001',
+  ],
+  // 明确允许所有标准的HTTP方法
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  // 允许前端在请求头中携带 'Content-Type' 和 'Authorization' 等字段
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  // 响应预检请求时，返回200状态码，确保兼容性
+  optionsSuccessStatus: 200,
+};
+
+// 2. 将带有详细选项的配置应用到CORS中间件
+app.use(cors(corsOptions));
+
+// 3. 继续使用其他中间件
 app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());
