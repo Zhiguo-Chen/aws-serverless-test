@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import './ChatWidget.scss';
 import { axiosInstance } from '../../auth/axiosInstance';
 
-const MODELS = ['gemini-2.0-flash', 'gpt-4o-mini'];
+const MODELS = ['gpt-4o-mini', 'gemini-2.0-flash'];
 
 const ChatWidget = () => {
   const [open, setOpen] = useState(false);
