@@ -13,6 +13,9 @@ const dialogueSchema = new mongoose.Schema({
     required: true,
     ref: 'Session',
   },
+  responseId: {
+    type: String,
+  },
   role: {
     type: String,
     enum: ['user', 'model'],
