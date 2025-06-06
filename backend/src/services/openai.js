@@ -1,16 +1,43 @@
 import OpenAI from 'openai';
 import 'dotenv/config';
+import Dialogue from '../models/dialogue.js';
+import Session from '../models/session.js';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export const chatService = async (message, imageBase64 = null) => {
+export const chatService = async (
+  message,
+  userId = null,
+  sessionId = null,
+  imageBase64 = null,
+) => {
   if (!message || typeof message !== 'string' || message.trim() === '') {
     return { error: 'Message is required and must be a non-empty string.' };
   }
 
-  console.log('Chat service called with message:', message);
+  let session;
+  if (sessionId) {
+    session = await Session.findOne({ sessionId, userId });
+    if (!session) {
+      return res.status(400).json({ message: 'Invalid sessionId' });
+    }
+  } else {
+    session = new Session({ userId });
+    await session.save();
+  }
+
+  let responseId = null;
+
+  const latestModelDialogue = await Dialogue.findOne({
+    sessionId: session.sessionId,
+    role: 'model',
+  }).sort({ createdAt: -1 });
+
+  if (latestModelDialogue) {
+    responseId = latestModelDialogue.responseId;
+  }
 
   try {
     const inputPayload = [{ role: 'user', content: message }];
@@ -27,11 +54,27 @@ export const chatService = async (message, imageBase64 = null) => {
     }
     const response = await openai.responses.create({
       model: 'gpt-4o-mini',
+      previous_response_id: responseId,
       input: inputPayload,
+      store: true,
     });
 
-    console.log('Chat service response:', response);
-    return { result: response.output_text };
+    const userDialogue = new Dialogue({
+      sessionId: session.sessionId,
+      role: 'user',
+      message,
+    });
+    await userDialogue.save();
+    // 保存AI回复
+    const aiDialogue = new Dialogue({
+      sessionId: session.sessionId,
+      role: 'model',
+      message: response.output_text,
+      responseId: response.id,
+    });
+    await aiDialogue.save();
+
+    return { result: response.output_text, sessionId: session.sessionId };
   } catch (error) {
     console.error('Error in chat service:', error);
     return { error: error.message || 'Chat service error' };
