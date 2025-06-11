@@ -79,6 +79,16 @@ const start = async () => {
     await db.sequelize.sync({ force: false });
     console.log('Database synced successfully');
 
+    // 4. 初始化聊天历史链（在 MongoDB 连接之后）
+    try {
+      await initializeChatHistoryChain();
+      console.log('Chat history chain initialized successfully');
+    } catch (chatError) {
+      console.error('Failed to initialize chat history chain:', chatError);
+      // 不要因为聊天功能失败而停止整个应用
+      console.log('Continuing without chat history functionality...');
+    }
+
     // 5. 启动服务器
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
