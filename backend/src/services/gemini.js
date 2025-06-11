@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { GoogleGenAI } from '@google/genai';
 import Dialogue from '../models/dialogue.js';
 import Session from '../models/session.js';
+// import { connectMongoDB } from '../config/mongodb.js';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -24,16 +25,15 @@ export const geminiChatService = async (
   if (!message || typeof message !== 'string' || message.trim() === '') {
     return { error: 'Message is required and must be a non-empty string.' };
   }
+  // await connectMongoDB();
   // 1. 获取或创建 session
   let session;
   if (sessionId) {
     session = await Session.findOne({ sessionId, userId });
     if (!session) {
-      return res.status(400).json({ message: 'Invalid sessionId' });
+      session = new Session({ userId, sessionId });
+      await session.save();
     }
-  } else {
-    session = new Session({ userId });
-    await session.save();
   }
 
   // 2. 加载历史消息
