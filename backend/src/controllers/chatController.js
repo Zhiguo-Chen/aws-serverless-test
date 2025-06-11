@@ -6,6 +6,7 @@ import Session from '../models/session.js';
 import { geminiChatService } from '../services/gemini.js';
 import { grokService } from '../services/grok.js';
 import { chatService } from '../services/openai.js';
+import { langChainGeminiChatService } from '../services/langchain-gemini.js';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -22,7 +23,14 @@ export const chat = async (req, res) => {
     const userId = req.user.id; // 从请求中获取用户ID
 
     let modelResponse;
-    if (model.toLowerCase().includes('grok')) {
+    if (model.toLowerCase().includes('langchain')) {
+      modelResponse = await langChainGeminiChatService(
+        message,
+        userId,
+        sessionId,
+        imageBase64,
+      );
+    } else if (model.toLowerCase().includes('grok')) {
       modelResponse = await grokService(message);
     } else if (model.toLowerCase().includes('gemini')) {
       modelResponse = await geminiChatService(

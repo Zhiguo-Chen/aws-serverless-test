@@ -55,6 +55,14 @@ export const chatService = async (
     const response = await openai.responses.create({
       model: 'gpt-4o-mini',
       previous_response_id: responseId,
+      tools: [
+        {
+          type: 'mcp',
+          server_label: 'deepwiki',
+          server_url: 'https://mcp.deepwiki.com/mcp',
+          require_approval: 'never',
+        },
+      ],
       input: inputPayload,
       store: true,
     });
