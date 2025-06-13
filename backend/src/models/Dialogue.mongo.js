@@ -40,6 +40,4 @@ dialogueSchema.pre('save', function (next) {
   next();
 });
 
-const Dialogue = mongoose.model('Dialogue', dialogueSchema);
-
-export default Dialogue;
+export const Dialogue = mongoose.model('Dialogue', dialogueSchema);
