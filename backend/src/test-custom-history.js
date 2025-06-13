@@ -3,7 +3,7 @@ import { connectMongoDB } from './config/mongodb.js';
 import {
   initializeChatHistoryChain,
   langChainGeminiChatService,
-} from './services/langchain-gemini.js';
+} from './services/langchain-gemini.service.js';
 
 async function testCustomChatHistory() {
   try {

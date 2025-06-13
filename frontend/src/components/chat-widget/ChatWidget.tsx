@@ -11,14 +11,62 @@ const MessageRenderer = ({ content }: { content: string }) => {
     const lines = text?.split('\n');
 
     return lines.map((line, index) => {
-      // 如果是空行，渲染空的 div
       if (line.trim() === '') {
         return <div key={index} style={{ height: '8px' }}></div>;
       }
 
-      // 检查是否是以 * ** 开头的列表项 (注意这里可能没有空格)
-      if (line.trim().match(/^\*\s*\*\*/)) {
+      // 三个*或两个*开头，保持原有逻辑
+      if (line.trim().match(/^(\*{2,})/)) {
         return renderListItem(line, index);
+      }
+
+      // * **标题**: 内容 这种格式，优先判断
+      const match = line.trim().match(/^\*\s*\*\*([^*]+)\*\*\s*:?\s*(.*)/);
+      if (match) {
+        const title = match[1].trim();
+        let description = match[2].trim();
+        description = description.replace(/\*\*/g, '').trim();
+        return (
+          <div
+            key={index}
+            style={{ marginBottom: '12px', paddingLeft: '16px' }}
+          >
+            <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+              <span style={{ color: '#1976d2', marginRight: '8px' }}>•</span>
+              <div>
+                <span style={{ fontWeight: 'bold', color: '#1976d2' }}>
+                  {title}
+                </span>
+                {description && (
+                  <span style={{ color: '#333', marginLeft: '4px' }}>
+                    : {description}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      // 单个*开头，渲染为有缩进的普通列表项
+      if (line.trim().match(/^\*\s+/)) {
+        return (
+          <div
+            key={index}
+            style={{
+              marginBottom: '8px',
+              paddingLeft: '24px',
+              color: '#1976d2',
+              display: 'flex',
+              alignItems: 'flex-start',
+            }}
+          >
+            <span style={{ marginRight: 8 }}>•</span>
+            <span style={{ color: '#333' }}>
+              {line.trim().replace(/^\*\s+/, '')}
+            </span>
+          </div>
+        );
       }
 
       // 普通文本行

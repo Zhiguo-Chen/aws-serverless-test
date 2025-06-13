@@ -1,8 +1,7 @@
 import 'dotenv/config';
 import { GoogleGenAI } from '@google/genai';
-import Dialogue from '../models/dialogue.js';
-import Session from '../models/session.js';
-// import { connectMongoDB } from '../config/mongodb.js';
+import { Dialogue } from '../models/Dialogue.mongo.js';
+import Session from '../models/Session.mongo.js';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
