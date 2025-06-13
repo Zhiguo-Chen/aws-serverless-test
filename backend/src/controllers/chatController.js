@@ -1,12 +1,10 @@
 import 'dotenv/config';
 import fs from 'fs';
 import OpenAI from 'openai';
-import Dialogue from '../models/dialogue.js';
-import Session from '../models/session.js';
-import { geminiChatService } from '../services/gemini.js';
-import { grokService } from '../services/grok.js';
-import { chatService } from '../services/openai.js';
-import { langChainGeminiChatService } from '../services/langchain-gemini.js';
+import { geminiChatService } from '../services/gemini.service.js';
+import { grokService } from '../services/grok.service.js';
+import { chatService } from '../services/openai.service.js';
+import { langChainGeminiChatService } from '../services/langchain-gemini.service.js';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,

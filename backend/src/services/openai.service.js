@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 import 'dotenv/config';
-import Dialogue from '../models/dialogue.js';
-import Session from '../models/session.js';
+import { Dialogue } from '../models/Dialogue.mongo.js';
+import Session from '../models/Session.mongo.js';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,

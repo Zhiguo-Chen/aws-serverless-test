@@ -4,11 +4,11 @@
 
 "@cfworker/json-schema@^4.0.2":
   version "4.1.1"
-  resolved "https://registry.npmmirror.com/@cfworker/json-schema/-/json-schema-4.1.1.tgz#4a2a3947ee9fa7b7c24be981422831b8674c3be6"
+  resolved "https://registry.npmmirror.com/@cfworker/json-schema/-/json-schema-4.1.1.tgz"
 
 "@google/genai@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.npmmirror.com/@google/genai/-/genai-1.3.0.tgz#30e9850a38d075a42b8f7d82d94f58922596a674"
+  version "1.4.0"
+  resolved "https://registry.npmmirror.com/@google/genai/-/genai-1.4.0.tgz"
   dependencies:
     google-auth-library "^9.14.2"
     ws "^8.18.0"
@@ -17,7 +17,47 @@
 
 "@google/generative-ai@^0.24.0":
   version "0.24.1"
-  resolved "https://registry.npmmirror.com/@google/generative-ai/-/generative-ai-0.24.1.tgz#634a3c06f8ea7a6125c1b0d6c1e66bb11afb52c9"
+  resolved "https://registry.npmmirror.com/@google/generative-ai/-/generative-ai-0.24.1.tgz"
+
+"@graphql-typed-document-node/core@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.npmmirror.com/@graphql-typed-document-node/core/-/core-3.2.0.tgz#5f3d96ec6b2354ad6d8a28bf216a1d97b5426861"
+
+"@grpc/grpc-js@^1.13.1":
+  version "1.13.4"
+  resolved "https://registry.npmmirror.com/@grpc/grpc-js/-/grpc-js-1.13.4.tgz#922fbc496e229c5fa66802d2369bf181c1df1c5a"
+  dependencies:
+    "@grpc/proto-loader" "^0.7.13"
+    "@js-sdsl/ordered-map" "^4.4.2"
+
+"@grpc/proto-loader@^0.7.13":
+  version "0.7.15"
+  resolved "https://registry.npmmirror.com/@grpc/proto-loader/-/proto-loader-0.7.15.tgz#4cdfbf35a35461fc843abe8b9e2c0770b5095e60"
+  dependencies:
+    lodash.camelcase "^4.3.0"
+    long "^5.0.0"
+    protobufjs "^7.2.5"
+    yargs "^17.7.2"
+
+"@js-sdsl/ordered-map@^4.4.2":
+  version "4.4.2"
+  resolved "https://registry.npmmirror.com/@js-sdsl/ordered-map/-/ordered-map-4.4.2.tgz#9299f82874bab9e4c7f9c48d865becbfe8d6907c"
+
+"@langchain/community@^0.3.45":
+  version "0.3.45"
+  resolved "https://registry.npmmirror.com/@langchain/community/-/community-0.3.45.tgz#7af0cfd67ee662bf4f88a655babbf808918262fd"
+  dependencies:
+    "@langchain/openai" ">=0.2.0 <0.6.0"
+    "@langchain/weaviate" "^0.2.0"
+    binary-extensions "^2.2.0"
+    expr-eval "^2.0.2"
+    flat "^5.0.2"
+    js-yaml "^4.1.0"
+    langchain ">=0.2.3 <0.3.0 || >=0.3.4 <0.4.0"
+    langsmith "^0.3.29"
+    uuid "^10.0.0"
+    zod "^3.22.3"
+    zod-to-json-schema "^3.22.5"
 
 "@langchain/core@^0.3.57":
   version "0.3.57"
@@ -44,17 +84,106 @@
     uuid "^11.1.0"
     zod-to-json-schema "^3.22.4"
 
+"@langchain/langgraph-checkpoint@~0.0.18":
+  version "0.0.18"
+  resolved "https://registry.npmmirror.com/@langchain/langgraph-checkpoint/-/langgraph-checkpoint-0.0.18.tgz#2f7a9cdeda948ccc8d312ba9463810709d71d0b8"
+  dependencies:
+    uuid "^10.0.0"
+
+"@langchain/langgraph-sdk@~0.0.32":
+  version "0.0.84"
+  resolved "https://registry.npmmirror.com/@langchain/langgraph-sdk/-/langgraph-sdk-0.0.84.tgz#91f1bb431838c0f945326755681dcf3465ca4962"
+  dependencies:
+    "@types/json-schema" "^7.0.15"
+    p-queue "^6.6.2"
+    p-retry "4"
+    uuid "^9.0.0"
+
+"@langchain/langgraph@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.npmmirror.com/@langchain/langgraph/-/langgraph-0.3.1.tgz#12b55eed0ef6b9415c860c63692fd85a8f64e54c"
+  dependencies:
+    "@langchain/langgraph-checkpoint" "~0.0.18"
+    "@langchain/langgraph-sdk" "~0.0.32"
+    uuid "^10.0.0"
+    zod "^3.23.8"
+
 "@langchain/mongodb@^0.1.0":
   version "0.1.0"
-  resolved "https://registry.npmmirror.com/@langchain/mongodb/-/mongodb-0.1.0.tgz#f0de8e28ee002f888db64e16f2d1973a68498c75"
+  resolved "https://registry.npmmirror.com/@langchain/mongodb/-/mongodb-0.1.0.tgz"
   dependencies:
     mongodb "^6.3.0"
 
+"@langchain/openai@>=0.1.0 <0.6.0", "@langchain/openai@>=0.2.0 <0.6.0":
+  version "0.5.12"
+  resolved "https://registry.npmmirror.com/@langchain/openai/-/openai-0.5.12.tgz#1ade0f923238f73e0330fd91b988fbcb3d0a5689"
+  dependencies:
+    js-tiktoken "^1.0.12"
+    openai "^4.96.0"
+    zod "^3.22.4"
+    zod-to-json-schema "^3.22.3"
+
+"@langchain/textsplitters@>=0.0.0 <0.2.0":
+  version "0.1.0"
+  resolved "https://registry.npmmirror.com/@langchain/textsplitters/-/textsplitters-0.1.0.tgz#f37620992192df09ecda3dfbd545b36a6bcbae46"
+  dependencies:
+    js-tiktoken "^1.0.12"
+
+"@langchain/weaviate@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.npmmirror.com/@langchain/weaviate/-/weaviate-0.2.0.tgz#cc21452a14cf1ed3c533a74dae366ecb417a5480"
+  dependencies:
+    uuid "^10.0.0"
+    weaviate-client "^3.5.2"
+
 "@mongodb-js/saslprep@^1.1.9":
   version "1.2.2"
-  resolved "https://registry.npmmirror.com/@mongodb-js/saslprep/-/saslprep-1.2.2.tgz#09506f29cc2a99d9d7b951caa7fffc87e522a6d3"
+  resolved "https://registry.npmmirror.com/@mongodb-js/saslprep/-/saslprep-1.2.2.tgz"
   dependencies:
     sparse-bitfield "^3.0.3"
+
+"@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.npmmirror.com/@protobufjs/aspromise/-/aspromise-1.1.2.tgz#9b8b0cc663d669a7d8f6f5d0893a14d348f30fbf"
+
+"@protobufjs/base64@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.npmmirror.com/@protobufjs/base64/-/base64-1.1.2.tgz#4c85730e59b9a1f1f349047dbf24296034bb2735"
+
+"@protobufjs/codegen@^2.0.4":
+  version "2.0.4"
+  resolved "https://registry.npmmirror.com/@protobufjs/codegen/-/codegen-2.0.4.tgz#7ef37f0d010fb028ad1ad59722e506d9262815cb"
+
+"@protobufjs/eventemitter@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/@protobufjs/eventemitter/-/eventemitter-1.1.0.tgz#355cbc98bafad5978f9ed095f397621f1d066b70"
+
+"@protobufjs/fetch@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/@protobufjs/fetch/-/fetch-1.1.0.tgz#ba99fb598614af65700c1619ff06d454b0d84c45"
+  dependencies:
+    "@protobufjs/aspromise" "^1.1.1"
+    "@protobufjs/inquire" "^1.1.0"
+
+"@protobufjs/float@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.npmmirror.com/@protobufjs/float/-/float-1.0.2.tgz#5e9e1abdcb73fc0a7cb8b291df78c8cbd97b87d1"
+
+"@protobufjs/inquire@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/@protobufjs/inquire/-/inquire-1.1.0.tgz#ff200e3e7cf2429e2dcafc1140828e8cc638f089"
+
+"@protobufjs/path@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.npmmirror.com/@protobufjs/path/-/path-1.1.2.tgz#6cc2b20c5c9ad6ad0dccfd21ca7673d8d7fbf68d"
+
+"@protobufjs/pool@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/@protobufjs/pool/-/pool-1.1.0.tgz#09fd15f2d6d3abfa9b65bc366506d6ad7846ff54"
+
+"@protobufjs/utf8@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
 
 "@types/debug@^4.1.8":
   version "4.1.12"
@@ -62,13 +191,17 @@
   dependencies:
     "@types/ms" "*"
 
+"@types/json-schema@^7.0.15":
+  version "7.0.15"
+  resolved "https://registry.npmmirror.com/@types/json-schema/-/json-schema-7.0.15.tgz#596a1747233694d50f6ad8a7869fcb6f56cf5841"
+
 "@types/ms@*":
   version "0.7.34"
   resolved "https://registry.npmmirror.com/@types/ms/-/ms-0.7.34.tgz"
 
 "@types/node-fetch@^2.6.4":
   version "2.6.12"
-  resolved "https://registry.npmmirror.com/@types/node-fetch/-/node-fetch-2.6.12.tgz#8ab5c3ef8330f13100a7479e2cd56d3386830a03"
+  resolved "https://registry.npmmirror.com/@types/node-fetch/-/node-fetch-2.6.12.tgz"
   dependencies:
     "@types/node" "*"
     form-data "^4.0.0"
@@ -79,19 +212,25 @@
   dependencies:
     undici-types "~6.19.8"
 
+"@types/node@>=13.7.0":
+  version "24.0.1"
+  resolved "https://registry.npmmirror.com/@types/node/-/node-24.0.1.tgz#e9bfcb1c35547437c294403b7bec497772a88b0a"
+  dependencies:
+    undici-types "~7.8.0"
+
 "@types/node@^18.11.18":
-  version "18.19.100"
-  resolved "https://registry.npmmirror.com/@types/node/-/node-18.19.100.tgz#7f3aefbb6911099ab7e0902a1f373b1a4d2c1947"
+  version "18.19.111"
+  resolved "https://registry.npmmirror.com/@types/node/-/node-18.19.111.tgz"
   dependencies:
     undici-types "~5.26.4"
 
 "@types/retry@0.12.0":
   version "0.12.0"
-  resolved "https://registry.npmmirror.com/@types/retry/-/retry-0.12.0.tgz#2b35eccfcee7d38cd72ad99232fbd58bffb3c84d"
+  resolved "https://registry.npmmirror.com/@types/retry/-/retry-0.12.0.tgz"
 
 "@types/uuid@^10.0.0":
   version "10.0.0"
-  resolved "https://registry.npmmirror.com/@types/uuid/-/uuid-10.0.0.tgz#e9c07fe50da0f53dc24970cca94d619ff03f6f6d"
+  resolved "https://registry.npmmirror.com/@types/uuid/-/uuid-10.0.0.tgz"
 
 "@types/validator@^13.7.17":
   version "13.12.2"
@@ -99,17 +238,21 @@
 
 "@types/webidl-conversions@*":
   version "7.0.3"
-  resolved "https://registry.npmmirror.com/@types/webidl-conversions/-/webidl-conversions-7.0.3.tgz#1306dbfa53768bcbcfc95a1c8cde367975581859"
+  resolved "https://registry.npmmirror.com/@types/webidl-conversions/-/webidl-conversions-7.0.3.tgz"
 
 "@types/whatwg-url@^11.0.2":
   version "11.0.5"
-  resolved "https://registry.npmmirror.com/@types/whatwg-url/-/whatwg-url-11.0.5.tgz#aaa2546e60f0c99209ca13360c32c78caf2c409f"
+  resolved "https://registry.npmmirror.com/@types/whatwg-url/-/whatwg-url-11.0.5.tgz"
   dependencies:
     "@types/webidl-conversions" "*"
 
+abort-controller-x@^0.4.0, abort-controller-x@^0.4.3:
+  version "0.4.3"
+  resolved "https://registry.npmmirror.com/abort-controller-x/-/abort-controller-x-0.4.3.tgz#ff269788386fabd58a7b6eeaafcb6cf55c2958e0"
+
 abort-controller@^3.0.0:
   version "3.0.0"
-  resolved "https://registry.npmmirror.com/abort-controller/-/abort-controller-3.0.0.tgz#eaf54d53b62bae4138e809ca225c8439a6efb392"
+  resolved "https://registry.npmmirror.com/abort-controller/-/abort-controller-3.0.0.tgz"
   dependencies:
     event-target-shim "^5.0.0"
 
@@ -122,27 +265,35 @@ accepts@~1.3.8:
 
 agent-base@^7.1.2:
   version "7.1.3"
-  resolved "https://registry.npmmirror.com/agent-base/-/agent-base-7.1.3.tgz#29435eb821bc4194633a5b89e5bc4703bafc25a1"
+  resolved "https://registry.npmmirror.com/agent-base/-/agent-base-7.1.3.tgz"
 
 agentkeepalive@^4.2.1:
   version "4.6.0"
-  resolved "https://registry.npmmirror.com/agentkeepalive/-/agentkeepalive-4.6.0.tgz#35f73e94b3f40bf65f105219c623ad19c136ea6a"
+  resolved "https://registry.npmmirror.com/agentkeepalive/-/agentkeepalive-4.6.0.tgz"
   dependencies:
     humanize-ms "^1.2.1"
 
-ansi-styles@^4.1.0:
+ansi-regex@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.npmmirror.com/ansi-regex/-/ansi-regex-5.0.1.tgz#082cb2c89c9fe8659a311a53bd6a4dc5301db304"
+
+ansi-styles@^4.0.0, ansi-styles@^4.1.0:
   version "4.3.0"
-  resolved "https://registry.npmmirror.com/ansi-styles/-/ansi-styles-4.3.0.tgz#edd803628ae71c04c85ae7a0906edad34b648937"
+  resolved "https://registry.npmmirror.com/ansi-styles/-/ansi-styles-4.3.0.tgz"
   dependencies:
     color-convert "^2.0.1"
 
 ansi-styles@^5.0.0:
   version "5.2.0"
-  resolved "https://registry.npmmirror.com/ansi-styles/-/ansi-styles-5.2.0.tgz#07449690ad45777d1924ac2abb2fc8895dba836b"
+  resolved "https://registry.npmmirror.com/ansi-styles/-/ansi-styles-5.2.0.tgz"
 
 append-field@^1.0.0:
   version "1.0.0"
-  resolved "https://registry.npmmirror.com/append-field/-/append-field-1.0.0.tgz#1e3440e915f0b1203d23748e78edd7b9b5b43e56"
+  resolved "https://registry.npmmirror.com/append-field/-/append-field-1.0.0.tgz"
+
+argparse@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.npmmirror.com/argparse/-/argparse-2.0.1.tgz#246f50f3ca78a3240f6c997e8a9bd1eac49e4b38"
 
 array-flatten@1.1.1:
   version "1.1.1"
@@ -150,15 +301,15 @@ array-flatten@1.1.1:
 
 asynckit@^0.4.0:
   version "0.4.0"
-  resolved "https://registry.npmmirror.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
+  resolved "https://registry.npmmirror.com/asynckit/-/asynckit-0.4.0.tgz"
 
 base64-js@^1.3.0, base64-js@^1.5.1:
   version "1.5.1"
-  resolved "https://registry.npmmirror.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
+  resolved "https://registry.npmmirror.com/base64-js/-/base64-js-1.5.1.tgz"
 
 basic-auth@~2.0.1:
   version "2.0.1"
-  resolved "https://registry.npmmirror.com/basic-auth/-/basic-auth-2.0.1.tgz#b998279bf47ce38344b4f3cf916d4679bbf51e3a"
+  resolved "https://registry.npmmirror.com/basic-auth/-/basic-auth-2.0.1.tgz"
   dependencies:
     safe-buffer "5.1.2"
 
@@ -168,7 +319,11 @@ bcryptjs@^2.4.3:
 
 bignumber.js@^9.0.0:
   version "9.3.0"
-  resolved "https://registry.npmmirror.com/bignumber.js/-/bignumber.js-9.3.0.tgz#bdba7e2a4c1a2eba08290e8dcad4f36393c92acd"
+  resolved "https://registry.npmmirror.com/bignumber.js/-/bignumber.js-9.3.0.tgz"
+
+binary-extensions@^2.2.0:
+  version "2.3.0"
+  resolved "https://registry.npmmirror.com/binary-extensions/-/binary-extensions-2.3.0.tgz#f6e14a97858d327252200242d4ccfe522c445522"
 
 body-parser@1.20.3:
   version "1.20.3"
@@ -189,7 +344,7 @@ body-parser@1.20.3:
 
 bson@^6.10.3, bson@^6.10.4:
   version "6.10.4"
-  resolved "https://registry.npmmirror.com/bson/-/bson-6.10.4.tgz#d530733bb5bb16fb25c162e01a3344fab332fd2b"
+  resolved "https://registry.npmmirror.com/bson/-/bson-6.10.4.tgz"
 
 buffer-equal-constant-time@1.0.1, buffer-equal-constant-time@^1.0.1:
   version "1.0.1"
@@ -197,11 +352,11 @@ buffer-equal-constant-time@1.0.1, buffer-equal-constant-time@^1.0.1:
 
 buffer-from@^1.0.0:
   version "1.1.2"
-  resolved "https://registry.npmmirror.com/buffer-from/-/buffer-from-1.1.2.tgz#2b146a6fd72e80b4f55d255f35ed59a3a9a41bd5"
+  resolved "https://registry.npmmirror.com/buffer-from/-/buffer-from-1.1.2.tgz"
 
 busboy@^1.0.0:
   version "1.6.0"
-  resolved "https://registry.npmmirror.com/busboy/-/busboy-1.6.0.tgz#966ea36a9502e43cdb9146962523b92f531f6893"
+  resolved "https://registry.npmmirror.com/busboy/-/busboy-1.6.0.tgz"
   dependencies:
     streamsearch "^1.1.0"
 
@@ -211,51 +366,56 @@ bytes@3.1.2:
 
 call-bind-apply-helpers@^1.0.1, call-bind-apply-helpers@^1.0.2:
   version "1.0.2"
-  resolved "https://registry.npmmirror.com/call-bind-apply-helpers/-/call-bind-apply-helpers-1.0.2.tgz#4b5428c222be985d79c3d82657479dbe0b59b2d6"
+  resolved "https://registry.npmmirror.com/call-bind-apply-helpers/-/call-bind-apply-helpers-1.0.2.tgz"
   dependencies:
     es-errors "^1.3.0"
     function-bind "^1.1.2"
 
-call-bind@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.npmmirror.com/call-bind/-/call-bind-1.0.7.tgz"
+call-bound@^1.0.2:
+  version "1.0.4"
+  resolved "https://registry.npmmirror.com/call-bound/-/call-bound-1.0.4.tgz"
   dependencies:
-    es-define-property "^1.0.0"
-    es-errors "^1.3.0"
-    function-bind "^1.1.2"
-    get-intrinsic "^1.2.4"
-    set-function-length "^1.2.1"
+    call-bind-apply-helpers "^1.0.2"
+    get-intrinsic "^1.3.0"
 
 camelcase@6:
   version "6.3.0"
-  resolved "https://registry.npmmirror.com/camelcase/-/camelcase-6.3.0.tgz#5685b95eb209ac9c0c177467778c9c84df58ba9a"
+  resolved "https://registry.npmmirror.com/camelcase/-/camelcase-6.3.0.tgz"
 
 chalk@^4.1.2:
   version "4.1.2"
-  resolved "https://registry.npmmirror.com/chalk/-/chalk-4.1.2.tgz#aac4e2b7734a740867aeb16bf02aad556a1e7a01"
+  resolved "https://registry.npmmirror.com/chalk/-/chalk-4.1.2.tgz"
   dependencies:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
+cliui@^8.0.1:
+  version "8.0.1"
+  resolved "https://registry.npmmirror.com/cliui/-/cliui-8.0.1.tgz#0c04b075db02cbfe60dc8e6cf2f5486b1a3608aa"
+  dependencies:
+    string-width "^4.2.0"
+    strip-ansi "^6.0.1"
+    wrap-ansi "^7.0.0"
+
 color-convert@^2.0.1:
   version "2.0.1"
-  resolved "https://registry.npmmirror.com/color-convert/-/color-convert-2.0.1.tgz#72d3a68d598c9bdb3af2ad1e84f21d896abd4de3"
+  resolved "https://registry.npmmirror.com/color-convert/-/color-convert-2.0.1.tgz"
   dependencies:
     color-name "~1.1.4"
 
 color-name@~1.1.4:
   version "1.1.4"
-  resolved "https://registry.npmmirror.com/color-name/-/color-name-1.1.4.tgz#c2a09a87acbde69543de6f63fa3995c826c536a2"
+  resolved "https://registry.npmmirror.com/color-name/-/color-name-1.1.4.tgz"
 
 combined-stream@^1.0.8:
   version "1.0.8"
-  resolved "https://registry.npmmirror.com/combined-stream/-/combined-stream-1.0.8.tgz#c3d45a8b34fd730631a110a8a2520682b31d5a7f"
+  resolved "https://registry.npmmirror.com/combined-stream/-/combined-stream-1.0.8.tgz"
   dependencies:
     delayed-stream "~1.0.0"
 
 concat-stream@^1.5.2:
   version "1.6.2"
-  resolved "https://registry.npmmirror.com/concat-stream/-/concat-stream-1.6.2.tgz#904bdf194cd3122fc675c77fc4ac3d4ff0fd1a34"
+  resolved "https://registry.npmmirror.com/concat-stream/-/concat-stream-1.6.2.tgz"
   dependencies:
     buffer-from "^1.0.0"
     inherits "^2.0.3"
@@ -263,8 +423,8 @@ concat-stream@^1.5.2:
     typedarray "^0.0.6"
 
 console-table-printer@^2.12.1:
-  version "2.14.2"
-  resolved "https://registry.npmmirror.com/console-table-printer/-/console-table-printer-2.14.2.tgz#5bb4748b1eb36de0cd2c1d36688ffc1276b42cb9"
+  version "2.14.3"
+  resolved "https://registry.npmmirror.com/console-table-printer/-/console-table-printer-2.14.3.tgz"
   dependencies:
     simple-wcswidth "^1.0.1"
 
@@ -288,7 +448,7 @@ cookie@0.7.1:
 
 core-util-is@~1.0.0:
   version "1.0.3"
-  resolved "https://registry.npmmirror.com/core-util-is/-/core-util-is-1.0.3.tgz#a6042d3634c2b27e9328f837b965fac83808db85"
+  resolved "https://registry.npmmirror.com/core-util-is/-/core-util-is-1.0.3.tgz"
 
 cors@^2.8.5:
   version "2.8.5"
@@ -296,6 +456,12 @@ cors@^2.8.5:
   dependencies:
     object-assign "^4"
     vary "^1"
+
+cross-fetch@^3.1.5:
+  version "3.2.0"
+  resolved "https://registry.npmmirror.com/cross-fetch/-/cross-fetch-3.2.0.tgz#34e9192f53bc757d6614304d9e5e6fb4edb782e3"
+  dependencies:
+    node-fetch "^2.7.0"
 
 csv-parser@^3.0.0:
   version "3.0.0"
@@ -311,7 +477,7 @@ debug@2.6.9:
 
 debug@4, debug@4.x:
   version "4.4.1"
-  resolved "https://registry.npmmirror.com/debug/-/debug-4.4.1.tgz#e5a8bc6cbc4c6cd3e64308b0693a3d4fa550189b"
+  resolved "https://registry.npmmirror.com/debug/-/debug-4.4.1.tgz"
   dependencies:
     ms "^2.1.3"
 
@@ -323,19 +489,11 @@ debug@^4.3.4:
 
 decamelize@1.2.0:
   version "1.2.0"
-  resolved "https://registry.npmmirror.com/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
-
-define-data-property@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.npmmirror.com/define-data-property/-/define-data-property-1.1.4.tgz"
-  dependencies:
-    es-define-property "^1.0.0"
-    es-errors "^1.3.0"
-    gopd "^1.0.1"
+  resolved "https://registry.npmmirror.com/decamelize/-/decamelize-1.2.0.tgz"
 
 delayed-stream@~1.0.0:
   version "1.0.0"
-  resolved "https://registry.npmmirror.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
+  resolved "https://registry.npmmirror.com/delayed-stream/-/delayed-stream-1.0.0.tgz"
 
 depd@2.0.0, depd@~2.0.0:
   version "2.0.0"
@@ -355,7 +513,7 @@ dottie@^2.0.6:
 
 dunder-proto@^1.0.1:
   version "1.0.1"
-  resolved "https://registry.npmmirror.com/dunder-proto/-/dunder-proto-1.0.1.tgz#d7ae667e1dc83482f8b70fd0f6eefc50da30f58a"
+  resolved "https://registry.npmmirror.com/dunder-proto/-/dunder-proto-1.0.1.tgz"
   dependencies:
     call-bind-apply-helpers "^1.0.1"
     es-errors "^1.3.0"
@@ -371,6 +529,10 @@ ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.npmmirror.com/ee-first/-/ee-first-1.1.1.tgz"
 
+emoji-regex@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.npmmirror.com/emoji-regex/-/emoji-regex-8.0.0.tgz#e818fd69ce5ccfcb404594f842963bf53164cc37"
+
 encodeurl@~1.0.2:
   version "1.0.2"
   resolved "https://registry.npmmirror.com/encodeurl/-/encodeurl-1.0.2.tgz"
@@ -379,15 +541,9 @@ encodeurl@~2.0.0:
   version "2.0.0"
   resolved "https://registry.npmmirror.com/encodeurl/-/encodeurl-2.0.0.tgz"
 
-es-define-property@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.npmmirror.com/es-define-property/-/es-define-property-1.0.0.tgz"
-  dependencies:
-    get-intrinsic "^1.2.4"
-
 es-define-property@^1.0.1:
   version "1.0.1"
-  resolved "https://registry.npmmirror.com/es-define-property/-/es-define-property-1.0.1.tgz#983eb2f9a6724e9303f61addf011c72e09e0b0fa"
+  resolved "https://registry.npmmirror.com/es-define-property/-/es-define-property-1.0.1.tgz"
 
 es-errors@^1.3.0:
   version "1.3.0"
@@ -395,18 +551,22 @@ es-errors@^1.3.0:
 
 es-object-atoms@^1.0.0, es-object-atoms@^1.1.1:
   version "1.1.1"
-  resolved "https://registry.npmmirror.com/es-object-atoms/-/es-object-atoms-1.1.1.tgz#1c4f2c4837327597ce69d2ca190a7fdd172338c1"
+  resolved "https://registry.npmmirror.com/es-object-atoms/-/es-object-atoms-1.1.1.tgz"
   dependencies:
     es-errors "^1.3.0"
 
 es-set-tostringtag@^2.1.0:
   version "2.1.0"
-  resolved "https://registry.npmmirror.com/es-set-tostringtag/-/es-set-tostringtag-2.1.0.tgz#f31dbbe0c183b00a6d26eb6325c810c0fd18bd4d"
+  resolved "https://registry.npmmirror.com/es-set-tostringtag/-/es-set-tostringtag-2.1.0.tgz"
   dependencies:
     es-errors "^1.3.0"
     get-intrinsic "^1.2.6"
     has-tostringtag "^1.0.2"
     hasown "^2.0.2"
+
+escalade@^3.1.1:
+  version "3.2.0"
+  resolved "https://registry.npmmirror.com/escalade/-/escalade-3.2.0.tgz#011a3f69856ba189dffa7dc8fcce99d2a87903e5"
 
 escape-html@~1.0.3:
   version "1.0.3"
@@ -418,11 +578,15 @@ etag@~1.8.1:
 
 event-target-shim@^5.0.0:
   version "5.0.1"
-  resolved "https://registry.npmmirror.com/event-target-shim/-/event-target-shim-5.0.1.tgz#5d4d3ebdf9583d63a5333ce2deb7480ab2b05789"
+  resolved "https://registry.npmmirror.com/event-target-shim/-/event-target-shim-5.0.1.tgz"
 
 eventemitter3@^4.0.4:
   version "4.0.7"
-  resolved "https://registry.npmmirror.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
+  resolved "https://registry.npmmirror.com/eventemitter3/-/eventemitter3-4.0.7.tgz"
+
+expr-eval@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.npmmirror.com/expr-eval/-/expr-eval-2.0.2.tgz#fa6f044a7b0c93fde830954eb9c5b0f7fbc7e201"
 
 express@^4.21.1:
   version "4.21.1"
@@ -462,7 +626,7 @@ express@^4.21.1:
 
 extend@^3.0.2:
   version "3.0.2"
-  resolved "https://registry.npmmirror.com/extend/-/extend-3.0.2.tgz#f8b1136b4071fbd8eb140aff858b1019ec2915fa"
+  resolved "https://registry.npmmirror.com/extend/-/extend-3.0.2.tgz"
 
 finalhandler@1.3.1:
   version "1.3.1"
@@ -476,22 +640,27 @@ finalhandler@1.3.1:
     statuses "2.0.1"
     unpipe "~1.0.0"
 
+flat@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.npmmirror.com/flat/-/flat-5.0.2.tgz#8ca6fe332069ffa9d324c327198c598259ceb241"
+
 form-data-encoder@1.7.2:
   version "1.7.2"
-  resolved "https://registry.npmmirror.com/form-data-encoder/-/form-data-encoder-1.7.2.tgz#1f1ae3dccf58ed4690b86d87e4f57c654fbab040"
+  resolved "https://registry.npmmirror.com/form-data-encoder/-/form-data-encoder-1.7.2.tgz"
 
 form-data@^4.0.0:
-  version "4.0.2"
-  resolved "https://registry.npmmirror.com/form-data/-/form-data-4.0.2.tgz#35cabbdd30c3ce73deb2c42d3c8d3ed9ca51794c"
+  version "4.0.3"
+  resolved "https://registry.npmmirror.com/form-data/-/form-data-4.0.3.tgz"
   dependencies:
     asynckit "^0.4.0"
     combined-stream "^1.0.8"
     es-set-tostringtag "^2.1.0"
+    hasown "^2.0.2"
     mime-types "^2.1.12"
 
 formdata-node@^4.3.2:
   version "4.4.1"
-  resolved "https://registry.npmmirror.com/formdata-node/-/formdata-node-4.4.1.tgz#23f6a5cb9cb55315912cbec4ff7b0f59bbd191e2"
+  resolved "https://registry.npmmirror.com/formdata-node/-/formdata-node-4.4.1.tgz"
   dependencies:
     node-domexception "1.0.0"
     web-streams-polyfill "4.0.0-beta.3"
@@ -510,7 +679,7 @@ function-bind@^1.1.2:
 
 gaxios@^6.0.0, gaxios@^6.1.1:
   version "6.7.1"
-  resolved "https://registry.npmmirror.com/gaxios/-/gaxios-6.7.1.tgz#ebd9f7093ede3ba502685e73390248bb5b7f71fb"
+  resolved "https://registry.npmmirror.com/gaxios/-/gaxios-6.7.1.tgz"
   dependencies:
     extend "^3.0.2"
     https-proxy-agent "^7.0.1"
@@ -520,25 +689,19 @@ gaxios@^6.0.0, gaxios@^6.1.1:
 
 gcp-metadata@^6.1.0:
   version "6.1.1"
-  resolved "https://registry.npmmirror.com/gcp-metadata/-/gcp-metadata-6.1.1.tgz#f65aa69f546bc56e116061d137d3f5f90bdec494"
+  resolved "https://registry.npmmirror.com/gcp-metadata/-/gcp-metadata-6.1.1.tgz"
   dependencies:
     gaxios "^6.1.1"
     google-logging-utils "^0.0.2"
     json-bigint "^1.0.0"
 
-get-intrinsic@^1.1.3, get-intrinsic@^1.2.4:
-  version "1.2.4"
-  resolved "https://registry.npmmirror.com/get-intrinsic/-/get-intrinsic-1.2.4.tgz"
-  dependencies:
-    es-errors "^1.3.0"
-    function-bind "^1.1.2"
-    has-proto "^1.0.1"
-    has-symbols "^1.0.3"
-    hasown "^2.0.0"
+get-caller-file@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.npmmirror.com/get-caller-file/-/get-caller-file-2.0.5.tgz#4f94412a82db32f36e3b0b9741f8a97feb031f7e"
 
-get-intrinsic@^1.2.6:
+get-intrinsic@^1.2.5, get-intrinsic@^1.2.6, get-intrinsic@^1.3.0:
   version "1.3.0"
-  resolved "https://registry.npmmirror.com/get-intrinsic/-/get-intrinsic-1.3.0.tgz#743f0e3b6964a93a5491ed1bffaae054d7f98d01"
+  resolved "https://registry.npmmirror.com/get-intrinsic/-/get-intrinsic-1.3.0.tgz"
   dependencies:
     call-bind-apply-helpers "^1.0.2"
     es-define-property "^1.0.1"
@@ -553,14 +716,14 @@ get-intrinsic@^1.2.6:
 
 get-proto@^1.0.1:
   version "1.0.1"
-  resolved "https://registry.npmmirror.com/get-proto/-/get-proto-1.0.1.tgz#150b3f2743869ef3e851ec0c49d15b1d14d00ee1"
+  resolved "https://registry.npmmirror.com/get-proto/-/get-proto-1.0.1.tgz"
   dependencies:
     dunder-proto "^1.0.1"
     es-object-atoms "^1.0.0"
 
 google-auth-library@^9.14.2:
   version "9.15.1"
-  resolved "https://registry.npmmirror.com/google-auth-library/-/google-auth-library-9.15.1.tgz#0c5d84ed1890b2375f1cd74f03ac7b806b392928"
+  resolved "https://registry.npmmirror.com/google-auth-library/-/google-auth-library-9.15.1.tgz"
   dependencies:
     base64-js "^1.3.0"
     ecdsa-sig-formatter "^1.0.11"
@@ -571,54 +734,45 @@ google-auth-library@^9.14.2:
 
 google-logging-utils@^0.0.2:
   version "0.0.2"
-  resolved "https://registry.npmmirror.com/google-logging-utils/-/google-logging-utils-0.0.2.tgz#5fd837e06fa334da450433b9e3e1870c1594466a"
-
-gopd@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.npmmirror.com/gopd/-/gopd-1.0.1.tgz"
-  dependencies:
-    get-intrinsic "^1.1.3"
+  resolved "https://registry.npmmirror.com/google-logging-utils/-/google-logging-utils-0.0.2.tgz"
 
 gopd@^1.2.0:
   version "1.2.0"
-  resolved "https://registry.npmmirror.com/gopd/-/gopd-1.2.0.tgz#89f56b8217bdbc8802bd299df6d7f1081d7e51a1"
+  resolved "https://registry.npmmirror.com/gopd/-/gopd-1.2.0.tgz"
+
+graphql-request@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.npmmirror.com/graphql-request/-/graphql-request-6.1.0.tgz#f4eb2107967af3c7a5907eb3131c671eac89be4f"
+  dependencies:
+    "@graphql-typed-document-node/core" "^3.2.0"
+    cross-fetch "^3.1.5"
+
+graphql@^16.10.0:
+  version "16.11.0"
+  resolved "https://registry.npmmirror.com/graphql/-/graphql-16.11.0.tgz#96d17f66370678027fdf59b2d4c20b4efaa8a633"
 
 gtoken@^7.0.0:
   version "7.1.0"
-  resolved "https://registry.npmmirror.com/gtoken/-/gtoken-7.1.0.tgz#d61b4ebd10132222817f7222b1e6064bd463fc26"
+  resolved "https://registry.npmmirror.com/gtoken/-/gtoken-7.1.0.tgz"
   dependencies:
     gaxios "^6.0.0"
     jws "^4.0.0"
 
 has-flag@^4.0.0:
   version "4.0.0"
-  resolved "https://registry.npmmirror.com/has-flag/-/has-flag-4.0.0.tgz#944771fd9c81c81265c4d6941860da06bb59479b"
+  resolved "https://registry.npmmirror.com/has-flag/-/has-flag-4.0.0.tgz"
 
-has-property-descriptors@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.npmmirror.com/has-property-descriptors/-/has-property-descriptors-1.0.2.tgz"
-  dependencies:
-    es-define-property "^1.0.0"
-
-has-proto@^1.0.1:
-  version "1.0.3"
-  resolved "https://registry.npmmirror.com/has-proto/-/has-proto-1.0.3.tgz"
-
-has-symbols@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.npmmirror.com/has-symbols/-/has-symbols-1.0.3.tgz"
-
-has-symbols@^1.1.0:
+has-symbols@^1.0.3, has-symbols@^1.1.0:
   version "1.1.0"
-  resolved "https://registry.npmmirror.com/has-symbols/-/has-symbols-1.1.0.tgz#fc9c6a783a084951d0b971fe1018de813707a338"
+  resolved "https://registry.npmmirror.com/has-symbols/-/has-symbols-1.1.0.tgz"
 
 has-tostringtag@^1.0.2:
   version "1.0.2"
-  resolved "https://registry.npmmirror.com/has-tostringtag/-/has-tostringtag-1.0.2.tgz#2cdc42d40bef2e5b4eeab7c01a73c54ce7ab5abc"
+  resolved "https://registry.npmmirror.com/has-tostringtag/-/has-tostringtag-1.0.2.tgz"
   dependencies:
     has-symbols "^1.0.3"
 
-hasown@^2.0.0, hasown@^2.0.2:
+hasown@^2.0.2:
   version "2.0.2"
   resolved "https://registry.npmmirror.com/hasown/-/hasown-2.0.2.tgz"
   dependencies:
@@ -626,7 +780,7 @@ hasown@^2.0.0, hasown@^2.0.2:
 
 helmet@^8.1.0:
   version "8.1.0"
-  resolved "https://registry.npmmirror.com/helmet/-/helmet-8.1.0.tgz#f96d23fedc89e9476ecb5198181009c804b8b38c"
+  resolved "https://registry.npmmirror.com/helmet/-/helmet-8.1.0.tgz"
 
 http-errors@2.0.0:
   version "2.0.0"
@@ -640,14 +794,14 @@ http-errors@2.0.0:
 
 https-proxy-agent@^7.0.1:
   version "7.0.6"
-  resolved "https://registry.npmmirror.com/https-proxy-agent/-/https-proxy-agent-7.0.6.tgz#da8dfeac7da130b05c2ba4b59c9b6cd66611a6b9"
+  resolved "https://registry.npmmirror.com/https-proxy-agent/-/https-proxy-agent-7.0.6.tgz"
   dependencies:
     agent-base "^7.1.2"
     debug "4"
 
 humanize-ms@^1.2.1:
   version "1.2.1"
-  resolved "https://registry.npmmirror.com/humanize-ms/-/humanize-ms-1.2.1.tgz#c46e3159a293f6b896da29316d8b6fe8bb79bbed"
+  resolved "https://registry.npmmirror.com/humanize-ms/-/humanize-ms-1.2.1.tgz"
   dependencies:
     ms "^2.0.0"
 
@@ -669,25 +823,39 @@ ipaddr.js@1.9.1:
   version "1.9.1"
   resolved "https://registry.npmmirror.com/ipaddr.js/-/ipaddr.js-1.9.1.tgz"
 
+is-fullwidth-code-point@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmmirror.com/is-fullwidth-code-point/-/is-fullwidth-code-point-3.0.0.tgz#f116f8064fe90b3f7844a38997c0b75051269f1d"
+
 is-stream@^2.0.0:
   version "2.0.1"
-  resolved "https://registry.npmmirror.com/is-stream/-/is-stream-2.0.1.tgz#fac1e3d53b97ad5a9d0ae9cef2389f5810a5c077"
+  resolved "https://registry.npmmirror.com/is-stream/-/is-stream-2.0.1.tgz"
 
 isarray@~1.0.0:
   version "1.0.0"
-  resolved "https://registry.npmmirror.com/isarray/-/isarray-1.0.0.tgz#bb935d48582cba168c06834957a54a3e07124f11"
+  resolved "https://registry.npmmirror.com/isarray/-/isarray-1.0.0.tgz"
 
 js-tiktoken@^1.0.12:
   version "1.0.20"
-  resolved "https://registry.npmmirror.com/js-tiktoken/-/js-tiktoken-1.0.20.tgz#fa2733bf147acaf1bdcf9ab8a878e79c581c95f2"
+  resolved "https://registry.npmmirror.com/js-tiktoken/-/js-tiktoken-1.0.20.tgz"
   dependencies:
     base64-js "^1.5.1"
 
+js-yaml@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.npmmirror.com/js-yaml/-/js-yaml-4.1.0.tgz#c1fb65f8f5017901cdd2c951864ba18458a10602"
+  dependencies:
+    argparse "^2.0.1"
+
 json-bigint@^1.0.0:
   version "1.0.0"
-  resolved "https://registry.npmmirror.com/json-bigint/-/json-bigint-1.0.0.tgz#ae547823ac0cad8398667f8cd9ef4730f5b01ff1"
+  resolved "https://registry.npmmirror.com/json-bigint/-/json-bigint-1.0.0.tgz"
   dependencies:
     bignumber.js "^9.0.0"
+
+jsonpointer@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.npmmirror.com/jsonpointer/-/jsonpointer-5.0.1.tgz#2110e0af0900fd37467b5907ecd13a7884a1b559"
 
 jsonwebtoken@^9.0.2:
   version "9.0.2"
@@ -714,7 +882,7 @@ jwa@^1.4.1:
 
 jwa@^2.0.0:
   version "2.0.1"
-  resolved "https://registry.npmmirror.com/jwa/-/jwa-2.0.1.tgz#bf8176d1ad0cd72e0f3f58338595a13e110bc804"
+  resolved "https://registry.npmmirror.com/jwa/-/jwa-2.0.1.tgz"
   dependencies:
     buffer-equal-constant-time "^1.0.1"
     ecdsa-sig-formatter "1.0.11"
@@ -729,18 +897,35 @@ jws@^3.2.2:
 
 jws@^4.0.0:
   version "4.0.0"
-  resolved "https://registry.npmmirror.com/jws/-/jws-4.0.0.tgz#2d4e8cf6a318ffaa12615e9dec7e86e6c97310f4"
+  resolved "https://registry.npmmirror.com/jws/-/jws-4.0.0.tgz"
   dependencies:
     jwa "^2.0.0"
     safe-buffer "^5.0.1"
 
 kareem@2.6.3:
   version "2.6.3"
-  resolved "https://registry.npmmirror.com/kareem/-/kareem-2.6.3.tgz#23168ec8ffb6c1abfd31b7169a6fb1dd285992ac"
+  resolved "https://registry.npmmirror.com/kareem/-/kareem-2.6.3.tgz"
+
+"langchain@>=0.2.3 <0.3.0 || >=0.3.4 <0.4.0", langchain@^0.3.27:
+  version "0.3.27"
+  resolved "https://registry.npmmirror.com/langchain/-/langchain-0.3.27.tgz#e0ed686765dba3809f90a214110bee445cf240a8"
+  dependencies:
+    "@langchain/openai" ">=0.1.0 <0.6.0"
+    "@langchain/textsplitters" ">=0.0.0 <0.2.0"
+    js-tiktoken "^1.0.12"
+    js-yaml "^4.1.0"
+    jsonpointer "^5.0.1"
+    langsmith "^0.3.29"
+    openapi-types "^12.1.3"
+    p-retry "4"
+    uuid "^10.0.0"
+    yaml "^2.2.1"
+    zod "^3.22.4"
+    zod-to-json-schema "^3.22.3"
 
 langsmith@^0.3.29:
-  version "0.3.30"
-  resolved "https://registry.npmmirror.com/langsmith/-/langsmith-0.3.30.tgz#817803f22f1ebf7bbf9b1f411c6a7f07c46a9dd1"
+  version "0.3.31"
+  resolved "https://registry.npmmirror.com/langsmith/-/langsmith-0.3.31.tgz"
   dependencies:
     "@types/uuid" "^10.0.0"
     chalk "^4.1.2"
@@ -749,6 +934,10 @@ langsmith@^0.3.29:
     p-retry "4"
     semver "^7.6.3"
     uuid "^10.0.0"
+
+lodash.camelcase@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.npmmirror.com/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
 
 lodash.includes@^4.3.0:
   version "4.3.0"
@@ -782,9 +971,13 @@ lodash@^4.17.21:
   version "4.17.21"
   resolved "https://registry.npmmirror.com/lodash/-/lodash-4.17.21.tgz"
 
+long@^5.0.0, long@^5.2.4:
+  version "5.3.2"
+  resolved "https://registry.npmmirror.com/long/-/long-5.3.2.tgz#1d84463095999262d7d7b7f8bfd4a8cc55167f83"
+
 math-intrinsics@^1.1.0:
   version "1.1.0"
-  resolved "https://registry.npmmirror.com/math-intrinsics/-/math-intrinsics-1.1.0.tgz#a0dd74be81e2aa5c2f27e65ce283605ee4e2b7f9"
+  resolved "https://registry.npmmirror.com/math-intrinsics/-/math-intrinsics-1.1.0.tgz"
 
 media-typer@0.3.0:
   version "0.3.0"
@@ -792,7 +985,7 @@ media-typer@0.3.0:
 
 memory-pager@^1.0.2:
   version "1.5.0"
-  resolved "https://registry.npmmirror.com/memory-pager/-/memory-pager-1.5.0.tgz#d8751655d22d384682741c972f2c3d6dfa3e66b5"
+  resolved "https://registry.npmmirror.com/memory-pager/-/memory-pager-1.5.0.tgz"
 
 merge-descriptors@1.0.3:
   version "1.0.3"
@@ -822,7 +1015,7 @@ minimist@^1.2.0, minimist@^1.2.6:
 
 mkdirp@^0.5.4:
   version "0.5.6"
-  resolved "https://registry.npmmirror.com/mkdirp/-/mkdirp-0.5.6.tgz#7def03d2432dcae4ba1d611445c48396062255f6"
+  resolved "https://registry.npmmirror.com/mkdirp/-/mkdirp-0.5.6.tgz"
   dependencies:
     minimist "^1.2.6"
 
@@ -838,14 +1031,14 @@ moment@^2.29.4:
 
 mongodb-connection-string-url@^3.0.0:
   version "3.0.2"
-  resolved "https://registry.npmmirror.com/mongodb-connection-string-url/-/mongodb-connection-string-url-3.0.2.tgz#e223089dfa0a5fa9bf505f8aedcbc67b077b33e7"
+  resolved "https://registry.npmmirror.com/mongodb-connection-string-url/-/mongodb-connection-string-url-3.0.2.tgz"
   dependencies:
     "@types/whatwg-url" "^11.0.2"
     whatwg-url "^14.1.0 || ^13.0.0"
 
 mongodb@^6.3.0:
   version "6.17.0"
-  resolved "https://registry.npmmirror.com/mongodb/-/mongodb-6.17.0.tgz#b52da4e3cdf62299e55c51584cb5657283157594"
+  resolved "https://registry.npmmirror.com/mongodb/-/mongodb-6.17.0.tgz"
   dependencies:
     "@mongodb-js/saslprep" "^1.1.9"
     bson "^6.10.4"
@@ -853,7 +1046,7 @@ mongodb@^6.3.0:
 
 mongodb@~6.16.0:
   version "6.16.0"
-  resolved "https://registry.npmmirror.com/mongodb/-/mongodb-6.16.0.tgz#2a7a1986ec151d9c738fc8ce4cf4324c3f728a2f"
+  resolved "https://registry.npmmirror.com/mongodb/-/mongodb-6.16.0.tgz"
   dependencies:
     "@mongodb-js/saslprep" "^1.1.9"
     bson "^6.10.3"
@@ -861,7 +1054,7 @@ mongodb@~6.16.0:
 
 mongoose@^8.15.1:
   version "8.15.1"
-  resolved "https://registry.npmmirror.com/mongoose/-/mongoose-8.15.1.tgz#d0c5224a01ea8a8f96f5fd5f8557675a054d0a6f"
+  resolved "https://registry.npmmirror.com/mongoose/-/mongoose-8.15.1.tgz"
   dependencies:
     bson "^6.10.3"
     kareem "2.6.3"
@@ -873,7 +1066,7 @@ mongoose@^8.15.1:
 
 morgan@^1.10.0:
   version "1.10.0"
-  resolved "https://registry.npmmirror.com/morgan/-/morgan-1.10.0.tgz#091778abc1fc47cd3509824653dae1faab6b17d7"
+  resolved "https://registry.npmmirror.com/morgan/-/morgan-1.10.0.tgz"
   dependencies:
     basic-auth "~2.0.1"
     debug "2.6.9"
@@ -883,25 +1076,25 @@ morgan@^1.10.0:
 
 mpath@0.9.0:
   version "0.9.0"
-  resolved "https://registry.npmmirror.com/mpath/-/mpath-0.9.0.tgz#0c122fe107846e31fc58c75b09c35514b3871904"
+  resolved "https://registry.npmmirror.com/mpath/-/mpath-0.9.0.tgz"
 
 mquery@5.0.0:
   version "5.0.0"
-  resolved "https://registry.npmmirror.com/mquery/-/mquery-5.0.0.tgz#a95be5dfc610b23862df34a47d3e5d60e110695d"
+  resolved "https://registry.npmmirror.com/mquery/-/mquery-5.0.0.tgz"
   dependencies:
     debug "4.x"
 
-ms@2.0.0:
+ms@2.0.0, ms@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmmirror.com/ms/-/ms-2.0.0.tgz"
 
-ms@2.1.3, ms@^2.0.0, ms@^2.1.1, ms@^2.1.3:
+ms@2.1.3, ms@^2.1.1, ms@^2.1.3:
   version "2.1.3"
   resolved "https://registry.npmmirror.com/ms/-/ms-2.1.3.tgz"
 
 multer@^1.4.5-lts.2:
   version "1.4.5-lts.2"
-  resolved "https://registry.npmmirror.com/multer/-/multer-1.4.5-lts.2.tgz#340af065d8685dda846ec9e3d7655fcd50afba2d"
+  resolved "https://registry.npmmirror.com/multer/-/multer-1.4.5-lts.2.tgz"
   dependencies:
     append-field "^1.0.0"
     busboy "^1.0.0"
@@ -913,19 +1106,40 @@ multer@^1.4.5-lts.2:
 
 mustache@^4.2.0:
   version "4.2.0"
-  resolved "https://registry.npmmirror.com/mustache/-/mustache-4.2.0.tgz#e5892324d60a12ec9c2a73359edca52972bf6f64"
+  resolved "https://registry.npmmirror.com/mustache/-/mustache-4.2.0.tgz"
 
 negotiator@0.6.3:
   version "0.6.3"
   resolved "https://registry.npmmirror.com/negotiator/-/negotiator-0.6.3.tgz"
 
+nice-grpc-client-middleware-retry@^3.1.10:
+  version "3.1.11"
+  resolved "https://registry.npmmirror.com/nice-grpc-client-middleware-retry/-/nice-grpc-client-middleware-retry-3.1.11.tgz#4fc0128b891d184b6c98af3bfd6aca1b608a3fd1"
+  dependencies:
+    abort-controller-x "^0.4.0"
+    nice-grpc-common "^2.0.2"
+
+nice-grpc-common@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.npmmirror.com/nice-grpc-common/-/nice-grpc-common-2.0.2.tgz#e6aeebb2bd19d87114b351e291e30d79dd38acf7"
+  dependencies:
+    ts-error "^1.0.6"
+
+nice-grpc@^2.1.11:
+  version "2.1.12"
+  resolved "https://registry.npmmirror.com/nice-grpc/-/nice-grpc-2.1.12.tgz#56ffdcc4d5bc3d0271c176210680c4bd10c5149b"
+  dependencies:
+    "@grpc/grpc-js" "^1.13.1"
+    abort-controller-x "^0.4.0"
+    nice-grpc-common "^2.0.2"
+
 node-domexception@1.0.0:
   version "1.0.0"
-  resolved "https://registry.npmmirror.com/node-domexception/-/node-domexception-1.0.0.tgz#6888db46a1f71c0b76b3f7555016b63fe64766e5"
+  resolved "https://registry.npmmirror.com/node-domexception/-/node-domexception-1.0.0.tgz"
 
-node-fetch@^2.6.7, node-fetch@^2.6.9:
+node-fetch@^2.6.7, node-fetch@^2.6.9, node-fetch@^2.7.0:
   version "2.7.0"
-  resolved "https://registry.npmmirror.com/node-fetch/-/node-fetch-2.7.0.tgz#d0f0fa6e3e2dc1d27efcd8ad99d550bda94d187d"
+  resolved "https://registry.npmmirror.com/node-fetch/-/node-fetch-2.7.0.tgz"
   dependencies:
     whatwg-url "^5.0.0"
 
@@ -933,9 +1147,9 @@ object-assign@^4, object-assign@^4.1.1:
   version "4.1.1"
   resolved "https://registry.npmmirror.com/object-assign/-/object-assign-4.1.1.tgz"
 
-object-inspect@^1.13.1:
-  version "1.13.2"
-  resolved "https://registry.npmmirror.com/object-inspect/-/object-inspect-1.13.2.tgz"
+object-inspect@^1.13.3:
+  version "1.13.4"
+  resolved "https://registry.npmmirror.com/object-inspect/-/object-inspect-1.13.4.tgz"
 
 on-finished@2.4.1:
   version "2.4.1"
@@ -945,17 +1159,17 @@ on-finished@2.4.1:
 
 on-finished@~2.3.0:
   version "2.3.0"
-  resolved "https://registry.npmmirror.com/on-finished/-/on-finished-2.3.0.tgz#20f1336481b083cd75337992a16971aa2d906947"
+  resolved "https://registry.npmmirror.com/on-finished/-/on-finished-2.3.0.tgz"
   dependencies:
     ee-first "1.1.1"
 
 on-headers@~1.0.2:
   version "1.0.2"
-  resolved "https://registry.npmmirror.com/on-headers/-/on-headers-1.0.2.tgz#772b0ae6aaa525c399e489adfad90c403eb3c28f"
+  resolved "https://registry.npmmirror.com/on-headers/-/on-headers-1.0.2.tgz"
 
-openai@^4.100.0:
-  version "4.100.0"
-  resolved "https://registry.npmmirror.com/openai/-/openai-4.100.0.tgz#eb630a97f3531b7c91906b3a42920f9873efa392"
+openai@^4.100.0, openai@^4.96.0:
+  version "4.104.0"
+  resolved "https://registry.npmmirror.com/openai/-/openai-4.104.0.tgz"
   dependencies:
     "@types/node" "^18.11.18"
     "@types/node-fetch" "^2.6.4"
@@ -965,27 +1179,31 @@ openai@^4.100.0:
     formdata-node "^4.3.2"
     node-fetch "^2.6.7"
 
+openapi-types@^12.1.3:
+  version "12.1.3"
+  resolved "https://registry.npmmirror.com/openapi-types/-/openapi-types-12.1.3.tgz#471995eb26c4b97b7bd356aacf7b91b73e777dd3"
+
 p-finally@^1.0.0:
   version "1.0.0"
-  resolved "https://registry.npmmirror.com/p-finally/-/p-finally-1.0.0.tgz#3fbcfb15b899a44123b34b6dcc18b724336a2cae"
+  resolved "https://registry.npmmirror.com/p-finally/-/p-finally-1.0.0.tgz"
 
 p-queue@^6.6.2:
   version "6.6.2"
-  resolved "https://registry.npmmirror.com/p-queue/-/p-queue-6.6.2.tgz#2068a9dcf8e67dd0ec3e7a2bcb76810faa85e426"
+  resolved "https://registry.npmmirror.com/p-queue/-/p-queue-6.6.2.tgz"
   dependencies:
     eventemitter3 "^4.0.4"
     p-timeout "^3.2.0"
 
 p-retry@4:
   version "4.6.2"
-  resolved "https://registry.npmmirror.com/p-retry/-/p-retry-4.6.2.tgz#9baae7184057edd4e17231cee04264106e092a16"
+  resolved "https://registry.npmmirror.com/p-retry/-/p-retry-4.6.2.tgz"
   dependencies:
     "@types/retry" "0.12.0"
     retry "^0.13.1"
 
 p-timeout@^3.2.0:
   version "3.2.0"
-  resolved "https://registry.npmmirror.com/p-timeout/-/p-timeout-3.2.0.tgz#c7e17abc971d2a7962ef83626b35d635acf23dfe"
+  resolved "https://registry.npmmirror.com/p-timeout/-/p-timeout-3.2.0.tgz"
   dependencies:
     p-finally "^1.0.0"
 
@@ -1065,7 +1283,24 @@ postgres-interval@^1.1.0:
 
 process-nextick-args@~2.0.0:
   version "2.0.1"
-  resolved "https://registry.npmmirror.com/process-nextick-args/-/process-nextick-args-2.0.1.tgz#7820d9b16120cc55ca9ae7792680ae7dba6d7fe2"
+  resolved "https://registry.npmmirror.com/process-nextick-args/-/process-nextick-args-2.0.1.tgz"
+
+protobufjs@^7.2.5:
+  version "7.5.3"
+  resolved "https://registry.npmmirror.com/protobufjs/-/protobufjs-7.5.3.tgz#13f95a9e3c84669995ec3652db2ac2fb00b89363"
+  dependencies:
+    "@protobufjs/aspromise" "^1.1.2"
+    "@protobufjs/base64" "^1.1.2"
+    "@protobufjs/codegen" "^2.0.4"
+    "@protobufjs/eventemitter" "^1.1.0"
+    "@protobufjs/fetch" "^1.1.0"
+    "@protobufjs/float" "^1.0.2"
+    "@protobufjs/inquire" "^1.1.0"
+    "@protobufjs/path" "^1.1.2"
+    "@protobufjs/pool" "^1.1.0"
+    "@protobufjs/utf8" "^1.1.0"
+    "@types/node" ">=13.7.0"
+    long "^5.0.0"
 
 proxy-addr@~2.0.7:
   version "2.0.7"
@@ -1076,7 +1311,7 @@ proxy-addr@~2.0.7:
 
 punycode@^2.3.1:
   version "2.3.1"
-  resolved "https://registry.npmmirror.com/punycode/-/punycode-2.3.1.tgz#027422e2faec0b25e1549c3e1bd8309b9133b6e5"
+  resolved "https://registry.npmmirror.com/punycode/-/punycode-2.3.1.tgz"
 
 qs@6.13.0:
   version "6.13.0"
@@ -1099,7 +1334,7 @@ raw-body@2.5.2:
 
 readable-stream@^2.2.2:
   version "2.3.8"
-  resolved "https://registry.npmmirror.com/readable-stream/-/readable-stream-2.3.8.tgz#91125e8042bba1b9887f49345f6277027ce8be9b"
+  resolved "https://registry.npmmirror.com/readable-stream/-/readable-stream-2.3.8.tgz"
   dependencies:
     core-util-is "~1.0.0"
     inherits "~2.0.3"
@@ -1109,17 +1344,21 @@ readable-stream@^2.2.2:
     string_decoder "~1.1.1"
     util-deprecate "~1.0.1"
 
+require-directory@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.npmmirror.com/require-directory/-/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
+
 retry-as-promised@^7.0.4:
   version "7.0.4"
   resolved "https://registry.npmmirror.com/retry-as-promised/-/retry-as-promised-7.0.4.tgz"
 
 retry@^0.13.1:
   version "0.13.1"
-  resolved "https://registry.npmmirror.com/retry/-/retry-0.13.1.tgz#185b1587acf67919d63b357349e03537b2484658"
+  resolved "https://registry.npmmirror.com/retry/-/retry-0.13.1.tgz"
 
 safe-buffer@5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"
-  resolved "https://registry.npmmirror.com/safe-buffer/-/safe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"
+  resolved "https://registry.npmmirror.com/safe-buffer/-/safe-buffer-5.1.2.tgz"
 
 safe-buffer@5.2.1, safe-buffer@^5.0.1:
   version "5.2.1"
@@ -1129,13 +1368,9 @@ safe-buffer@5.2.1, safe-buffer@^5.0.1:
   version "2.1.2"
   resolved "https://registry.npmmirror.com/safer-buffer/-/safer-buffer-2.1.2.tgz"
 
-semver@^7.5.4:
+semver@^7.5.4, semver@^7.6.3:
   version "7.6.3"
   resolved "https://registry.npmmirror.com/semver/-/semver-7.6.3.tgz"
-
-semver@^7.6.3:
-  version "7.7.2"
-  resolved "https://registry.npmmirror.com/semver/-/semver-7.7.2.tgz#67d99fdcd35cec21e6f8b87a7fd515a33f982b58"
 
 send@0.19.0:
   version "0.19.0"
@@ -1189,41 +1424,57 @@ serve-static@1.16.2:
     parseurl "~1.3.3"
     send "0.19.0"
 
-set-function-length@^1.2.1:
-  version "1.2.2"
-  resolved "https://registry.npmmirror.com/set-function-length/-/set-function-length-1.2.2.tgz"
-  dependencies:
-    define-data-property "^1.1.4"
-    es-errors "^1.3.0"
-    function-bind "^1.1.2"
-    get-intrinsic "^1.2.4"
-    gopd "^1.0.1"
-    has-property-descriptors "^1.0.2"
-
 setprototypeof@1.2.0:
   version "1.2.0"
   resolved "https://registry.npmmirror.com/setprototypeof/-/setprototypeof-1.2.0.tgz"
 
-side-channel@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.npmmirror.com/side-channel/-/side-channel-1.0.6.tgz"
+side-channel-list@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmmirror.com/side-channel-list/-/side-channel-list-1.0.0.tgz"
   dependencies:
-    call-bind "^1.0.7"
     es-errors "^1.3.0"
-    get-intrinsic "^1.2.4"
-    object-inspect "^1.13.1"
+    object-inspect "^1.13.3"
+
+side-channel-map@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmmirror.com/side-channel-map/-/side-channel-map-1.0.1.tgz"
+  dependencies:
+    call-bound "^1.0.2"
+    es-errors "^1.3.0"
+    get-intrinsic "^1.2.5"
+    object-inspect "^1.13.3"
+
+side-channel-weakmap@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.npmmirror.com/side-channel-weakmap/-/side-channel-weakmap-1.0.2.tgz"
+  dependencies:
+    call-bound "^1.0.2"
+    es-errors "^1.3.0"
+    get-intrinsic "^1.2.5"
+    object-inspect "^1.13.3"
+    side-channel-map "^1.0.1"
+
+side-channel@^1.0.6:
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/side-channel/-/side-channel-1.1.0.tgz"
+  dependencies:
+    es-errors "^1.3.0"
+    object-inspect "^1.13.3"
+    side-channel-list "^1.0.0"
+    side-channel-map "^1.0.1"
+    side-channel-weakmap "^1.0.2"
 
 sift@17.1.3:
   version "17.1.3"
-  resolved "https://registry.npmmirror.com/sift/-/sift-17.1.3.tgz#9d2000d4d41586880b0079b5183d839c7a142bf7"
+  resolved "https://registry.npmmirror.com/sift/-/sift-17.1.3.tgz"
 
 simple-wcswidth@^1.0.1:
   version "1.0.1"
-  resolved "https://registry.npmmirror.com/simple-wcswidth/-/simple-wcswidth-1.0.1.tgz#8ab18ac0ae342f9d9b629604e54d2aa1ecb018b2"
+  resolved "https://registry.npmmirror.com/simple-wcswidth/-/simple-wcswidth-1.0.1.tgz"
 
 sparse-bitfield@^3.0.3:
   version "3.0.3"
-  resolved "https://registry.npmmirror.com/sparse-bitfield/-/sparse-bitfield-3.0.3.tgz#ff4ae6e68656056ba4b3e792ab3334d38273ca11"
+  resolved "https://registry.npmmirror.com/sparse-bitfield/-/sparse-bitfield-3.0.3.tgz"
   dependencies:
     memory-pager "^1.0.2"
 
@@ -1237,17 +1488,31 @@ statuses@2.0.1:
 
 streamsearch@^1.1.0:
   version "1.1.0"
-  resolved "https://registry.npmmirror.com/streamsearch/-/streamsearch-1.1.0.tgz#404dd1e2247ca94af554e841a8ef0eaa238da764"
+  resolved "https://registry.npmmirror.com/streamsearch/-/streamsearch-1.1.0.tgz"
+
+string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
+  version "4.2.3"
+  resolved "https://registry.npmmirror.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
+  dependencies:
+    emoji-regex "^8.0.0"
+    is-fullwidth-code-point "^3.0.0"
+    strip-ansi "^6.0.1"
 
 string_decoder@~1.1.1:
   version "1.1.1"
-  resolved "https://registry.npmmirror.com/string_decoder/-/string_decoder-1.1.1.tgz#9cf1611ba62685d7030ae9e4ba34149c3af03fc8"
+  resolved "https://registry.npmmirror.com/string_decoder/-/string_decoder-1.1.1.tgz"
   dependencies:
     safe-buffer "~5.1.0"
 
+strip-ansi@^6.0.0, strip-ansi@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.npmmirror.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
+  dependencies:
+    ansi-regex "^5.0.1"
+
 supports-color@^7.1.0:
   version "7.2.0"
-  resolved "https://registry.npmmirror.com/supports-color/-/supports-color-7.2.0.tgz#1b7dcdcb32b8138801b3e478ba6a51caa89648da"
+  resolved "https://registry.npmmirror.com/supports-color/-/supports-color-7.2.0.tgz"
   dependencies:
     has-flag "^4.0.0"
 
@@ -1261,13 +1526,17 @@ toposort-class@^1.0.1:
 
 tr46@^5.1.0:
   version "5.1.1"
-  resolved "https://registry.npmmirror.com/tr46/-/tr46-5.1.1.tgz#96ae867cddb8fdb64a49cc3059a8d428bcf238ca"
+  resolved "https://registry.npmmirror.com/tr46/-/tr46-5.1.1.tgz"
   dependencies:
     punycode "^2.3.1"
 
 tr46@~0.0.3:
   version "0.0.3"
-  resolved "https://registry.npmmirror.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
+  resolved "https://registry.npmmirror.com/tr46/-/tr46-0.0.3.tgz"
+
+ts-error@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.npmmirror.com/ts-error/-/ts-error-1.0.6.tgz#277496f2a28de6c184cfce8dfd5cdd03a4e6b0fc"
 
 type-is@^1.6.4, type-is@~1.6.18:
   version "1.6.18"
@@ -1278,15 +1547,19 @@ type-is@^1.6.4, type-is@~1.6.18:
 
 typedarray@^0.0.6:
   version "0.0.6"
-  resolved "https://registry.npmmirror.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
+  resolved "https://registry.npmmirror.com/typedarray/-/typedarray-0.0.6.tgz"
 
 undici-types@~5.26.4:
   version "5.26.5"
-  resolved "https://registry.npmmirror.com/undici-types/-/undici-types-5.26.5.tgz#bcd539893d00b56e964fd2657a4866b221a65617"
+  resolved "https://registry.npmmirror.com/undici-types/-/undici-types-5.26.5.tgz"
 
 undici-types@~6.19.8:
   version "6.19.8"
   resolved "https://registry.npmmirror.com/undici-types/-/undici-types-6.19.8.tgz"
+
+undici-types@~7.8.0:
+  version "7.8.0"
+  resolved "https://registry.npmmirror.com/undici-types/-/undici-types-7.8.0.tgz#de00b85b710c54122e44fbfd911f8d70174cd294"
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"
@@ -1294,7 +1567,7 @@ unpipe@1.0.0, unpipe@~1.0.0:
 
 util-deprecate@~1.0.1:
   version "1.0.2"
-  resolved "https://registry.npmmirror.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
+  resolved "https://registry.npmmirror.com/util-deprecate/-/util-deprecate-1.0.2.tgz"
 
 utils-merge@1.0.1:
   version "1.0.1"
@@ -1302,7 +1575,7 @@ utils-merge@1.0.1:
 
 uuid@^10.0.0:
   version "10.0.0"
-  resolved "https://registry.npmmirror.com/uuid/-/uuid-10.0.0.tgz#5a95aa454e6e002725c79055fd42aaba30ca6294"
+  resolved "https://registry.npmmirror.com/uuid/-/uuid-10.0.0.tgz"
 
 uuid@^11.0.3:
   version "11.0.3"
@@ -1310,15 +1583,15 @@ uuid@^11.0.3:
 
 uuid@^11.1.0:
   version "11.1.0"
-  resolved "https://registry.npmmirror.com/uuid/-/uuid-11.1.0.tgz#9549028be1753bb934fc96e2bca09bb4105ae912"
+  resolved "https://registry.npmmirror.com/uuid/-/uuid-11.1.0.tgz"
 
 uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.npmmirror.com/uuid/-/uuid-8.3.2.tgz"
 
-uuid@^9.0.1:
+uuid@^9.0.0, uuid@^9.0.1:
   version "9.0.1"
-  resolved "https://registry.npmmirror.com/uuid/-/uuid-9.0.1.tgz#e188d4c8853cc722220392c424cd637f32293f30"
+  resolved "https://registry.npmmirror.com/uuid/-/uuid-9.0.1.tgz"
 
 validator@^13.9.0:
   version "13.12.0"
@@ -1328,28 +1601,41 @@ vary@^1, vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.npmmirror.com/vary/-/vary-1.1.2.tgz"
 
+weaviate-client@^3.5.2:
+  version "3.6.1"
+  resolved "https://registry.npmmirror.com/weaviate-client/-/weaviate-client-3.6.1.tgz#c894f546fbfad3b6e5900ee5945ed2e26e366b4a"
+  dependencies:
+    abort-controller-x "^0.4.3"
+    graphql "^16.10.0"
+    graphql-request "^6.1.0"
+    long "^5.2.4"
+    nice-grpc "^2.1.11"
+    nice-grpc-client-middleware-retry "^3.1.10"
+    nice-grpc-common "^2.0.2"
+    uuid "^9.0.1"
+
 web-streams-polyfill@4.0.0-beta.3:
   version "4.0.0-beta.3"
-  resolved "https://registry.npmmirror.com/web-streams-polyfill/-/web-streams-polyfill-4.0.0-beta.3.tgz#2898486b74f5156095e473efe989dcf185047a38"
+  resolved "https://registry.npmmirror.com/web-streams-polyfill/-/web-streams-polyfill-4.0.0-beta.3.tgz"
 
 webidl-conversions@^3.0.0:
   version "3.0.1"
-  resolved "https://registry.npmmirror.com/webidl-conversions/-/webidl-conversions-3.0.1.tgz#24534275e2a7bc6be7bc86611cc16ae0a5654871"
+  resolved "https://registry.npmmirror.com/webidl-conversions/-/webidl-conversions-3.0.1.tgz"
 
 webidl-conversions@^7.0.0:
   version "7.0.0"
-  resolved "https://registry.npmmirror.com/webidl-conversions/-/webidl-conversions-7.0.0.tgz#256b4e1882be7debbf01d05f0aa2039778ea080a"
+  resolved "https://registry.npmmirror.com/webidl-conversions/-/webidl-conversions-7.0.0.tgz"
 
 "whatwg-url@^14.1.0 || ^13.0.0":
   version "14.2.0"
-  resolved "https://registry.npmmirror.com/whatwg-url/-/whatwg-url-14.2.0.tgz#4ee02d5d725155dae004f6ae95c73e7ef5d95663"
+  resolved "https://registry.npmmirror.com/whatwg-url/-/whatwg-url-14.2.0.tgz"
   dependencies:
     tr46 "^5.1.0"
     webidl-conversions "^7.0.0"
 
 whatwg-url@^5.0.0:
   version "5.0.0"
-  resolved "https://registry.npmmirror.com/whatwg-url/-/whatwg-url-5.0.0.tgz#966454e8765462e37644d3626f6742ce8b70965d"
+  resolved "https://registry.npmmirror.com/whatwg-url/-/whatwg-url-5.0.0.tgz"
   dependencies:
     tr46 "~0.0.3"
     webidl-conversions "^3.0.0"
@@ -1360,22 +1646,54 @@ wkx@^0.5.0:
   dependencies:
     "@types/node" "*"
 
+wrap-ansi@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.npmmirror.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
+  dependencies:
+    ansi-styles "^4.0.0"
+    string-width "^4.1.0"
+    strip-ansi "^6.0.0"
+
 ws@^8.18.0:
   version "8.18.2"
-  resolved "https://registry.npmmirror.com/ws/-/ws-8.18.2.tgz#42738b2be57ced85f46154320aabb51ab003705a"
+  resolved "https://registry.npmmirror.com/ws/-/ws-8.18.2.tgz"
 
 xtend@^4.0.0:
   version "4.0.2"
   resolved "https://registry.npmmirror.com/xtend/-/xtend-4.0.2.tgz"
 
-zod-to-json-schema@^3.22.3, zod-to-json-schema@^3.22.4, zod-to-json-schema@^3.24.5:
+y18n@^5.0.5:
+  version "5.0.8"
+  resolved "https://registry.npmmirror.com/y18n/-/y18n-5.0.8.tgz#7f4934d0f7ca8c56f95314939ddcd2dd91ce1d55"
+
+yaml@^2.2.1:
+  version "2.8.0"
+  resolved "https://registry.npmmirror.com/yaml/-/yaml-2.8.0.tgz#15f8c9866211bdc2d3781a0890e44d4fa1a5fff6"
+
+yargs-parser@^21.1.1:
+  version "21.1.1"
+  resolved "https://registry.npmmirror.com/yargs-parser/-/yargs-parser-21.1.1.tgz#9096bceebf990d21bb31fa9516e0ede294a77d35"
+
+yargs@^17.7.2:
+  version "17.7.2"
+  resolved "https://registry.npmmirror.com/yargs/-/yargs-17.7.2.tgz#991df39aca675a192b816e1e0363f9d75d2aa269"
+  dependencies:
+    cliui "^8.0.1"
+    escalade "^3.1.1"
+    get-caller-file "^2.0.5"
+    require-directory "^2.1.1"
+    string-width "^4.2.3"
+    y18n "^5.0.5"
+    yargs-parser "^21.1.1"
+
+zod-to-json-schema@^3.22.3, zod-to-json-schema@^3.22.4, zod-to-json-schema@^3.22.5, zod-to-json-schema@^3.24.5:
   version "3.24.5"
-  resolved "https://registry.npmmirror.com/zod-to-json-schema/-/zod-to-json-schema-3.24.5.tgz#d1095440b147fb7c2093812a53c54df8d5df50a3"
+  resolved "https://registry.npmmirror.com/zod-to-json-schema/-/zod-to-json-schema-3.24.5.tgz"
 
-zod@^3.22.4:
-  version "3.25.50"
-  resolved "https://registry.npmmirror.com/zod/-/zod-3.25.50.tgz#9de9ca02ae702fd37ed87b28f8f17099f2402aa9"
+zod@^3.22.3, zod@^3.22.4, zod@^3.25.57:
+  version "3.25.61"
+  resolved "https://registry.npmmirror.com/zod/-/zod-3.25.61.tgz"
 
-zod@^3.25.57:
-  version "3.25.57"
-  resolved "https://registry.npmmirror.com/zod/-/zod-3.25.57.tgz#317c8a6eb8a8460bb4b58defb19e8b50c1200e51"
+zod@^3.23.8:
+  version "3.25.63"
+  resolved "https://registry.npmmirror.com/zod/-/zod-3.25.63.tgz#5eac66b56aa9f5e1cd3604dd541b819110474efa"

@@ -1,0 +1,76 @@
+import { AIMessage, HumanMessage } from "@langchain/core/messages";
+import { ChatHistory } from "../models/ChatSessionHistory.mongo.js";
+
+class MongoChatHistory {
+  constructor(sessionId, userId = null) {
+    this.sessionId = sessionId;
+    this.userId = userId;
+  }
+
+  async getMessages() {
+    try {
+      const chatHistory = await ChatHistory.findOne({
+        sessionId: this.sessionId,
+      });
+      if (!chatHistory || !chatHistory.messages) {
+        return [];
+      }
+
+      // 转换为 LangChain Message 格式
+      return chatHistory.messages.map((msg) => {
+        if (msg.type === 'human') {
+          return new HumanMessage(msg.content);
+        } else {
+          return new AIMessage(msg.content);
+        }
+      });
+    } catch (error) {
+      console.error('Error getting messages from MongoDB:', error);
+      return [];
+    }
+  }
+
+  async addMessage(message) {
+    try {
+      const messageType = message instanceof HumanMessage ? 'human' : 'ai';
+      const messageData = {
+        type: messageType,
+        content: message.content,
+        timestamp: new Date(),
+      };
+
+      await ChatHistory.findOneAndUpdate(
+        { sessionId: this.sessionId },
+        {
+          $push: { messages: messageData },
+          $set: {
+            updatedAt: new Date(),
+            ...(this.userId && { userId: this.userId }),
+          },
+        },
+        {
+          upsert: true,
+          new: true,
+          setDefaultsOnInsert: true,
+        },
+      );
+    } catch (error) {
+      console.error('Error adding message to MongoDB:', error);
+      throw error;
+    }
+  }
+
+  async clearHistory() {
+    try {
+      await ChatHistory.deleteOne({ sessionId: this.sessionId });
+    } catch (error) {
+      console.error('Error clearing chat history:', error);
+      throw error;
+    }
+  }
+}
+
+// 获取聊天历史的工厂函数
+export const getChatHistory = (sessionId, userId = null) => {
+  return new MongoChatHistory(sessionId, userId);
+};
