@@ -10,11 +10,6 @@ export class MessageProcessor {
   }
 
   async processMessage(state, config) {
-    console.log('processMessage called with state:', {
-      messagesCount: state.messages?.length,
-      configurable: config.configurable,
-    });
-
     this.validateConfig(config);
 
     const { sessionId, userId } = config.configurable;
@@ -47,23 +42,76 @@ export class MessageProcessor {
   async prepareMessages(state, chatHistory) {
     const historicalMessages = await chatHistory.getMessages();
     const currentMessages = state.messages || [];
-    const allMessages = [...historicalMessages, ...currentMessages];
 
-    console.log('Processing messages:', {
-      historical: historicalMessages.length,
-      current: currentMessages.length,
-      total: allMessages.length,
+    // 过滤掉无效的历史消息
+    const validHistoricalMessages = historicalMessages.filter((msg) => {
+      if (!msg || !msg.content) return false;
+
+      // 如果是字符串内容，检查是否为空
+      if (typeof msg.content === 'string') {
+        return msg.content.trim().length > 0;
+      }
+
+      // 如果是数组内容，检查是否有有效的部分
+      if (Array.isArray(msg.content)) {
+        return msg.content.some((part) => {
+          if (
+            part.type === 'text' &&
+            part.text &&
+            part.text.trim().length > 0
+          ) {
+            return true;
+          }
+          if (
+            part.type === 'image_url' &&
+            part.image_url &&
+            part.image_url.url
+          ) {
+            return true;
+          }
+          return false;
+        });
+      }
+
+      return false;
     });
+
+    const allMessages = [...validHistoricalMessages, ...currentMessages];
 
     // 添加新的用户消息到历史记录
     if (currentMessages.length > 0) {
       const lastMessage = currentMessages[currentMessages.length - 1];
-      if (lastMessage instanceof HumanMessage) {
+      if (
+        lastMessage instanceof HumanMessage &&
+        this.isValidMessage(lastMessage)
+      ) {
         await chatHistory.addMessage(lastMessage);
       }
     }
 
-    return { allMessages, currentMessages };
+    return { allMessages: allMessages, currentMessages };
+  }
+
+  isValidMessage(message) {
+    if (!message || !message.content) return false;
+
+    if (typeof message.content === 'string') {
+      return message.content.trim().length > 0;
+    }
+
+    if (Array.isArray(message.content)) {
+      return message.content.some((part) => {
+        if (part.type === 'text' && part.text && part.text.trim().length > 0) {
+          return true;
+        }
+        if (part.type === 'image_url' && part.image_url && part.image_url.url) {
+          return true;
+        }
+        return false;
+      });
+    }
+
+    return false;
   }
 
   async generateResponse(currentMessages, allMessages) {
@@ -74,6 +122,7 @@ export class MessageProcessor {
 
       const { textContent, imageBase64 } =
         this.extractMessageContent(latestHumanMessage);
+
       const intent = await extractQueryIntent(textContent, imageBase64);
 
       console.log('Extracted Intent:', intent);
@@ -98,8 +147,21 @@ export class MessageProcessor {
       const imageContent = userMessage.find(
         (content) => content.type === 'image_url',
       );
-      if (imageContent) {
-        imageBase64 = imageContent.image_url.url;
+      if (
+        imageContent &&
+        imageContent.image_url &&
+        imageContent.image_url.url
+      ) {
+        // 提取纯 base64 数据，去掉 data:image/jpeg;base64, 前缀
+        const fullUrl = imageContent.image_url.url;
+        if (fullUrl.startsWith('data:image/')) {
+          const base64Match = fullUrl.match(/^data:image\/[^;]+;base64,(.+)$/);
+          if (base64Match) {
+            imageBase64 = base64Match[1]; // 只保留纯 base64 部分
+          }
+        } else {
+          imageBase64 = fullUrl; // 如果已经是纯 base64，直接使用
+        }
       }
 
       const textContentObj = userMessage.find(
@@ -135,7 +197,14 @@ export class MessageProcessor {
   }
 
   async handleGeneralChat(allMessages) {
-    const llmResponse = await this.model.invoke(allMessages);
+    // 过滤掉无效的消息
+    const validMessages = allMessages.filter((msg) => this.isValidMessage(msg));
+
+    if (validMessages.length === 0) {
+      return '抱歉，没有找到有效的对话内容。';
+    }
+
+    const llmResponse = await this.model.invoke(validMessages);
     return llmResponse.content;
   }
 }

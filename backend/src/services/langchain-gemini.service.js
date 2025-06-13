@@ -15,13 +15,6 @@ export const langChainGeminiChatService = async (
   sessionId = null,
   imageBase64 = null,
 ) => {
-  console.log('LangChain Gemini Chat Service called with:', {
-    message,
-    userId,
-    sessionId,
-    imageBase64: imageBase64 ? 'present' : 'not present',
-  });
-
   // 验证请求
   const validation = ChatValidation.validateChatRequest(
     message,
@@ -72,3 +65,4 @@ export const langChainGeminiChatService = async (
 // 导出历史记录相关函数
 export const clearChatHistory = ChatHistoryService.clearHistory;
 export const getChatHistoryMessages = ChatHistoryService.getHistoryMessages;
+export const cleanInvalidMessages = ChatHistoryService.cleanInvalidMessages;
