@@ -13,15 +13,14 @@ const db = {};
 
 // 自动加载所有模型文件（ESM 动态导入）
 const loadModels = async () => {
-  const files = fs
-    .readdirSync(__dirname)
-    .filter(
-      (file) =>
-        file.indexOf('.') !== 0 &&
-        file !== basename &&
-        file.slice(-3) === '.js' &&
-        file.indexOf('.test.js') === -1,
-    );
+  const files = fs.readdirSync(__dirname).filter(
+    (file) =>
+      file.indexOf('.') !== 0 &&
+      file !== basename &&
+      file.slice(-3) === '.js' &&
+      file.indexOf('.test.js') === -1 &&
+      !file.includes('mongo'), // 排除文件名
+  );
 
   for (const file of files) {
     console.log(file);

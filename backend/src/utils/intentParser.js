@@ -162,6 +162,8 @@ export const extractQueryIntent = async (
     });
   }
 
+  console.log('base64 is : ', imageBase64);
+
   if (imageBase64) {
     messageContent.push({
       type: 'image_url',
