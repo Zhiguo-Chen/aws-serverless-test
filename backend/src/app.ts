@@ -1,16 +1,17 @@
+import 'reflect-metadata';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import path from 'path';
 import fs from 'fs';
-import db, { loadModels } from './models/index.js';
-import { connectMongoDB } from './config/mongodb.js';
+import { testConnection, syncDatabase, closeConnection } from './models';
+import { connectMongoDB } from './config/mongodb';
 
 // 导入路由
-import productRoutes from './routes/productRoutes.js';
+import productRoutes from './routes/productRoutes';
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+// const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const publicDir = path.join(__dirname, 'public');
 if (!fs.existsSync(publicDir)) {
   fs.mkdirSync(publicDir);
@@ -56,10 +57,17 @@ app.get('/health', (req, res) => {
 });
 
 // 错误处理中间件
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Something went wrong!' });
-});
+app.use(
+  (
+    err: Error,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) => {
+    console.error(err.stack);
+    res.status(500).json({ error: 'Something went wrong!' });
+  },
+);
 
 // 启动函数
 const PORT = process.env.PORT || 4000;
@@ -67,25 +75,49 @@ const start = async () => {
   try {
     console.log('Starting application initialization...');
 
-    // 1. 加载模型
-    await loadModels();
-    console.log('Models loaded successfully');
+    // 1. 测试数据库连接（模型已自动加载）
+    const isConnected = await testConnection();
+    if (!isConnected) {
+      throw new Error('Failed to connect to database');
+    }
 
     // 2. 连接 MongoDB
     await connectMongoDB();
     console.log('MongoDB connected successfully');
 
     // 3. 同步数据库
-    await db.sequelize.sync({ force: false });
+    await syncDatabase({
+      force:
+        process.env.NODEENV === 'development' &&
+        process.env.DB_FORCE_SYNC === 'true',
+      alter:
+        process.env.NODEENV === 'development' &&
+        process.env.DB_ALTER_SYNC === 'true',
+    });
     console.log('Database synced successfully');
 
-    // 5. 启动服务器
+    // 4. 启动服务器
+    const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
       console.log('Application startup completed successfully');
     });
+
+    // 优雅关闭处理
+    process.on('SIGTERM', async () => {
+      console.log('SIGTERM received, shutting down gracefully');
+      await closeConnection();
+      process.exit(0);
+    });
+
+    process.on('SIGINT', async () => {
+      console.log('SIGINT received, shutting down gracefully');
+      await closeConnection();
+      process.exit(0);
+    });
   } catch (error) {
     console.error('Failed to start application:', error);
+    await closeConnection();
     process.exit(1);
   }
 };

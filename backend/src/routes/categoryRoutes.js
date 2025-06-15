@@ -2,8 +2,8 @@ import express from 'express';
 import {
   getAllCategories,
   createCategory,
-} from '../controllers/categoryController.js';
-import authenticationToken from '../middlewares/auth.js';
+} from '../controllers/categoryController';
+import authenticationToken from '../middlewares/auth';
 
 const router = express.Router();
 

@@ -1,24 +1,25 @@
 import 'dotenv/config';
 import fs from 'fs';
-import OpenAI from 'openai';
 import { geminiChatService } from '../services/gemini.service.js';
 import { grokService } from '../services/grok.service.js';
 import { chatService } from '../services/openai.service.js';
 import { langChainGeminiChatService } from '../services/langchain-gemini.service.js';
+import { Request, Response } from 'express';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
 
-export const chat = async (req, res) => {
+export const chat = async (req: Request | any, res: Response): Promise<void> => {
   try {
     const { message, model, sessionId } = req.body;
-    let imageBase64 = null;
+    let imageBase64: null | undefined = null;
     if (req.file) {
-      imageBase64 = fs.readFileSync(req.file.path, { encoding: 'base64' });
+      imageBase64 = fs.readFileSync(req.file.path, { encoding: 'base64' }) as any;
     }
 
-    const userId = req.user.id; // 从请求中获取用户ID
+    const userId = req.user?.id as any;
+    if (!userId) {
+      res.status(401).json({ error: 'User not authenticated' });
+      return;
+    }
 
     let modelResponse;
     if (model.toLowerCase().includes('langchain')) {
@@ -46,10 +47,11 @@ export const chat = async (req, res) => {
       );
     }
     if (modelResponse?.error) {
-      return res.status(500).json({
+      res.status(500).json({
         error: modelResponse.error,
         details: modelResponse.details,
       });
+      return;
     }
     const aiResponseText = modelResponse.result;
     res

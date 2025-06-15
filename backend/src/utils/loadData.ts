@@ -1,10 +1,16 @@
 // seeders/seedProducts.js
-const fs = require('fs');
-const path = require('path');
-const csv = require('csv-parser');
-const sequelize = require('../config/database');
+// const fs = require('fs');
+// const path = require('path');
+// const csv = require('csv-parser');
+// const sequelize = require('../config/database');
+import fs from 'fs';
+import path from 'path';
+// @ts-ignore
+import csv from 'csv-parser';
+import sequelize from '../config/database';
+import { Sequelize } from 'sequelize';
 
-const loadData = async (Model, fileName) => {
+const loadData = async (Model: any, fileName: string) => {
   try {
     await sequelize.authenticate();
     console.log('Database connected.');
@@ -13,11 +19,11 @@ const loadData = async (Model, fileName) => {
     await sequelize.sync();
 
     // Read the CSV file
-    const results = [];
+    const results: Record<string, any>[] = [];
     await new Promise((resolve, reject) => {
       fs.createReadStream(path.resolve(__dirname + '/../db/data/', fileName))
         .pipe(csv())
-        .on('data', (data) => results.push(data))
+        .on('data', (data: any) => results.push(data))
         .on('end', resolve)
         .on('error', reject);
     });
