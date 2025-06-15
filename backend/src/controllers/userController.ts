@@ -1,18 +1,22 @@
 import jwt from 'jsonwebtoken';
+// Try to install type definitions first. If that doesn't work, use the declare statement in a .d.ts file.
+// For now, you can suppress the type error if you are sure about the usage.
+// @ts-ignore
 import bcrypt from 'bcryptjs';
-import db from '../models/index.js';
+import { User } from '../models';
+import { Request, Response } from 'express';
 
-const register = async (req, res) => {
+const register = async (req: Request, res: Response) => {
   try {
     const { name, email, phone, password, isSeller } = req.body;
 
-    const user = await db.User.create({
+    const user = await User.create({
       name,
       email,
       phone,
       password,
       isSeller,
-    });
+    } as User);
     res.status(201).json({
       message: 'user registered successfully',
       user,
@@ -25,20 +29,27 @@ const register = async (req, res) => {
   }
 };
 
-const login = async (req, res) => {
+const login = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password } = req.body;
 
-    const user = await db.User.findOne({ where: { email } });
+    const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      return res.status(404).json({ message: 'user not found' });
+      res.status(404).json({ message: 'user not found' });
+      return;
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const hash =
+      user.password ||
+      user.getDataValue('password') ||
+      user.dataValues.password;
+
+    const isPasswordValid = await bcrypt.compare(password, hash);
 
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid password' });
+      res.status(401).json({ message: 'Invalid password' });
+      return;
     }
     const token = jwt.sign(
       { id: user.id },

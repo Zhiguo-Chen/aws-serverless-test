@@ -1,4 +1,4 @@
-const Category = require('../../models/Category');
+const Category = require('../../models/Category.model');
 const loadData = require('../../utils/loadData');
 
 const seedData2Table = async () => {

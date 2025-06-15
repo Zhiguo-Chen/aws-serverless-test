@@ -2,15 +2,15 @@ import express from 'express';
 import fs from 'fs';
 import multer from 'multer';
 import path from 'path';
-import { chat } from '../controllers/chatController.js';
-import productController from '../controllers/productController.js';
-import { login, register } from '../controllers/userController.js';
-import authenticationToken from '../middlewares/auth.js';
-import categoryRoutes from './categoryRoutes.js';
+import { chat } from '../controllers/chatController';
+import productController from '../controllers/productController';
+import { login, register } from '../controllers/userController';
+import authenticationToken from '../middlewares/auth';
+import categoryRoutes from './categoryRoutes';
 
 const router = express.Router();
 const uploadDir = path.join(
-  path.dirname(new URL(import.meta.url).pathname),
+  __dirname,
   '../public/uploads',
 );
 if (!fs.existsSync(uploadDir)) {

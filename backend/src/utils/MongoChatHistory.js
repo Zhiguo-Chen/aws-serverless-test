@@ -1,5 +1,5 @@
-import { AIMessage, HumanMessage } from "@langchain/core/messages";
-import { ChatHistory } from "../models/ChatSessionHistory.mongo.js";
+import { AIMessage, HumanMessage } from '@langchain/core/messages';
+import { ChatHistory } from '../models/ChatSessionHistory.mongo';
 
 class MongoChatHistory {
   constructor(sessionId, userId = null) {

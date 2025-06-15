@@ -24,7 +24,7 @@ const sessionSchema = new Schema({
 
 // Middleware to update the updatedAt field on save
 sessionSchema.pre('save', function (next) {
-  this.updatedAt = Date.now();
+  this.updatedAt = new Date();
   next();
 });
 

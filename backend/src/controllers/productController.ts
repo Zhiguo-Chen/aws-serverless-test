@@ -1,9 +1,7 @@
-import fs from 'fs';
-import path from 'path';
-import db from '../models/index.js';
+import { Request, Response } from 'express';
+import sequelize, { Category, Product } from '../models';
 
-const createProduct = async (req, res) => {
-  const { Product, Category } = db;
+const createProduct = async (req: Request, res: Response): Promise<void> => {
   try {
     const {
       name,
@@ -20,16 +18,22 @@ const createProduct = async (req, res) => {
 
     const categoryRecord = await Category.findOne({
       where: { name: category },
+      raw: true,
     });
 
     if (!categoryRecord) {
-      return res.status(400).json({ error: 'Category not found' });
+      res.status(400).json({ error: 'Category not found' });
+      return;
     }
 
     let imageUrl = null;
     if (req.file) {
       imageUrl = `/uploads/${req.file.filename}`;
     }
+
+    console.log('=========');
+    console.log(categoryRecord);
+    console.log('=========');
 
     const product = await Product.create({
       name,
@@ -49,14 +53,13 @@ const createProduct = async (req, res) => {
     });
 
     res.status(201).json(product);
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
     res.status(500).json({ error: error.message });
   }
 };
 
-const updateProduct = async (req, res) => {
-  const { Product } = db;
+const updateProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const updates = req.body;
@@ -71,16 +74,16 @@ const updateProduct = async (req, res) => {
       updates.imageUrl = `/uploads/${req.file.filename}`;
       // 删除旧图片
       const product = await Product.findByPk(id);
-      if (product.imageUrl) {
-        const oldImagePath = path.join(
-          __dirname,
-          '../public',
-          product.imageUrl,
-        );
-        if (fs.existsSync(oldImagePath)) {
-          fs.unlinkSync(oldImagePath);
-        }
-      }
+      // if (product?.imageUrl) {
+      //   const oldImagePath = path.join(
+      //     __dirname,
+      //     '../public',
+      //     product.imageUrl,
+      //   );
+      //   if (fs.existsSync(oldImagePath)) {
+      //     fs.unlinkSync(oldImagePath);
+      //   }
+      // }
     }
 
     const [updated] = await Product.update(updates, {
@@ -93,19 +96,18 @@ const updateProduct = async (req, res) => {
     } else {
       res.status(404).json({ error: 'Product not found' });
     }
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 };
 
-const getProducts = async (req, res) => {
-  const { Product, Category, sequelize } = db;
+const getProducts = async (req: Request, res: Response) => {
   try {
     const products = await Product.findAll({
       include: [
         {
           model: Category,
-          as: 'Category',
+          as: 'category',
           attributes: ['id', 'name'],
         },
       ],
@@ -140,21 +142,20 @@ const getProducts = async (req, res) => {
     });
 
     res.status(200).json(formattedProducts);
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
 
-const getProductById = async (req, res) => {
-  const { Product, Category, sequelize } = db;
+const getProductById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const product = await Product.findByPk(id, {
       include: [
         {
           model: Category,
-          as: 'Category',
+          as: 'category',
           attributes: ['id', 'name'],
         },
       ],
@@ -189,7 +190,7 @@ const getProductById = async (req, res) => {
       // 计算评分分布
       if (productData.Reviews && productData.Reviews.length > 0) {
         productData.ratingDistribution = [0, 0, 0, 0, 0]; // 1-5星的计数
-        productData.Reviews.forEach((review) => {
+        productData.Reviews.forEach((review: any) => {
           if (review.rating >= 1 && review.rating <= 5) {
             productData.ratingDistribution[review.rating - 1]++;
           }
@@ -200,26 +201,24 @@ const getProductById = async (req, res) => {
     } else {
       res.status(404).json({ error: 'Product not found' });
     }
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 };
 
-const deleteProduct = async (req, res) => {
-  const { Product } = db;
+const deleteProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const product = await Product.findByPk(id);
 
     if (product) {
       // 删除关联的图片
-      if (product.imageUrl) {
+      if (product.productImages && product.productImages.length > 0) {
         // 修正 __dirname 为 ES Module 兼容写法
-        const __dirname = path.dirname(new URL(import.meta.url).pathname);
-        const imagePath = path.join(__dirname, '../public', product.imageUrl);
-        if (fs.existsSync(imagePath)) {
-          fs.unlinkSync(imagePath);
-        }
+        // const imagePath = path.join(__dirname, '../public', product.imageUrl);
+        // if (fs.existsSync(imagePath)) {
+        //   fs.unlinkSync(imagePath);
+        // }
       }
 
       await product.destroy();
@@ -227,7 +226,7 @@ const deleteProduct = async (req, res) => {
     } else {
       res.status(404).json({ error: 'Product not found' });
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error deleting product:', error);
     res.status(500).json({ error: error.message });
   }
