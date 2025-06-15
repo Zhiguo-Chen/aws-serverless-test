@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import 'dotenv/config';
 
 const MONGODB_URI = process.env.MONGODB_URI;
-let dbConnection = null;
+let dbConnection: typeof mongoose | null = null;
 export let mongoClientReady = false;
 export const connectMongoDB = async () => {
   if (dbConnection && mongoose.connection.readyState === 1) {

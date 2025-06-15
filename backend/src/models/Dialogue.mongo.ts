@@ -36,7 +36,7 @@ const dialogueSchema = new mongoose.Schema({
 });
 
 dialogueSchema.pre('save', function (next) {
-  this.updatedAt = Date.now();
+  this.updatedAt = new Date();
   next();
 });
 
