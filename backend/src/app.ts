@@ -57,10 +57,17 @@ app.get('/health', (req, res) => {
 });
 
 // 错误处理中间件
-app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Something went wrong!' });
-});
+app.use(
+  (
+    err: Error,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) => {
+    console.error(err.stack);
+    res.status(500).json({ error: 'Something went wrong!' });
+  },
+);
 
 // 启动函数
 const PORT = process.env.PORT || 4000;
@@ -79,9 +86,13 @@ const start = async () => {
     console.log('MongoDB connected successfully');
 
     // 3. 同步数据库
-    await syncDatabase({ 
-      force: process.env.NODE_ENV === 'development' && process.env.DB_FORCE_SYNC === 'true',
-      alter: process.env.NODE_ENV === 'development' && process.env.DB_ALTER_SYNC === 'true'
+    await syncDatabase({
+      force:
+        process.env.NODEENV === 'development' &&
+        process.env.DB_FORCE_SYNC === 'true',
+      alter:
+        process.env.NODEENV === 'development' &&
+        process.env.DB_ALTER_SYNC === 'true',
     });
     console.log('Database synced successfully');
 
@@ -104,7 +115,6 @@ const start = async () => {
       await closeConnection();
       process.exit(0);
     });
-
   } catch (error) {
     console.error('Failed to start application:', error);
     await closeConnection();

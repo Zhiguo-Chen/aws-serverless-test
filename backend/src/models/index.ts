@@ -31,7 +31,7 @@ export const syncDatabase = async (
     await sequelize.sync({
       force,
       alter,
-      logging: process.env.NODE_ENV === 'development' ? console.log : false,
+      logging: process.env.NODEENV === 'development' ? console.log : false,
     });
 
     console.log('Database synchronized successfully');
