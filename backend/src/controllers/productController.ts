@@ -31,10 +31,6 @@ const createProduct = async (req: Request, res: Response): Promise<void> => {
       imageUrl = `/uploads/${req.file.filename}`;
     }
 
-    console.log('=========');
-    console.log(categoryRecord);
-    console.log('=========');
-
     const product = await Product.create({
       name,
       description,
