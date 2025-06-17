@@ -1,8 +1,3 @@
-// const csv = require('csv-parser');
-// const fs = require('fs');
-// const path = require('path');
-// const { sequelize, Category } = require('../models');
-
 import path from 'path';
 import fs from 'fs';
 import csv from 'csv-parser';
