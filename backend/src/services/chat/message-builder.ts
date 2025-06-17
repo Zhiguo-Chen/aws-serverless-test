@@ -1,7 +1,7 @@
 import { HumanMessage } from '@langchain/core/messages';
 
 export class MessageBuilder {
-  static buildUserMessage(message, imageBase64) {
+  static buildUserMessage(message: string, imageBase64: string | null) {
     const messageContent = [];
 
     // 验证并添加文本内容
@@ -36,7 +36,7 @@ export class MessageBuilder {
     }
 
     // 如果只有一个文本内容，直接使用字符串；否则使用数组
-    const content =
+    const content: any =
       messageContent.length === 1 && messageContent[0].type === 'text'
         ? messageContent[0].text
         : messageContent;

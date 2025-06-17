@@ -1,19 +1,19 @@
 import { HumanMessage } from '@langchain/core/messages';
-import { getChatHistory } from '../../utils/MongoChatHistory.js';
+import { getChatHistory } from '../../utils/MongoChatHistory';
 
 export class ChatHistoryService {
-  static async clearHistory(sessionId) {
+  static async clearHistory(sessionId: string) {
     try {
       const chatHistory = getChatHistory(sessionId);
       await chatHistory.clearHistory();
       return { success: true, message: 'Chat history cleared successfully' };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error clearing chat history:', error);
       return { success: false, error: error.message };
     }
   }
 
-  static async getHistoryMessages(sessionId) {
+  static async getHistoryMessages(sessionId: string) {
     try {
       const chatHistory = getChatHistory(sessionId);
       const messages = await chatHistory.getMessages();
@@ -21,7 +21,7 @@ export class ChatHistoryService {
       // 过滤并格式化消息
       const validMessages = messages
         .filter((msg) => this.isValidMessage(msg))
-        .map((msg) => ({
+        .map((msg: any) => ({
           type: msg instanceof HumanMessage ? 'human' : 'ai',
           content: msg.content,
           timestamp: msg.timestamp,
@@ -31,13 +31,13 @@ export class ChatHistoryService {
         success: true,
         messages: validMessages,
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error getting chat history:', error);
       return { success: false, error: error.message };
     }
   }
 
-  static isValidMessage(message) {
+  static isValidMessage(message: any) {
     if (!message || !message.content) return false;
 
     if (typeof message.content === 'string') {
@@ -45,7 +45,7 @@ export class ChatHistoryService {
     }
 
     if (Array.isArray(message.content)) {
-      return message.content.some((part) => {
+      return message.content.some((part: any) => {
         if (part.type === 'text' && part.text && part.text.trim().length > 0) {
           return true;
         }
@@ -60,7 +60,7 @@ export class ChatHistoryService {
   }
 
   // 新增：清理无效的历史消息
-  static async cleanInvalidMessages(sessionId) {
+  static async cleanInvalidMessages(sessionId: string) {
     try {
       const chatHistory = getChatHistory(sessionId);
       const messages = await chatHistory.getMessages();
@@ -82,7 +82,7 @@ export class ChatHistoryService {
       }
 
       return { success: true, cleaned: messages.length - validMessages.length };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error cleaning chat history:', error);
       return { success: false, error: error.message };
     }

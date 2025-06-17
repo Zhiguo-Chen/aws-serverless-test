@@ -2,7 +2,9 @@ import { AIMessage, HumanMessage } from '@langchain/core/messages';
 import { ChatHistory } from '../models/ChatSessionHistory.mongo';
 
 class MongoChatHistory {
-  constructor(sessionId, userId = null) {
+  sessionId: string;
+  userId: string | null;
+  constructor(sessionId: string, userId = null) {
     this.sessionId = sessionId;
     this.userId = userId;
   }
@@ -30,7 +32,7 @@ class MongoChatHistory {
     }
   }
 
-  async addMessage(message) {
+  async addMessage(message: any) {
     try {
       const messageType = message instanceof HumanMessage ? 'human' : 'ai';
       const messageData = {
@@ -71,6 +73,6 @@ class MongoChatHistory {
 }
 
 // 获取聊天历史的工厂函数
-export const getChatHistory = (sessionId, userId = null) => {
+export const getChatHistory = (sessionId: string, userId = null) => {
   return new MongoChatHistory(sessionId, userId);
 };
