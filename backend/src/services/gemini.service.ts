@@ -5,7 +5,7 @@ import Session from '../models/Session.mongo';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-let chatSession;
+let chatSession: any;
 
 const initChatSession = (history = []) => {
   // 获取模型
@@ -16,7 +16,7 @@ const initChatSession = (history = []) => {
 };
 
 export const geminiChatService = async (
-  message,
+  message: string,
   userId = null,
   sessionId = null,
   imageBase64 = null,
@@ -26,7 +26,7 @@ export const geminiChatService = async (
   }
   // await connectMongoDB();
   // 1. 获取或创建 session
-  let session;
+  let session: any;
   if (sessionId) {
     session = await Session.findOne({ sessionId, userId });
     if (!session) {
@@ -43,7 +43,7 @@ export const geminiChatService = async (
   const historyForModel = loadedDbHistory.map((d) => ({
     role: d.role, // 你需要在Dialogue表中加role字段（"user"或"model"）
     parts: [{ text: d.message }],
-  }));
+  })) as any;
 
   if (!chatSession || historyForModel) {
     initChatSession(historyForModel || []);
@@ -52,7 +52,7 @@ export const geminiChatService = async (
   console.log('Gemini service called with message:', message);
 
   try {
-    const contents = [{ text: message }];
+    const contents: any = [{ text: message }];
     if (imageBase64) {
       contents.push({
         inlineData: {
@@ -80,7 +80,7 @@ export const geminiChatService = async (
 
     console.log('Gemini chat service response:', response.text);
     return { result: response.text, sessionId: session.sessionId };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in chat service:', error);
     return { error: error.message || 'Chat service error' };
   }

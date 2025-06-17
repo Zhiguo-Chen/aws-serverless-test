@@ -4,15 +4,16 @@ import {
   START,
   StateGraph,
 } from '@langchain/langgraph';
-import { MessageProcessor } from './message-processor.js';
+import { MessageProcessor } from './message-processor';
 
 export class WorkflowBuilder {
+  messageProcessor: MessageProcessor;
   constructor() {
     this.messageProcessor = new MessageProcessor();
   }
 
   buildWorkflow() {
-    const callModel = async (state, config) => {
+    const callModel = async (state: any, config: any) => {
       return await this.messageProcessor.processMessage(state, config);
     };
 

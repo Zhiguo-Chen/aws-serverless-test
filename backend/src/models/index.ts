@@ -121,11 +121,11 @@ export const getStats = async (): Promise<any> => {
 
 // 导出所有模型（如果需要的话）
 // 这里可以导出你的具体模型，但通常通过 sequelize.models 访问就足够了
-export * from './Category.model';
-export * from './Product.model';
-export * from './ProductImage.model';
-export * from './Review.model';
-export * from './User.model';
+export { Category } from './Category.model';
+export { Product } from './Product.model';
+export { ProductImage } from './ProductImage.model';
+export { Review } from './Review.model';
+export { User } from './User.model';
 
 // 默认导出 sequelize 实例
 export default sequelize;

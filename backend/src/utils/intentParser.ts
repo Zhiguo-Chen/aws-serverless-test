@@ -145,7 +145,7 @@ const modelWithTools = model.withConfig({
 
 // -------------------- 3. Main Function (Same as before) --------------------
 export const extractQueryIntent = async (
-  userInput,
+  userInput: string | null | undefined,
   imageBase64 = null,
   imageMimeType = 'image/jpeg',
 ) => {

@@ -1,9 +1,7 @@
 import { Op } from 'sequelize';
-import db from '../models';
+import { Category, Product } from '../models';
 
-export const searchProducts = async (query) => {
-  const { Product, Category } = db;
-  console.log('Searching products with query:', query);
+export const searchProducts = async (query: any) => {
   return Product.findAll({
     where: {
       [Op.or]: [
@@ -14,7 +12,7 @@ export const searchProducts = async (query) => {
     include: [
       {
         model: Category,
-        as: 'Category',
+        as: 'category',
         where: {
           name: { [Op.iLike]: `%${query}%` },
         },

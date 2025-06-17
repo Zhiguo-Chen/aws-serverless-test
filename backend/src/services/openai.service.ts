@@ -8,7 +8,7 @@ const openai = new OpenAI({
 });
 
 export const chatService = async (
-  message,
+  message: string,
   userId = null,
   sessionId = null,
   imageBase64 = null,
@@ -21,7 +21,8 @@ export const chatService = async (
   if (sessionId) {
     session = await Session.findOne({ sessionId, userId });
     if (!session) {
-      return res.status(400).json({ message: 'Invalid sessionId' });
+      session = new Session({ userId, sessionId });
+      await session.save();
     }
   } else {
     session = new Session({ userId });
@@ -40,7 +41,7 @@ export const chatService = async (
   }
 
   try {
-    const inputPayload = [{ role: 'user', content: message }];
+    const inputPayload: any = [{ role: 'user', content: message }];
     if (imageBase64) {
       inputPayload.push({
         role: 'user',
@@ -83,7 +84,7 @@ export const chatService = async (
     await aiDialogue.save();
 
     return { result: response.output_text, sessionId: session.sessionId };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in chat service:', error);
     return { error: error.message || 'Chat service error' };
   }
