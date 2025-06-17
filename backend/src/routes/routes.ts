@@ -1,3 +1,5 @@
+import { chat } from '../controllers/chatController';
+
 const express = require('express');
 const { register, login } = require('../controllers/userController');
 const authenticationToken = require('../middlewares/auth');
@@ -10,7 +12,7 @@ const {
 
 const router = express.Router();
 
-router.use('/test', (req, res) => {
+router.use('/test', (req: any, res: any) => {
   res.json({ id: 1, name: 'Leo Messi' });
 });
 
