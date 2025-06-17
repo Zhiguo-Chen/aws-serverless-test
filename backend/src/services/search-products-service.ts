@@ -5,12 +5,6 @@ import { Op } from 'sequelize';
 import sequelize, { Category, Product } from '../models';
 
 export const searchProducts = async (query: any) => {
-  console.log('==============');
-  console.log('Searching products with query:', query);
-  console.log('==============');
-  console.log('Available models:', Object.keys(sequelize.models));
-  console.log('Product model:', sequelize.models.Product);
-  console.log('==============');
   return Product.findAll({
     where: {
       [Op.or]: [
