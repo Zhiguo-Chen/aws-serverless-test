@@ -1,5 +1,5 @@
-const Category = require('../../models/Category.model');
-const loadData = require('../../utils/loadData');
+import { Category } from '../../models';
+import { loadData } from '../../utils/loadData';
 
 const seedData2Table = async () => {
   await Promise.all([loadData(Category, 'categories.csv')]);

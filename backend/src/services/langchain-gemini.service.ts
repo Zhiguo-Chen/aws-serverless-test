@@ -1,16 +1,16 @@
 import { AIMessage } from '@langchain/core/messages';
-import { WorkflowBuilder } from './chat/workflow-builder.js';
-import { MessageBuilder } from './chat/message-builder.js';
-import { ChatHistoryService } from './chat/chat-history-service.js';
-import { ChatValidation } from './chat/validation.js';
+import { WorkflowBuilder } from './chat/workflow-builder';
+import { MessageBuilder } from './chat/message-builder';
+import { ChatHistoryService } from './chat/chat-history-service';
+import { ChatValidation } from './chat/validation';
 
 // 创建工作流实例
 const workflowBuilder = new WorkflowBuilder();
-const app = workflowBuilder.buildWorkflow();
+const app: any = workflowBuilder.buildWorkflow();
 
 // 主要的聊天服务函数
 export const langChainGeminiChatService = async (
-  message,
+  message: string,
   userId = null,
   sessionId = null,
   imageBase64 = null,
@@ -52,7 +52,7 @@ export const langChainGeminiChatService = async (
       result: finalResult || '抱歉，我没有生成有效的回复。',
       sessionId,
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in chat service:', error);
     console.error('Error stack:', error.stack);
     return {

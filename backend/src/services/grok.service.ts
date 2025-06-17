@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 import 'dotenv/config';
 
-export const grokService = async (message) => {
+export const grokService = async (message: string) => {
   if (!message || typeof message !== 'string' || message.trim() === '') {
     return { error: 'Message is required and must be a non-empty string.' };
   }
@@ -21,7 +21,7 @@ export const grokService = async (message) => {
     });
     console.log('Grok service response:', completion);
     return { result: completion };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in Grok service:', error);
     return { error: error.message || 'Grok service error' };
   }

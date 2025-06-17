@@ -1,5 +1,9 @@
 export class ChatValidation {
-  static validateChatRequest(message, sessionId, imageBase64) {
+  static validateChatRequest(
+    message: string,
+    sessionId: string | null,
+    imageBase64: string | null,
+  ) {
     if (!sessionId) {
       return {
         isValid: false,
