@@ -8,9 +8,8 @@ import path from 'path';
 // @ts-ignore
 import csv from 'csv-parser';
 import sequelize from '../config/database';
-import { Sequelize } from 'sequelize';
 
-const loadData = async (Model: any, fileName: string) => {
+export const loadData = async (Model: any, fileName: string) => {
   try {
     await sequelize.authenticate();
     console.log('Database connected.');
@@ -47,5 +46,3 @@ const loadData = async (Model: any, fileName: string) => {
     await sequelize.close();
   }
 };
-
-module.exports = loadData;

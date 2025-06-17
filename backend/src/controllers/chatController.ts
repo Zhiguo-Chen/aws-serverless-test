@@ -1,18 +1,22 @@
 import 'dotenv/config';
 import fs from 'fs';
-import { geminiChatService } from '../services/gemini.service.js';
-import { grokService } from '../services/grok.service.js';
-import { chatService } from '../services/openai.service.js';
-import { langChainGeminiChatService } from '../services/langchain-gemini.service.js';
+import { geminiChatService } from '../services/gemini.service';
+import { grokService } from '../services/grok.service';
+import { chatService } from '../services/openai.service';
+import { langChainGeminiChatService } from '../services/langchain-gemini.service';
 import { Request, Response } from 'express';
 
-
-export const chat = async (req: Request | any, res: Response): Promise<void> => {
+export const chat = async (
+  req: Request | any,
+  res: Response,
+): Promise<void> => {
   try {
     const { message, model, sessionId } = req.body;
     let imageBase64: null | undefined = null;
     if (req.file) {
-      imageBase64 = fs.readFileSync(req.file.path, { encoding: 'base64' }) as any;
+      imageBase64 = fs.readFileSync(req.file.path, {
+        encoding: 'base64',
+      }) as any;
     }
 
     const userId = req.user?.id as any;
@@ -21,7 +25,7 @@ export const chat = async (req: Request | any, res: Response): Promise<void> => 
       return;
     }
 
-    let modelResponse;
+    let modelResponse: any;
     if (model.toLowerCase().includes('langchain')) {
       modelResponse = await langChainGeminiChatService(
         message,

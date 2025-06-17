@@ -1,15 +1,17 @@
 import { AIMessage, HumanMessage } from '@langchain/core/messages';
-import { extractQueryIntent } from '../../utils/intentParser.js';
-import { searchProducts } from '../search-products-service.js';
-import { getChatHistory } from '../../utils/MongoChatHistory.js';
-import { createChatModel } from './model-config.js';
+import { extractQueryIntent } from '../../utils/intentParser';
+import { searchProducts } from '../search-products-service';
+import { getChatHistory } from '../../utils/MongoChatHistory';
+import { createChatModel } from './model-config';
+import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 
 export class MessageProcessor {
+  model: ChatGoogleGenerativeAI;
   constructor() {
     this.model = createChatModel();
   }
 
-  async processMessage(state, config) {
+  async processMessage(state: any, config: any) {
     this.validateConfig(config);
 
     const { sessionId, userId } = config.configurable;
@@ -20,7 +22,7 @@ export class MessageProcessor {
       chatHistory,
     );
 
-    const responseText = await this.generateResponse(
+    const responseText: any = await this.generateResponse(
       currentMessages,
       allMessages,
     );
@@ -31,7 +33,7 @@ export class MessageProcessor {
     return { messages: [aiMessage] };
   }
 
-  validateConfig(config) {
+  validateConfig(config: any) {
     if (!config.configurable?.sessionId) {
       throw new Error(
         "Make sure that the config includes the following information: {'configurable': {'sessionId': 'some_value'}}",
@@ -39,12 +41,12 @@ export class MessageProcessor {
     }
   }
 
-  async prepareMessages(state, chatHistory) {
+  async prepareMessages(state: any, chatHistory: any) {
     const historicalMessages = await chatHistory.getMessages();
     const currentMessages = state.messages || [];
 
     // 过滤掉无效的历史消息
-    const validHistoricalMessages = historicalMessages.filter((msg) => {
+    const validHistoricalMessages = historicalMessages.filter((msg: any) => {
       if (!msg || !msg.content) return false;
 
       // 如果是字符串内容，检查是否为空
@@ -54,7 +56,7 @@ export class MessageProcessor {
 
       // 如果是数组内容，检查是否有有效的部分
       if (Array.isArray(msg.content)) {
-        return msg.content.some((part) => {
+        return msg.content.some((part: any) => {
           if (
             part.type === 'text' &&
             part.text &&
@@ -92,7 +94,7 @@ export class MessageProcessor {
     return { allMessages: allMessages, currentMessages };
   }
 
-  isValidMessage(message) {
+  isValidMessage(message: any) {
     if (!message || !message.content) return false;
 
     if (typeof message.content === 'string') {
@@ -100,7 +102,7 @@ export class MessageProcessor {
     }
 
     if (Array.isArray(message.content)) {
-      return message.content.some((part) => {
+      return message.content.some((part: any) => {
         if (part.type === 'text' && part.text && part.text.trim().length > 0) {
           return true;
         }
@@ -114,10 +116,10 @@ export class MessageProcessor {
     return false;
   }
 
-  async generateResponse(currentMessages, allMessages) {
+  async generateResponse(currentMessages: any, allMessages: any) {
     try {
       const latestHumanMessage = currentMessages.find(
-        (msg) => msg instanceof HumanMessage,
+        (msg: any) => msg instanceof HumanMessage,
       );
 
       const { textContent, imageBase64 } =
@@ -138,7 +140,7 @@ export class MessageProcessor {
     }
   }
 
-  extractMessageContent(message) {
+  extractMessageContent(message: any) {
     const userMessage = message?.content;
     let imageBase64 = null;
     let textContent = '';
@@ -175,7 +177,7 @@ export class MessageProcessor {
     return { textContent, imageBase64 };
   }
 
-  async handleProductQuery(intent) {
+  async handleProductQuery(intent: any) {
     const products = await searchProducts(intent.categories[0]);
 
     if (products.length > 0) {
@@ -196,7 +198,7 @@ export class MessageProcessor {
     }
   }
 
-  async handleGeneralChat(allMessages) {
+  async handleGeneralChat(allMessages: any[]) {
     // 过滤掉无效的消息
     const validMessages = allMessages.filter((msg) => this.isValidMessage(msg));
 
