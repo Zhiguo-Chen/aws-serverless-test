@@ -1,8 +1,5 @@
 import { Op } from 'sequelize';
-// import sequelize from '../models';
-// import { Product } from '../models/Product.model';
-// import { Category } from '../models/Category.model';
-import sequelize, { Category, Product } from '../models';
+import { Category, Product } from '../models';
 
 export const searchProducts = async (query: any) => {
   return Product.findAll({
