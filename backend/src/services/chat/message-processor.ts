@@ -1,7 +1,10 @@
 import { AIMessage, HumanMessage } from '@langchain/core/messages';
-import { extractQueryIntent } from '../../utils/intentParser';
+import {
+  enhanceIntentWithHistory,
+  extractQueryIntent,
+} from '../../utils/intentParser';
 import { searchProducts } from '../search-products-service';
-import { getChatHistory } from '../../utils/MongoChatHistory';
+import { getChatHistory, MongoChatHistory } from '../../utils/MongoChatHistory';
 import { createChatModel } from './model-config';
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 
@@ -41,7 +44,7 @@ export class MessageProcessor {
     }
   }
 
-  async prepareMessages(state: any, chatHistory: any) {
+  async prepareMessages(state: any, chatHistory: MongoChatHistory) {
     const historicalMessages = await chatHistory.getMessages();
     const currentMessages = state.messages || [];
 
@@ -130,7 +133,7 @@ export class MessageProcessor {
       console.log('Extracted Intent:', intent);
 
       if (intent.intentType === 'product_query') {
-        return await this.handleProductQuery(intent);
+        return await this.handleProductQuery(intent, allMessages);
       } else {
         return await this.handleGeneralChat(allMessages);
       }
@@ -177,8 +180,24 @@ export class MessageProcessor {
     return { textContent, imageBase64 };
   }
 
-  async handleProductQuery(intent: any) {
-    const products = await searchProducts(intent.categories[0]);
+  async handleProductQuery(intent: any, allMessages: any[]) {
+    let category;
+    if (intent && (!intent.categories || intent.categories.length === 0)) {
+      console.log('No categories found in intent, enhancing with history...');
+      const enhancedIntent = await enhanceIntentWithHistory(
+        intent,
+        allMessages,
+      );
+      if (enhancedIntent.categories && enhancedIntent.categories.length > 0) {
+        category = enhancedIntent.categories[0];
+      }
+    } else if (intent.categories.length > 0) {
+      category = intent.categories[0];
+    }
+    if (!category) {
+      return `抱歉，没有找到相关的商品。`;
+    }
+    const products = await searchProducts(category);
 
     if (products.length > 0) {
       const formattedProducts = products.map((product) =>
