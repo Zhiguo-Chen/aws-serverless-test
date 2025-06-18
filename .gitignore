@@ -130,3 +130,7 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Uploads
+backend/src/public/uploads/*
+!backend/src/public/uploads/.gitkeep
