@@ -1,7 +1,7 @@
 import { AIMessage, HumanMessage } from '@langchain/core/messages';
 import { ChatHistory } from '../models/ChatSessionHistory.mongo';
 
-class MongoChatHistory {
+export class MongoChatHistory {
   sessionId: string;
   userId: string | null;
   constructor(sessionId: string, userId = null) {
