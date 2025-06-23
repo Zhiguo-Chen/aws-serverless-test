@@ -25,11 +25,15 @@ const NewLogin: React.FC = () => {
         password,
       });
       if (response.status === 200) {
-        const { token } = response.data;
+        const { token, user } = response.data;
         if (token) {
           localStorage.setItem(authTokenKey, token);
           axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        }
+        if (user.isSeller) {
           navigate('/management/product-list');
+        } else {
+          navigate('/main/home');
         }
       } else {
         console.log('Login failed:');

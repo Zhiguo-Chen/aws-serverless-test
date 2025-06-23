@@ -16,7 +16,8 @@ const MainHeader = () => {
         navigate('/main/home');
         break;
       case '2':
-        navigate('/main/contact');
+        // navigate('/main/contact');
+        navigate('/main/view-products');
         break;
       case '3':
         navigate('/main/about');
