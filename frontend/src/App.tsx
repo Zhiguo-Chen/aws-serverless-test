@@ -70,6 +70,7 @@ const App = () => {
               element={<ProductDetail />}
             />
             <Route path="contact" element={<Contact />} />
+            <Route path="view-products" element={<ViewProducts />} />
             {/* <Route path="add-product" element={<AddProducts />} /> */}
             {/* <Route path="product-list-2" element={<ProductList2 />} />
             <Route path="product-list/new" element={<ProductForm />} />

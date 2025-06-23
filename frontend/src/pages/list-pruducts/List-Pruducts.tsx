@@ -2,6 +2,8 @@ import { Card } from 'antd';
 import { AppstoreOutlined, BarsOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import ProductBrick from '../../components/ProductBrick/ProductBrick';
+import ProductItem from '../../components/ProductItem/ProductItem';
+import ProductPieceData from '../../components/ProductPieceData/ProductPieceData';
 
 export interface Product {
   category_id?: number;
@@ -66,17 +68,13 @@ const ListProducts = ({
       <ul
         className={
           isGrid
-            ? 'grid auto-fit grid-gap padding-1'
+            ? 'grid auto-fit grid-gap-2 padding-1'
             : 'flex flex-column flex-gap padding-1'
         }
       >
-        {products.map((product: Product) => {
+        {products.map((product: Product, index: number) => {
           return (
-            <li
-              key={product.id}
-              style={{ height: isGrid ? '30rem' : '10rem' }}
-              onClick={onProductClick}
-            >
+            <li key={product.id} onClick={onProductClick}>
               {/* <Card style={{ width: '100%' }}>
                 <div>
                   <img
@@ -87,11 +85,27 @@ const ListProducts = ({
                   {isGrid ?? <div>{product.name}</div>}
                 </div>
               </Card> */}
-              {/* {isGrid ? (
-                <ProductBrick product={product} />
+              {isGrid ? (
+                <ProductItem
+                  product={product}
+                  {...(product.oldPrice !== undefined && product.oldPrice > 0
+                    ? {
+                        labelPlace: (
+                          <label className="discount-info text-center">
+                            {product.oldPrice && product.oldPrice > 0
+                              ? -Math.ceil(
+                                  (1 - product.price / product.oldPrice) * 100,
+                                ) + '%'
+                              : ''}
+                          </label>
+                        ),
+                      }
+                    : {})}
+                  key={index}
+                />
               ) : (
-                <ProductItem product={product} />
-              )} */}
+                <ProductPieceData product={product} />
+              )}
             </li>
           );
         })}
