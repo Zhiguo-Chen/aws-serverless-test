@@ -1,4 +1,4 @@
-import { Product } from '../../pages/list-pruducts/List-Pruducts';
+import { Product } from '../../types/product';
 import './ProductPieceData.scss';
 import { StarFilled } from '@ant-design/icons';
 
@@ -9,7 +9,7 @@ const ProductPieceData = ({ product }: { product: Product }) => {
       <div className="flex">
         <div className="product-piece-image-container flex-shrink-0 flex justify-center align-center position-relative">
           <img
-            src={product.image}
+            src={product.productImages[0].imageUrl}
             alt={product.name}
             className="product-piece-image"
           />
@@ -57,7 +57,7 @@ const ProductPieceData = ({ product }: { product: Product }) => {
         </div>
         <div className="product-price-container flex-shrink-0 flex-grow-0 flex flex-column">
           <div className="price">${product.price}</div>
-          <div className="old-price">${product.oldPrice}</div>
+          <div className="old-price">${product.originalPrice}</div>
         </div>
       </div>
     </a>
