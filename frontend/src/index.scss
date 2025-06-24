@@ -59,6 +59,14 @@ button {
   flex-wrap: wrap;
 }
 
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+
+.flex-grow-0 {
+  flex-grow: 0;
+}
+
 .flex-1 {
   flex: 1;
   overflow: hidden;
@@ -95,7 +103,7 @@ button {
 
 .auto-fit {
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-  gap: 1rem;
+  // gap: 1rem;
   // padding: 1rem;
 }
 
@@ -305,4 +313,17 @@ ul {
   max-width: 1200px;
   margin: 0 auto;
   padding: 100px 0;
+}
+
+.price {
+  color: var(--seconday-color);
+}
+
+.old-price {
+  color: var(--text-2);
+  text-decoration: line-through;
+}
+
+.list-page-padding {
+  padding: 24px 0;
 }

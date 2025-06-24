@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Product } from '../list-pruducts/List-Pruducts';
 import { AppstoreOutlined, BarsOutlined } from '@ant-design/icons';
 import ProductItem from '../../components/ProductItem/ProductItem';
 import { ReactComponent as EyeIcon } from '../../assets/icons/eye.svg';
@@ -8,6 +7,7 @@ import { Breadcrumb } from 'antd';
 import { Link } from 'react-router-dom';
 import './ProductList.scss';
 import ProductListItem from '../../components/ProductListItem/ProductListItem';
+import { Product } from '../../types/product';
 
 const ProductList = ({
   productsList,
@@ -56,14 +56,14 @@ const ProductList = ({
           isGrid ? 'grid auto-fit grid-gap-2 ' : 'flex flex-column flex-gap '
         }
       >
-        {productsList.map((product: any, index: any) =>
+        {productsList.map((product: Product, index: number) =>
           isGrid ? (
             <ProductItem
               product={product}
               labelPlace={
                 <label className="discount-info text-center">
-                  {product.oldPrice && product.oldPrice > 0
-                    ? -Math.ceil((1 - product.price / product.oldPrice) * 100) +
+                  {product.originalPrice && product.originalPrice > 0
+                    ? -Math.ceil((1 - product.price / product.originalPrice) * 100) +
                       '%'
                     : ''}
                 </label>
