@@ -1,16 +1,10 @@
 import { useEffect, useState } from 'react';
-import { axiosInstance } from '../../auth/axiosInstance';
-import ListProducts from '../list-pruducts/List-Pruducts';
-import bag from '../../assets/images/Gucci-Savoy-medium-duffle-bag.png';
+import { getProducts } from '../../api/products';
 import cpu_cooler from '../../assets/images/argb-1-500x500.png';
 import GamePad from '../../assets/images/GamePad.png';
+import bag from '../../assets/images/Gucci-Savoy-medium-duffle-bag.png';
 import Jacket from '../../assets/images/Jacket.png';
-import ProductItem from '../../components/ProductItem/ProductItem';
-import ideapad from '../../assets/images/ideapad-gaming-3i.png';
-import controller from '../../assets/images/controller.png';
-import keyBoard from '../../assets/images/keyBoard.png';
-import monitor from '../../assets/images/monitor.png';
-import SectionName from '../../components/SectionName/SectionName';
+import ProductList from '../ProductList/ProductList';
 
 const ViewProducts = () => {
   const productsList = [
@@ -86,12 +80,9 @@ const ViewProducts = () => {
     const fetchData = async () => {
       try {
         console.log('Fetching user info...');
-        // const response = await axiosInstance.get('/api/get-products');
-        // console.log(response.data);
-        setProducts(productsList);
-        setTimeout(() => {
-          console.log(products);
-        }, 2000);
+        const response = await getProducts();
+        console.log(response.data);
+        setProducts(response.data);
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
@@ -104,10 +95,10 @@ const ViewProducts = () => {
   }; // Add any additional logic you want to handle here };
   return (
     <div className="list-page-padding">
-      <ListProducts
-        products={products}
+      <ProductList
+        productsList={products}
         onProductClick={handleProductClick}
-      ></ListProducts>
+      ></ProductList>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { axiosInstance } from '../../auth/axiosInstance';
-import ListProducts, { Product } from '../list-pruducts/List-Pruducts';
+import { Product } from '../../types/product';
+import ProductList from '../ProductList/ProductList';
 
 const MyProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -22,10 +23,10 @@ const MyProducts = () => {
   }; // Add any additional logic you want to handle here };
   return (
     <div>
-      <ListProducts
-        products={products}
+      <ProductList
+        productsList={products}
         onProductClick={handleProductClick}
-      ></ListProducts>
+      ></ProductList>
     </div>
   );
 };
