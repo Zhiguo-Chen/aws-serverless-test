@@ -354,7 +354,6 @@ const ProductForm = () => {
             </Upload>
             {/* 自定义图片预览 */}
             <div className="custom-upload-list">
-              {console.log('当前fileList', form.getFieldValue('image'))}
               {(form.getFieldValue('image') || []).map(
                 (file: any, idx: number) => {
                   const isSelected = primaryImageIndex === idx;
