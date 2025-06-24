@@ -134,7 +134,7 @@ const updateProduct = async (req: Request, res: Response) => {
               __dirname,
               '..',
               'public',
-              image.imageUrl,
+              image.imageUrl.substring(1),
             );
             if (fs.existsSync(imagePath)) {
               fs.unlinkSync(imagePath);
@@ -348,27 +348,69 @@ const getProductById = async (req: Request, res: Response) => {
   }
 };
 
-const deleteProduct = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const product = await Product.findByPk(id);
+const deleteProduct = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  const transaction = await sequelize.transaction();
 
-    if (product) {
-      // 删除关联的图片
-      if (product.productImages && product.productImages.length > 0) {
-        // 修正 __dirname 为 ES Module 兼容写法
-        // const imagePath = path.join(__dirname, '../public', product.imageUrl);
-        // if (fs.existsSync(imagePath)) {
-        //   fs.unlinkSync(imagePath);
+  try {
+    const rawProduct = await Product.findByPk(id, {
+      include: [{ model: ProductImage, as: 'productImages' }],
+      transaction,
+    });
+
+    const product = rawProduct?.toJSON();
+
+    console.log('=================');
+    console.log('Deleting product:', product);
+    console.log('=================');
+
+    if (!product) {
+      await transaction.rollback();
+      res.status(404).json({ error: 'Product not found' });
+      return;
+    }
+
+    // 删除所有附属图片文件
+    const images = product.productImages || [];
+    console.log('=================');
+    console.log('Deleting images for product:', images);
+    console.log('=================');
+    for (const image of images) {
+      if (image.imageUrl) {
+        // const imagePath = path.join(__dirname, '../../public', image.imageUrl);
+        const relativePath = image.imageUrl.replace(/^\/+/, '');
+        const imagePath = path.join(process.cwd(), 'public', relativePath);
+        console.log('=================');
+        console.log('Deleting image file:', imagePath);
+        console.log('=================');
+        if (fs.existsSync(imagePath)) {
+          fs.unlinkSync(imagePath);
+        }
+        // try {
+        //   await fs.unlink(imagePath, () => {
+        //     console.log('Deleted image file:', imagePath);
+        //   });
+        // } catch (err) {
+        //   console.warn('Failed to delete file or file not found:', imagePath);
         // }
       }
-
-      await product.destroy();
-      res.status(204).end();
-    } else {
-      res.status(404).json({ error: 'Product not found' });
     }
+
+    // 删除所有附属图片数据库记录
+    await ProductImage.destroy({
+      where: { productId: product.id },
+      transaction,
+    });
+
+    // 删除产品本身
+    if (rawProduct) {
+      await rawProduct.destroy({ transaction });
+    }
+
+    await transaction.commit();
+    res.status(204).end();
   } catch (error: any) {
+    await transaction.rollback();
     console.error('Error deleting product:', error);
     res.status(500).json({ error: error.message });
   }
