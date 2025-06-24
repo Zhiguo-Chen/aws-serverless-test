@@ -9,7 +9,7 @@ import authenticationToken from '../middlewares/auth';
 import categoryRoutes from './categoryRoutes';
 
 const router = express.Router();
-const uploadDir = path.join(__dirname, '../public/uploads');
+const uploadDir = path.join(__dirname, '../../public/uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
