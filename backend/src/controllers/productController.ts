@@ -360,10 +360,6 @@ const deleteProduct = async (req: Request, res: Response): Promise<void> => {
 
     const product = rawProduct?.toJSON();
 
-    console.log('=================');
-    console.log('Deleting product:', product);
-    console.log('=================');
-
     if (!product) {
       await transaction.rollback();
       res.status(404).json({ error: 'Product not found' });
@@ -372,27 +368,14 @@ const deleteProduct = async (req: Request, res: Response): Promise<void> => {
 
     // 删除所有附属图片文件
     const images = product.productImages || [];
-    console.log('=================');
-    console.log('Deleting images for product:', images);
-    console.log('=================');
     for (const image of images) {
       if (image.imageUrl) {
         // const imagePath = path.join(__dirname, '../../public', image.imageUrl);
         const relativePath = image.imageUrl.replace(/^\/+/, '');
         const imagePath = path.join(process.cwd(), 'public', relativePath);
-        console.log('=================');
-        console.log('Deleting image file:', imagePath);
-        console.log('=================');
         if (fs.existsSync(imagePath)) {
           fs.unlinkSync(imagePath);
         }
-        // try {
-        //   await fs.unlink(imagePath, () => {
-        //     console.log('Deleted image file:', imagePath);
-        //   });
-        // } catch (err) {
-        //   console.warn('Failed to delete file or file not found:', imagePath);
-        // }
       }
     }
 
