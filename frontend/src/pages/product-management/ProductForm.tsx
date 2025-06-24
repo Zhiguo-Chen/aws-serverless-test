@@ -12,8 +12,9 @@ import {
   Switch,
   Card,
   Spin,
+  Radio,
 } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { DeleteOutlined, UploadOutlined, StarFilled } from '@ant-design/icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   getProductById,
@@ -22,6 +23,7 @@ import {
 } from '../../api/products';
 import moment from 'moment';
 import { getCategories } from '../../api/categories';
+import './ProductForm.scss';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -36,13 +38,17 @@ const normFile = (e: any) => {
 };
 
 const ProductForm = () => {
+  const [_, forceUpdate] = useState({});
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [categories, setCategories] = useState([]);
   const { id } = useParams();
   const navigate = useNavigate();
   const isEditMode = Boolean(id);
+  const [primaryImageIndex, setPrimaryImageIndex] = useState<number | null>(
+    null,
+  );
+  const [deletedImageIds, setDeletedImageIds] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -62,14 +68,32 @@ const ProductForm = () => {
         try {
           const response = await getProductById(id);
           const product = response.data;
+          let primaryIdx: number | null = null;
+          const formattedImages = product.productImages.map(
+            (img: any, index: number) => {
+              if (img.isPrimary) {
+                primaryIdx = index;
+              }
+              return {
+                ...img, // Keep original data
+                uid: img.id,
+                name: img.imageUrl.split('/').pop(),
+                status: 'done',
+                url: `${API_URL}/public${img.imageUrl}`,
+              };
+            },
+          );
+          if (primaryIdx !== null) {
+            setPrimaryImageIndex(primaryIdx);
+          }
           form.setFieldsValue({
             ...product,
             categoryId: product.categoryId,
             flashSaleEndsAt: product.flashSaleEndsAt
               ? moment(product.flashSaleEndsAt)
               : null,
+            image: formattedImages,
           });
-          setImageUrl(`${API_URL}/public${product.imageUrl}`);
         } catch (error) {
           message.error('Failed to fetch product');
         } finally {
@@ -92,11 +116,40 @@ const ProductForm = () => {
         formData.append('category', selectedCategory.name);
       }
 
-      // 添加所有表单字段到FormData
+      // Handle images
+      const imagesMeta: any[] = [];
+      (values.image || []).forEach((file: any, idx: number) => {
+        if (file.originFileObj) {
+          // New file
+          formData.append(
+            'images',
+            file.originFileObj,
+            file.originFileObj.name,
+          );
+          imagesMeta.push({
+            fileName: file.name,
+            isPrimary: idx === primaryImageIndex,
+            isNew: true,
+          });
+        } else {
+          // Existing file
+          imagesMeta.push({
+            id: file.id,
+            isPrimary: idx === primaryImageIndex,
+            isNew: false,
+          });
+        }
+      });
+      formData.append('imagesMeta', JSON.stringify(imagesMeta));
+
+      if (isEditMode && deletedImageIds.length > 0) {
+        formData.append('deletedImageIds', JSON.stringify(deletedImageIds));
+      }
+
+      // Other fields
       Object.keys(values).forEach((key) => {
-        if (key === 'image' && values[key] && values[key][0]) {
-          formData.append('image', values[key][0].originFileObj);
-        } else if (key === 'flashSaleEndsAt' && values[key]) {
+        if (key === 'image') return; // 已处理
+        if (key === 'flashSaleEndsAt' && values[key]) {
           formData.append(key, values[key].format('YYYY-MM-DD HH:mm:ss'));
         } else if (values[key] !== undefined && values[key] !== null) {
           formData.append(key, values[key]);
@@ -247,31 +300,125 @@ const ProductForm = () => {
 
           <Form.Item
             name="image"
-            label="Product Image"
+            label="Product Images"
             valuePropName="fileList"
             getValueFromEvent={normFile}
+            rules={[
+              { required: true, message: 'Please upload at least one image!' },
+            ]}
           >
             <Upload
               name="image"
               listType="picture"
-              maxCount={1}
+              multiple
               beforeUpload={beforeUpload}
               accept="image/*"
+              showUploadList={false} // 不用默认的列表
+              onChange={({ fileList }) => {
+                const currentImages = form.getFieldValue('image') || [];
+                const newImages = fileList.map((file) => {
+                  if (file.originFileObj && !file.thumbUrl) {
+                    file.thumbUrl = URL.createObjectURL(file.originFileObj);
+                  }
+                  return file;
+                });
+
+                // Combine existing images with newly uploaded ones
+                const allImages = [...currentImages, ...newImages];
+
+                // Remove duplicates by 'uid'
+                const uniqueImages = allImages.filter(
+                  (file, index, self) =>
+                    index === self.findIndex((f) => f.uid === file.uid),
+                );
+
+                if (
+                  primaryImageIndex !== null &&
+                  uniqueImages[primaryImageIndex] === undefined
+                ) {
+                  setPrimaryImageIndex(null);
+                }
+
+                form.setFieldsValue({ image: uniqueImages });
+                // force re-render to show preview
+                forceUpdate({});
+              }}
+              customRequest={({ file, onSuccess }) => {
+                // 仅本地预览，不上传
+                setTimeout(() => {
+                  onSuccess && onSuccess('ok');
+                }, 0);
+              }}
             >
               <Button icon={<UploadOutlined />}>Click to upload</Button>
             </Upload>
-          </Form.Item>
+            {/* 自定义图片预览 */}
+            <div className="custom-upload-list">
+              {(form.getFieldValue('image') || []).map(
+                (file: any, idx: number) => {
+                  const isSelected = primaryImageIndex === idx;
+                  return (
+                    <div
+                      className={`custom-upload-item${
+                        isSelected ? ' selected' : ''
+                      }`}
+                      key={file.uid || file.id}
+                    >
+                      <div style={{ position: 'relative' }}>
+                        <img
+                          src={
+                            file.thumbUrl ||
+                            file.url ||
+                            `${API_URL}/public${file.imageUrl}`
+                          }
+                          alt={file.name}
+                          className="custom-upload-thumb"
+                          onClick={() => setPrimaryImageIndex(idx)}
+                          style={{ cursor: 'pointer' }}
+                        />
+                        {isSelected && <StarFilled className="primary-icon" />}
+                        <span
+                          className="custom-upload-delete"
+                          onClick={() => {
+                            const imageList = form.getFieldValue('image') || [];
+                            const fileToRemove = imageList[idx];
 
-          {imageUrl && !form.getFieldValue('image') && (
-            <div style={{ marginBottom: 16 }}>
-              <p>Current Image:</p>
-              <img
-                src={imageUrl}
-                alt="Product"
-                style={{ maxWidth: '100%', maxHeight: 200 }}
-              />
+                            if (fileToRemove.id) {
+                              // This is an existing image from the backend
+                              setDeletedImageIds((prev) => [
+                                ...prev,
+                                fileToRemove.id,
+                              ]);
+                            }
+
+                            const newList = imageList.filter(
+                              (_: any, i: number) => i !== idx,
+                            );
+                            form.setFieldsValue({ image: newList });
+                            if (primaryImageIndex === idx)
+                              setPrimaryImageIndex(null);
+                            else if (
+                              primaryImageIndex &&
+                              primaryImageIndex > idx
+                            )
+                              setPrimaryImageIndex(primaryImageIndex - 1);
+                            forceUpdate({});
+                          }}
+                        >
+                          <DeleteOutlined />
+                        </span>
+                      </div>
+                      <Radio
+                        checked={isSelected}
+                        onChange={() => setPrimaryImageIndex(idx)}
+                        style={{ marginTop: 4 }}
+                      />
+                    </div>
+                  );
+                },
+              )}
             </div>
-          )}
+          </Form.Item>
 
           <Form.Item>
             <Button type="primary" htmlType="submit">

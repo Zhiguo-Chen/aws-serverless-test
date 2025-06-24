@@ -18,11 +18,11 @@ import { Review } from './Review.model';
 })
 export class Product extends Model {
   @Column({
-    type: DataType.INTEGER,
-    autoIncrement: true,
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4,
     primaryKey: true,
   })
-  declare id: number;
+  declare id: string;
 
   @Column({
     type: DataType.STRING,

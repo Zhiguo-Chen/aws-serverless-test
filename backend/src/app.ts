@@ -11,8 +11,7 @@ import { connectMongoDB } from './config/mongodb';
 // 导入路由
 import productRoutes from './routes/productRoutes';
 
-// const __dirname = path.dirname(new URL(import.meta.url).pathname);
-const publicDir = path.join(__dirname, 'public');
+const publicDir = path.join(__dirname, '../public');
 if (!fs.existsSync(publicDir)) {
   fs.mkdirSync(publicDir);
 }

@@ -12,7 +12,6 @@ import AddProducts from './pages/add-products/Add-Products';
 import ProtectedRoute from './components/protected-route/protected-route';
 import { useEffect } from 'react';
 import { setupInterceptors } from './auth/axiosInstance';
-import ListProducts from './pages/list-pruducts/List-Pruducts';
 import ViewProducts from './pages/view-products/ ViewProducts';
 import MyProducts from './pages/my-products/MyProducts';
 import MainPageLayout from './pages/MainPageLayout/MainPageLayout';
@@ -70,6 +69,7 @@ const App = () => {
               element={<ProductDetail />}
             />
             <Route path="contact" element={<Contact />} />
+            <Route path="view-products" element={<ViewProducts />} />
             {/* <Route path="add-product" element={<AddProducts />} /> */}
             {/* <Route path="product-list-2" element={<ProductList2 />} />
             <Route path="product-list/new" element={<ProductForm />} />

@@ -1,7 +1,7 @@
 import { StarFilled } from '@ant-design/icons';
 import React, { FC } from 'react';
-import { Product } from '../../pages/list-pruducts/List-Pruducts';
 import './ProductListItem.scss';
+import { Product } from '../../types/product';
 
 interface ProductItemProps {
   product: Product;
@@ -20,7 +20,10 @@ const ProductListItem: FC<ProductItemProps> = ({
     <a>
       <div className="flex flex-gap list-item-container">
         <div className="list-item-img-container image-bg flex justify-center align-center position-relative">
-          <img src={product.image} alt={product.name} />
+          <img
+            src={product.productImages && product.productImages[0]?.imageUrl}
+            alt={product.name}
+          />
           {labelPlace && <>{labelPlace}</>}
           {actionButtonPlace && <>{actionButtonPlace}</>}
           <button className="add-to-cart">Add To Cart</button>
@@ -35,7 +38,10 @@ const ProductListItem: FC<ProductItemProps> = ({
               {isSocreShow && (
                 <div>
                   {Array.from({ length: totalStars }, (_, index) => {
-                    if (product.score && index < product.score) {
+                    if (
+                      product.averageRating &&
+                      index < product.averageRating
+                    ) {
                       return (
                         <StarFilled
                           key={index}
@@ -51,7 +57,7 @@ const ProductListItem: FC<ProductItemProps> = ({
                       );
                     }
                   })}
-                  <span className="reviews">({product.reviews})</span>
+                  <span className="reviews">({product.reviewCount})</span>
                 </div>
               )}
             </div>
@@ -60,7 +66,7 @@ const ProductListItem: FC<ProductItemProps> = ({
 
         <div className="price-info-container text-end">
           <div className="price">${product.price}</div>
-          <div className="old-price">${product.oldPrice}</div>
+          <div className="old-price">${product.originalPrice}</div>
         </div>
       </div>
     </a>
