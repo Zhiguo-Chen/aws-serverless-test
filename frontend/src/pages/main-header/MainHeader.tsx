@@ -2,12 +2,14 @@ import { ReactComponent as WishlistIcon } from '../../assets/icons/Wishlist.svg'
 import { ReactComponent as CartIcon } from '../../assets/icons/Cart1.svg';
 import { MenuProps, Tabs, Input } from 'antd';
 import type { TabsProps } from 'antd';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { ReactComponent as SearchIcon } from '../../assets/icons/search.svg';
 import { useNavigate } from 'react-router-dom';
+import { searchProduct } from '../../api/products';
 
 const { Search } = Input;
 const MainHeader = () => {
+  const [searchStr, setSearchStr] = useState('');
   const navigate = useNavigate();
   const onChange = (key: string) => {
     console.log(key);
@@ -28,7 +30,10 @@ const MainHeader = () => {
     }
   };
 
-  const onSearch = () => {};
+  const onSearch = async () => {
+    const data = await searchProduct(searchStr);
+    console.log(data);
+  };
   const items: TabsProps['items'] = [
     {
       key: '1',
@@ -65,27 +70,20 @@ const MainHeader = () => {
           indicator={{ align: 'end' }}
         />
       </div>
-      {/* <div>
-        <Search
-          placeholder="What are you looking for?"
-          onSearch={onSearch}
-          size="large"
-          style={{ width: 250 }}
-        />
-      </div> */}
       <div className="search-input flex align-center">
         <Input
+          value={searchStr}
+          onChange={(e) => setSearchStr(e.target.value)}
+          onPressEnter={onSearch}
           placeholder="What are you looking for?"
           suffix={
-            <span className="suffix-icon">
+            <span className="suffix-icon" onClick={onSearch}>
               <SearchIcon />
             </span>
           }
         />
       </div>
       <div className="flex flex-gap">
-        {/* <HeartOutlined style={{ fontSize: 32 }} />
-      <ShoppingCartOutlined style={{ fontSize: 32 }} /> */}
         <WishlistIcon
           width="32px"
           height="32px"

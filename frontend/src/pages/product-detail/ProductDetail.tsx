@@ -24,26 +24,22 @@ import ideapad from '../../assets/images/ideapad-gaming-3i.png';
 import controller from '../../assets/images/controller.png';
 import keyBoard from '../../assets/images/keyBoard.png';
 import monitor from '../../assets/images/monitor.png';
+import { getProductById } from '../../api/products';
+import { Product, ProductImage } from '../../types/product';
+import { API_URL } from '../../const/API_URL';
 
 const ProductDetail = () => {
   const { productId } = useParams<{ productId: string }>();
+  const [productDetail, setProductDetail] = useState<Product | null>(null);
   const [activeColor, setActiveColor] = useState<string>('');
   const [activeSize, setActiveSize] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
 
+  const colors = ['Red', 'Blue', 'Green', 'Yellow'];
+  const sizes = ['S', 'M', 'L', 'XL'];
+
   const navigate = useNavigate();
-  const product = {
-    image: controller1,
-    name: 'HAVIT HV-G92 Gamepad',
-    price: 120,
-    oldPrice: 160,
-    score: 4,
-    reviews: 88,
-    desc: 'PlayStation 5 Controller Skin High quality vinyl with air channel adhesive for easy bubble free install & mess free removal Pressure sensitive.',
-    colors: ['Red', 'Blue', 'Green', 'Yellow'],
-    sizes: ['S', 'M', 'L', 'XL'],
-  };
   const totalStars = 5;
   const recommendationProducts = [
     {
@@ -81,10 +77,22 @@ const ProductDetail = () => {
   ];
 
   const images = [controller1, controller2, controller3, controller4];
-  const [mainImage, setMainImage] = useState<string>(images[0]);
+  const [mainImage, setMainImage] = useState<ProductImage | null>(null);
+  const [showFullDesc, setShowFullDesc] = useState(false);
   useEffect(() => {
     console.log(productId);
+    getProdustDetail();
   }, [productId]);
+
+  const getProdustDetail = async () => {
+    const { data } = await getProductById(productId);
+    setProductDetail(data);
+    const primaryImage = data.productImages.find(
+      (image: ProductImage) => image.isPrimary,
+    );
+    setMainImage(primaryImage);
+    console.log(data);
+  };
   const handleDecrease = () => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
@@ -94,10 +102,18 @@ const ProductDetail = () => {
   const handleIncrease = () => {
     setQuantity(quantity + 1);
   };
+
+  const handleBack = () => {
+    navigate(-1);
+  };
+
+  const handlShowFullDesc = () => {
+    setShowFullDesc((prev) => !prev);
+  };
   return (
     <div className="product-detail-container flex-1">
       <div className="back-button">
-        <Button type="default" className="back-btn">
+        <Button type="default" className="back-btn" onClick={handleBack}>
           <LeftOutlined />
           Back
         </Button>
@@ -105,18 +121,26 @@ const ProductDetail = () => {
       <div className="product-detail-content flex">
         <div className="product-detail-image grid flex-1">
           <div className="product-detail-image-list grid grid-gap">
-            {images.map((image, index) => (
-              <div
-                key={index}
-                className="product-detail-image-item"
-                onClick={() => setMainImage(image)}
-              >
-                <img src={image} alt={`Product Image ${index + 1}`} />
-              </div>
-            ))}
+            {productDetail?.productImages.map(
+              (image: ProductImage, index: number) => (
+                <div
+                  key={index}
+                  className="product-detail-image-item"
+                  onClick={() => setMainImage(image)}
+                >
+                  <img
+                    src={`${API_URL}/public${image?.imageUrl}`}
+                    alt={`Product Image ${index + 1}`}
+                  />
+                </div>
+              ),
+            )}
           </div>
           <div className="product-detail-image-main flex justify-center align-center position-relative">
-            <img src={mainImage} alt="Main Product Image" />
+            <img
+              src={`${API_URL}/public${mainImage?.imageUrl}`}
+              alt="Main Product Image"
+            />
           </div>
           {/* <div className="product-detail-image-list grid grid-gap">
             {images.map((image, index) => (
@@ -135,11 +159,14 @@ const ProductDetail = () => {
         </div>
         <div className="product-detail-desc flex flex-column flex-gap-15">
           <div className="product-base-info flex flex-column flex-gap">
-            <div className="font-size-large">{product.name}</div>
+            <div className="font-size-large">{productDetail?.name}</div>
             <div className="flex align-center">
               <div className="star-container ">
                 {Array.from({ length: totalStars }, (_, index) => {
-                  if (product.score && index < product.score) {
+                  if (
+                    productDetail?.averageRating &&
+                    index < productDetail?.averageRating
+                  ) {
                     return (
                       <StarFilled
                         key={index}
@@ -155,22 +182,34 @@ const ProductDetail = () => {
                     );
                   }
                 })}
-                ({product.reviews} reviews)
+                ({productDetail?.reviewCount} reviews)
               </div>
               <div className="product-sales-state">In Stock</div>
             </div>
             <div className="font-size-large font-weight-lighter">
-              ${product.price}
+              ${productDetail?.price}
             </div>
           </div>
-          <div className="product-desc font-size-small font-weight-lighter">
-            {product.desc}
+          <div className={`product-desc font-size-small font-weight-lighter`}>
+            <div className={`${showFullDesc ? '' : ' text-elipsis-3'}`}>
+              {productDetail?.description}
+            </div>
+            {productDetail?.description &&
+              productDetail?.description.length > 150 && (
+                <div
+                  className="show-more-btn"
+                  style={{ color: '#1677ff', cursor: 'pointer', marginLeft: 8 }}
+                  onClick={handlShowFullDesc}
+                >
+                  {showFullDesc ? 'Show Less' : 'Show More'}
+                </div>
+              )}
           </div>
           <div className="product-divider divider"></div>
           <div className="product-colors-options flex flex-gap-15 align-center">
             <div className="font-size-small font-weight-lighter">Colors: </div>
             <div className="product-colors-list flex flex-gap-05">
-              {product.colors.map((color, index) => (
+              {colors.map((color, index) => (
                 <div
                   key={index}
                   className={`product-color-item ${
@@ -185,7 +224,7 @@ const ProductDetail = () => {
           <div className="product-size-options flex flex-gap-15 align-center">
             <div>Size:</div>
             <div className="flex flex-gap-05 justify-center align-center">
-              {product.sizes.map((size, index) => (
+              {sizes.map((size, index) => (
                 <div
                   key={index}
                   className={`product-size-item text-center cursor-pointer ${
@@ -236,7 +275,7 @@ const ProductDetail = () => {
               )}
             </button>
           </div>
-          <div className="product-benefits full-height full-width border-box flex flex-column">
+          <div className="product-benefits  full-width border-box flex flex-column">
             <div className="flex-1 flex flex-gap align-center product-benefits-info-container">
               <DeliveryIcon />
               <div className="flex flex-column flex-gap-05">

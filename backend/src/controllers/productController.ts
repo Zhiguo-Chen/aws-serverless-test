@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import sequelize, { Category, Product, ProductImage } from '../models';
 import * as fs from 'fs';
 import * as path from 'path';
+import { Op } from 'sequelize';
+import { searchProducts } from '../services/search-products-service';
 
 const createProduct = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -247,6 +249,11 @@ const getProducts = async (req: Request, res: Response) => {
           as: 'category',
           attributes: ['id', 'name'],
         },
+        {
+          model: ProductImage,
+          as: 'productImages', // 确保和你的关联别名一致
+          attributes: ['id', 'imageUrl', 'altText', 'isPrimary', 'createdAt'],
+        },
       ],
       attributes: {
         include: [
@@ -399,10 +406,27 @@ const deleteProduct = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const searchProductsByStr = async (req: Request, res: Response) => {
+  const { query } = req.body;
+
+  if (!query || typeof query !== 'string') {
+    return res.status(400).json({ error: 'Query parameter is required' });
+  }
+  try {
+    const products = await searchProducts(query);
+
+    res.status(200).json(products);
+  } catch (error: any) {
+    console.error('Error searching products:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 export default {
   createProduct,
   updateProduct,
   getProducts,
   getProductById,
   deleteProduct,
+  searchProductsByStr,
 };
