@@ -28,7 +28,7 @@ const setupInterceptors = (navigate: NavigateFunction) => {
         // Clear any authentication tokens or user data if needed
         localStorage.clear();
         // Redirect to the login page
-        navigate('/main/login');
+        navigate('/login');
       }
       return Promise.reject(error);
     },

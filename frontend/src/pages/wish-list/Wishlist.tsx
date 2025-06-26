@@ -1,4 +1,4 @@
-import './WishlistPage.scss';
+import './Wishlist.scss';
 import bag from '../../assets/images/Gucci-Savoy-medium-duffle-bag.png';
 import cpu_cooler from '../../assets/images/argb-1-500x500.png';
 import GamePad from '../../assets/images/GamePad.png';
@@ -10,7 +10,7 @@ import keyBoard from '../../assets/images/keyBoard.png';
 import monitor from '../../assets/images/monitor.png';
 import SectionName from '../../components/SectionName/SectionName';
 
-const WishlistPage = () => {
+const Wishlist = () => {
   const productsList = [
     {
       image: bag,
@@ -156,4 +156,4 @@ const WishlistPage = () => {
   );
 };
 
-export default WishlistPage;
+export default Wishlist;

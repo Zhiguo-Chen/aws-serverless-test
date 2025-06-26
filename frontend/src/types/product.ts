@@ -12,7 +12,12 @@ export interface Product {
   isFeatured: boolean;
   isNewArrival: boolean;
   isFlashSale: boolean;
+  isBestSelling?: boolean;
+  isExplored?: boolean;
+  isSpecialPromotional?: boolean;
+  stockQuantity: number;
   flashSaleEndsAt?: Date;
+  primaryImageUrl?: string;
   productImages: Array<ProductImage>;
   categoryId?: number;
   category?: Category;

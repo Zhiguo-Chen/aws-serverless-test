@@ -8,24 +8,23 @@ import {
 import Register from './pages/register/register';
 import Login from './pages/login/Login';
 import MainLayout from './components/main-layout/main-layout';
-import AddProducts from './pages/add-products/Add-Products';
 import ProtectedRoute from './components/protected-route/protected-route';
 import { useEffect } from 'react';
 import { setupInterceptors } from './auth/axiosInstance';
 import ViewProducts from './pages/view-products/ ViewProducts';
 import MyProducts from './pages/my-products/MyProducts';
-import MainPageLayout from './pages/MainPageLayout/MainPageLayout';
-import SignUp from './pages/SignUp/SignUp';
-import NewLogin from './pages/NewLogin/NewLogin';
-import HomePage from './pages/HomePage/Home';
-import AboutPage from './pages/About/About';
-import WishlistPage from './pages/WishlistPage/WishlistPage';
-import Cart from './pages/Cart/Cart';
-import ProductDetail from './pages/ProductDetail/ProductDetail';
-import Contact from './pages/Contact/Contact';
-import ProductList from './pages/ProductList/ProductList';
-import ByCategory from './pages/ByCategory/ByCategory';
-import NotFound from './pages/NotFound/NotFound';
+import MainPageLayout from './pages/main-layout/MainPageLayout';
+import SignUp from './pages/sign-up/SignUp';
+import NewLogin from './pages/new-login/NewLogin';
+import HomePage from './pages/home/Home';
+import AboutPage from './pages/about/About';
+import Wishlist from './pages/wish-list/Wishlist';
+import Cart from './pages/cart/Cart';
+import ProductDetail from './pages/product-detail/ProductDetail';
+import Contact from './pages/contact/Contact';
+import ProductList from './pages/product-list/ProductList';
+import ByCategory from './pages/by-category/ByCategory';
+import NotFound from './pages/not-found/NotFound';
 import ProductList2 from './pages/product-management/ProductsList2';
 import ProductForm from './pages/product-management/ProductForm';
 import ManageLayout from './pages/product-management/manage-layout';
@@ -53,16 +52,17 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/main-page" element={<MainPageLayout />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/main" element={<MainPageLayout />}>
+        <Route path="login" element={<NewLogin />} />
+        {/* <Route path="/main" element={<MainPageLayout />}>
           <Route path="login" element={<NewLogin />} />
-        </Route>
+        </Route> */}
         <Route element={<ProtectedRoute />}>
           <Route path="/main" element={<MainPageLayout />}>
             <Route path="home" element={<HomePage />} />
             <Route path=":categoryId/category" element={<ByCategory />} />
             <Route path="about" element={<AboutPage />} />
             <Route path="sign-up" element={<SignUp />} />
-            <Route path="wishlist" element={<WishlistPage />} />
+            <Route path="wishlist" element={<Wishlist />} />
             <Route path="cart" element={<Cart />} />
             <Route
               path=":productId/product-detail"
@@ -70,13 +70,9 @@ const App = () => {
             />
             <Route path="contact" element={<Contact />} />
             <Route path="view-products" element={<ViewProducts />} />
-            {/* <Route path="add-product" element={<AddProducts />} /> */}
             {/* <Route path="product-list-2" element={<ProductList2 />} />
             <Route path="product-list/new" element={<ProductForm />} />
             <Route path="product-list/edit/:id" element={<ProductForm />} /> */}
-            {/* <Route path="add-product" element={<AddProducts />} />
-            <Route path="view-products" element={<ViewProducts />} />
-            <Route path="my-products" element={<MyProducts />} /> */}
           </Route>
           <Route path="/management" element={<ManageLayout />}>
             <Route path="product-list" element={<ProductList2 />} />
