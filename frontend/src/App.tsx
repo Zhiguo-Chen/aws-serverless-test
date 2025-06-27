@@ -1,34 +1,24 @@
-import {
-  BrowserRouter,
-  Navigate,
-  Route,
-  Routes,
-  useNavigate,
-} from 'react-router-dom';
-import Register from './pages/register/register';
-import Login from './pages/login/Login';
-import MainLayout from './components/main-layout/main-layout';
-import ProtectedRoute from './components/protected-route/protected-route';
 import { useEffect } from 'react';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { setupInterceptors } from './auth/axiosInstance';
-import ViewProducts from './pages/view-products/ ViewProducts';
-import MyProducts from './pages/my-products/MyProducts';
-import MainPageLayout from './pages/main-layout/MainPageLayout';
-import SignUp from './pages/sign-up/SignUp';
-import NewLogin from './pages/new-login/NewLogin';
-import HomePage from './pages/home/Home';
-import AboutPage from './pages/about/About';
-import Wishlist from './pages/wish-list/Wishlist';
-import Cart from './pages/cart/Cart';
-import ProductDetail from './pages/product-detail/ProductDetail';
-import Contact from './pages/contact/Contact';
-import ProductList from './pages/product-list/ProductList';
-import ByCategory from './pages/by-category/ByCategory';
-import NotFound from './pages/not-found/NotFound';
-import ProductList2 from './pages/product-management/ProductsList2';
-import ProductForm from './pages/product-management/ProductForm';
-import ManageLayout from './pages/product-management/manage-layout';
 import ChatWidget from './components/chat-widget/ChatWidget';
+import ProtectedRoute from './components/protected-route/protected-route';
+import AboutPage from './pages/about/About';
+import ByCategory from './pages/by-category/ByCategory';
+import Cart from './pages/cart/Cart';
+import Contact from './pages/contact/Contact';
+import HomePage from './pages/home/Home';
+import MainPageLayout from './pages/main-layout/MainPageLayout';
+import NewLogin from './pages/new-login/NewLogin';
+import NotFound from './pages/not-found/NotFound';
+import ProductDetail from './pages/product-detail/ProductDetail';
+import ProductForm from './pages/product-management/ProductForm';
+import ProductList2 from './pages/product-management/ProductsList2';
+import ManageLayout from './pages/product-management/manage-layout';
+import Register from './pages/register/register';
+import SignUp from './pages/sign-up/SignUp';
+import ViewProducts from './pages/view-products/ ViewProducts';
+import Wishlist from './pages/wish-list/Wishlist';
 
 const authTokenKey = process.env.REACT_APP_AUTH_TOKEN || 'authToken';
 
