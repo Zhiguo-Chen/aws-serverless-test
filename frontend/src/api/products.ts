@@ -13,6 +13,11 @@ const getAuthHeaders = () => {
   };
 };
 
+const config = {
+  ...getAuthHeaders(),
+  'Content-Type': 'multipart/form-data',
+};
+
 export const getProducts = async () => {
   const response = await axiosInstance.get(`/api/products`);
   return response;
@@ -23,22 +28,25 @@ export const getProductById = async (id: any) => {
   return response;
 };
 
+export const searchProduct = async (searchStr: string) => {
+  const response = await axiosInstance.post(`/api/products/search`, {
+    query: searchStr,
+  });
+  return response;
+};
+
 export const createProduct = async (formData: any) => {
-  const config = {
-    ...getAuthHeaders(),
-    'Content-Type': 'multipart/form-data',
-  };
   const response = await axiosInstance.post(`/api/products`, formData, config);
   return response;
 };
 
 export const updateProduct = async (id: any, formData: any) => {
   console.log('updateProduct', id, formData);
-  const config = {
-    ...getAuthHeaders(),
-    'Content-Type': 'multipart/form-data',
-  };
-  const response = await axiosInstance.put(`/api/products/${id}`, formData, config);
+  const response = await axiosInstance.put(
+    `/api/products/${id}`,
+    formData,
+    config,
+  );
   return response;
 };
 

@@ -1,0 +1,163 @@
+.login-container {
+  // min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // padding: 40px 20px;
+  background-color: #fafafa;
+  min-width: 1200px;
+
+  .login-content {
+    display: flex;
+    max-width: 1200px;
+    width: 100%;
+    background: #fff;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+    .login-image {
+      flex: 1;
+      position: relative;
+      background-color: #f2f4f7;
+      mask-image: url('../../assets/images/beatsnoop.png');
+      mask-size: cover;
+      mask-position: center;
+      mask-repeat: no-repeat;
+      -webkit-mask-image: url('../../assets/images/beatsnoop.png');
+      -webkit-mask-size: cover;
+      -webkit-mask-position: center;
+      -webkit-mask-repeat: no-repeat;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('../../assets/images/beatsnoop.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+    }
+
+    .login-form-container {
+      flex: 1;
+      display: flex;
+      box-sizing: border-box;
+
+      .form-inner {
+        padding: 60px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        h1 {
+          font-size: 36px;
+          font-weight: 500;
+          margin-bottom: 12px;
+          color: #000;
+        }
+
+        .subtitle {
+          color: #666;
+          margin-bottom: 32px;
+        }
+
+        .login-form {
+          .ant-form-item {
+            margin-bottom: 20px;
+          }
+
+          .ant-input,
+          .ant-input-password {
+            height: 48px;
+            border-radius: 4px;
+            border: 1px solid #d0d5dd;
+
+            &:focus,
+            &:hover {
+              border-color: #000;
+              box-shadow: none;
+            }
+          }
+
+          .form-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+
+            .login-btn {
+              height: 48px;
+              background-color: #db4444;
+              border: none;
+              font-size: 16px;
+              font-weight: 500;
+              padding: 0 48px;
+
+              &:hover {
+                background-color: darken(#db4444, 5%);
+              }
+            }
+
+            .forgot-password {
+              color: #db4444;
+              text-decoration: none;
+              font-weight: 500;
+
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
+          .ant-input-affix-wrapper {
+            padding: 0 11px;
+            .ant-input {
+              border: none;
+            }
+          }
+        }
+
+        .signup-link {
+          text-align: center;
+          margin-top: 24px;
+          color: #666;
+
+          a {
+            color: #000;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 4px;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive styles
+@media (max-width: 968px) {
+  .login-container {
+    .login-content {
+      flex-direction: column;
+
+      .login-image {
+        display: none;
+      }
+
+      .login-form-container {
+        .form-inner {
+          padding: 40px 20px;
+        }
+      }
+    }
+  }
+}
