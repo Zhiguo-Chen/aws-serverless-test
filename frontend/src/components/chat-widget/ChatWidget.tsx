@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
-import './ChatWidget.scss';
+import { useEffect, useRef, useState } from 'react';
 import { axiosInstance } from '../../auth/axiosInstance';
+import './ChatWidget.scss';
 
 const MODELS = ['langchain-service', 'gpt-4o-mini', 'gemini-2.0-flash'];
 
@@ -132,21 +132,11 @@ const ChatWidget = () => {
   >([]);
   const [input, setInput] = useState('');
   const [model, setModel] = useState(MODELS[0]);
-  const [sessionId, setSessionId] = useState(null);
   const [file, setFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [abortController, setAbortController] =
     useState<AbortController | null>(null);
-
-  const fileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  };
 
   const handleSend = async () => {
     if (!input.trim() && !file) return;
@@ -180,9 +170,6 @@ const ChatWidget = () => {
         signal: controller.signal,
       });
       const botMessage = response?.data?.response || 'No response from bot.';
-      if (response.data.sessionId) {
-        setSessionId(response.data.sessionId);
-      }
       setMessages((prev) => [...prev, { role: 'bot', content: botMessage }]);
     } catch (err: any) {
       if (err.name === 'CanceledError' || err.name === 'AbortError') {
@@ -221,7 +208,7 @@ const ChatWidget = () => {
           /[xy]/g,
           function (c) {
             var r = (Math.random() * 16) | 0,
-              v = c == 'x' ? r : (r & 0x3) | 0x8;
+              v = c === 'x' ? r : (r & 0x3) | 0x8;
             return v.toString(16);
           },
         );
