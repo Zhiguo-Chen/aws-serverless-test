@@ -17,8 +17,8 @@ import ProductList2 from './pages/product-management/ProductsList2';
 import ManageLayout from './pages/product-management/manage-layout';
 import Register from './pages/register/register';
 import SignUp from './pages/sign-up/SignUp';
-import ViewProducts from './pages/view-products/ ViewProducts';
 import Wishlist from './pages/wish-list/Wishlist';
+import ViewProducts from './pages/view-products/ViewProducts';
 
 const authTokenKey = process.env.REACT_APP_AUTH_TOKEN || 'authToken';
 
