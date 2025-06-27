@@ -1,5 +1,3 @@
-// frontend/src/api/products.js
-import axios from 'axios';
 import { axiosInstance } from '../auth/axiosInstance';
 
 const authTokenKey = process.env.REACT_APP_AUTH_TOKEN || 'authToken';
