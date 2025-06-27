@@ -63,6 +63,7 @@ router.post(
   productController.createProduct,
 );
 router.get('/products', productController.getProducts);
+router.post('/products/search', productController.searchProductsByStr as any);
 router.get('/products/:id', productController.getProductById);
 router.put(
   '/products/:id',

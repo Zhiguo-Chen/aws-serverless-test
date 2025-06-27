@@ -26,6 +26,16 @@ jobs:
         run: |
           echo "REACT_APP_API_URL=${{ vars.REACT_APP_API_URL }}" >> frontend/.env.production
           echo "REACT_APP_AUTH_TOKEN=${{ vars.REACT_APP_AUTH_TOKEN }}" >> frontend/.env.production
+      # ✅ 清理旧 build 文件夹，确保不会带入历史构建产物
+      - name: Clean old build folder
+        run: |
+          rm -rf frontend/build
+
+      # ✅ 手动创建 .nojekyll 文件防止旧内容残留影响
+      - name: Add placeholder file to prevent caching issue
+        run: |
+          mkdir -p frontend/public
+          touch frontend/public/.nojekyll
 
       - name: Build And Deploy
         id: builddeploy

@@ -1,14 +1,13 @@
 {
   "files": {
-    "main.css": "/static/css/main.c922405e.css",
-    "main.js": "/static/js/main.0505d66f.js",
+    "main.css": "/static/css/main.c411648c.css",
+    "main.js": "/static/js/main.7fa4e023.js",
     "static/js/453.cd016445.chunk.js": "/static/js/453.cd016445.chunk.js",
     "static/media/JBL_BOOMBOX.png": "/static/media/JBL_BOOMBOX.039b727f7caf72815f32.png",
     "static/media/beatsnoop.png": "/static/media/beatsnoop.779011ec7dc21be00faa.png",
     "static/media/controller2.jpg": "/static/media/controller2.2b79d58589e33c7ddd18.jpg",
     "static/media/controller3.jpg": "/static/media/controller3.01dab0a3939dc48196b7.jpg",
     "static/media/controller4.jpg": "/static/media/controller4.685f93b9605a220879d9.jpg",
-    "static/media/iphone14.png": "/static/media/iphone14.bb7c553a152e9f74b3b8.png",
     "static/media/controller1.jpg": "/static/media/controller1.1809ad0c7c5ccbff37e1.jpg",
     "static/media/Apple.svg": "/static/media/Apple.20038c3a2de0e6526dafa7520d79173d.svg",
     "static/media/SoccerCleats.png": "/static/media/SoccerCleats.f70f6705513064c31db5.png",
@@ -51,12 +50,12 @@
     "static/media/icons_arrow-up.svg": "/static/media/icons_arrow-up.ec48c114005b09955beed2fff70655e9.svg",
     "static/media/Vector_left.svg": "/static/media/Vector_left.3b6ad76ad782eec2f9e785dbdb25fbea.svg",
     "static/media/Vector.svg": "/static/media/Vector.77f69d12652a0ab8f8be.svg",
-    "main.c922405e.css.map": "/static/css/main.c922405e.css.map",
-    "main.0505d66f.js.map": "/static/js/main.0505d66f.js.map",
+    "main.c411648c.css.map": "/static/css/main.c411648c.css.map",
+    "main.7fa4e023.js.map": "/static/js/main.7fa4e023.js.map",
     "453.cd016445.chunk.js.map": "/static/js/453.cd016445.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.c922405e.css",
-    "static/js/main.0505d66f.js"
+    "static/css/main.c411648c.css",
+    "static/js/main.7fa4e023.js"
   ]
 }
