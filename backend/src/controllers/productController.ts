@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import sequelize, { Category, Product, ProductImage } from '../models';
 import * as fs from 'fs';
 import * as path from 'path';
-import { Op } from 'sequelize';
 import { searchProducts } from '../services/search-products-service';
 
 const createProduct = async (req: Request, res: Response): Promise<void> => {

@@ -4,16 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { getCategories } from '../../../api/categories';
 import { ReactComponent as AppleIcon } from '../../../assets/icons/Apple.svg';
 import { ReactComponent as VectorIcon } from '../../../assets/icons/Vector2.svg';
-import { Product } from '../../../types/product';
+import { Product, ProductsProps } from '../../../types/product';
 
-interface PromotionalProps {
-  prdouctList: Product[];
-}
-
-const Promotional = ({ prdouctList }: PromotionalProps) => {
+const Promotional = ({ prdouctList }: ProductsProps) => {
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
-  console.log(JSON.stringify(prdouctList));
   useEffect(() => {
     // Fetch categories from API or define them statically
     const fetchCategories = async () => {
@@ -83,9 +78,11 @@ const Promotional = ({ prdouctList }: PromotionalProps) => {
                     src={product.primaryImageUrl}
                     alt={product.name}
                     style={{
-                      height: '320px',
+                      maxHeight: '320px',
                       position: 'relative',
                       top: '24px',
+                      maxWidth: '350px',
+                      objectFit: 'contain',
                     }}
                   />
                 </div>

@@ -4,9 +4,7 @@ import multer from 'multer';
 import path from 'path';
 import { chat } from '../controllers/chatController';
 import productController from '../controllers/productController';
-import { login, register } from '../controllers/userController';
 import authenticationToken from '../middlewares/auth';
-import categoryRoutes from './categoryRoutes';
 
 const router = express.Router();
 const uploadDir = path.join(__dirname, '../../public/uploads');
@@ -44,33 +42,23 @@ const upload = multer({
   },
 });
 
-// 登录路由
-router.post('/login', login);
-
-// 注册路由
-router.post('/register', register);
-
-// 在适当位置添加
-router.use('/categories', categoryRoutes);
-
-// 保护所有后续路由
-router.use(authenticationToken);
-
 // 产品管理路由
 router.post(
-  '/products',
+  '/add',
+  authenticationToken,
   upload.array('images', 10), // 最多10张图片
   productController.createProduct,
 );
-router.get('/products', productController.getProducts);
-router.post('/products/search', productController.searchProductsByStr as any);
-router.get('/products/:id', productController.getProductById);
+router.get('/list-all', productController.getProducts);
+router.post('/search', productController.searchProductsByStr as any);
+router.get('/:id', productController.getProductById);
 router.put(
-  '/products/:id',
+  '/:id',
+  authenticationToken,
   upload.array('images', 10),
   productController.updateProduct,
 );
-router.delete('/products/:id', productController.deleteProduct);
+router.delete('/:id', authenticationToken, productController.deleteProduct);
 
 // 聊天相关路由
 router.post('/chat', upload.single('image'), chat);
