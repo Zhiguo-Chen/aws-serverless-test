@@ -1,27 +1,22 @@
-import { chat } from '../controllers/chatController';
-
-const express = require('express');
-const { register, login } = require('../controllers/userController');
-const authenticationToken = require('../middlewares/auth');
-const { listAllCategory } = require('../controllers/categoryController');
-const {
-  addProduct,
-  getAllProducts,
-  getProductsByUser,
-} = require('../controllers/productController_bk');
+import express from 'express';
+import { login, register } from '../controllers/userController';
+import authenticationToken from '../middlewares/auth';
+import cartRoutes from './cartRoutes';
+import categoryRoutes from './categoryRoutes';
+import productsRoutes from './productRoutes';
 
 const router = express.Router();
 
-router.use('/test', (req: any, res: any) => {
-  res.json({ id: 1, name: 'Leo Messi' });
-});
+// 登录路由
+router.post('/login', login);
 
-router.use('/register', register);
-router.use('/login', login);
-router.use('/add-product', authenticationToken, addProduct);
-router.use('/get-products', authenticationToken, getAllProducts);
-router.use('/get-my-products', authenticationToken, getProductsByUser);
-router.use('/get-categories', authenticationToken, listAllCategory);
-router.use('/chat', authenticationToken, chat);
+// 注册路由
+router.post('/register', register);
 
-module.exports = router;
+router.use('/products', productsRoutes);
+router.use('/categories', categoryRoutes);
+// 保护所有后续路由
+router.use(authenticationToken);
+router.use('/cart', cartRoutes);
+
+export default router;

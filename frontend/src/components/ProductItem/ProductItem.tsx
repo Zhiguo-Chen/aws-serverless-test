@@ -2,6 +2,7 @@ import { StarFilled } from '@ant-design/icons';
 import React, { FC } from 'react';
 import './ProductItem.scss';
 import { Product } from '../../types/product';
+import { addToCart } from '../../api/cart';
 interface ProductItemProps {
   product: Product;
   labelPlace?: React.ReactNode;
@@ -16,16 +17,26 @@ const ProductItem: FC<ProductItemProps> = ({
   isSocreShow = false,
 }) => {
   const totalStars = 5;
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // e.preventDefault();
+    console.log(`Adding ${product.name} to cart`);
+    const data = await addToCart({ productId: product.id, quantity: 1 });
+    console.log('Add to cart response:', data);
+  };
   return (
     <div className="sales-item">
       <div className="image-bg flex justify-center align-center position-relative">
         <img
-          src={product.productImages && product.productImages[0]?.imageUrl}
+          src={product.productImages && product.primaryImageUrl}
           alt={product.name}
+          style={{ maxWidth: '270px', maxHeight: '100%' }}
         />
         {labelPlace && <>{labelPlace}</>}
         {actionButtonPlace && <>{actionButtonPlace}</>}
-        <button className="add-to-cart">Add To Cart</button>
+        <button className="add-to-cart" onClick={handleAddToCart}>
+          Add To Cart
+        </button>
       </div>
       <div className="product-info-container flex flex-column flex-gap-05">
         <div className="product-name-container">{product.name}</div>
