@@ -1,32 +1,25 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import './ProductDetail.scss';
-import { Button } from 'antd';
 import {
-  LeftOutlined,
-  StarFilled,
   HeartFilled,
   HeartOutlined,
+  LeftOutlined,
+  StarFilled,
 } from '@ant-design/icons';
+import { Button } from 'antd';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getProductById } from '../../api/products';
 import { ReactComponent as DeliveryIcon } from '../../assets/icons/icon-delivery_2.svg';
 import { ReactComponent as ReturnIcon } from '../../assets/icons/Icon-return.svg';
-import controller1 from '../../assets/images/controller1.jpg';
-import controller2 from '../../assets/images/controller2.jpg';
-import controller3 from '../../assets/images/controller3.jpg';
-import controller4 from '../../assets/images/controller4.jpg';
-import SectionName from '../../components/SectionName/SectionName';
-import bag from '../../assets/images/Gucci-Savoy-medium-duffle-bag.png';
-import cpu_cooler from '../../assets/images/argb-1-500x500.png';
-import GamePad from '../../assets/images/GamePad.png';
-import Jacket from '../../assets/images/Jacket.png';
-import ProductItem from '../../components/ProductItem/ProductItem';
-import ideapad from '../../assets/images/ideapad-gaming-3i.png';
 import controller from '../../assets/images/controller.png';
+import ideapad from '../../assets/images/ideapad-gaming-3i.png';
 import keyBoard from '../../assets/images/keyBoard.png';
 import monitor from '../../assets/images/monitor.png';
-import { getProductById } from '../../api/products';
-import { Product, ProductImage } from '../../types/product';
+import ProductItem from '../../components/ProductItem/ProductItem';
+import SectionName from '../../components/SectionName/SectionName';
 import { API_URL } from '../../const/API_URL';
+import { Product, ProductImage } from '../../types/product';
+import './ProductDetail.scss';
+import { addToCart } from '../../api/cart';
 
 const ProductDetail = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -76,7 +69,6 @@ const ProductDetail = () => {
     },
   ];
 
-  const images = [controller1, controller2, controller3, controller4];
   const [mainImage, setMainImage] = useState<ProductImage | null>(null);
   const [showFullDesc, setShowFullDesc] = useState(false);
   useEffect(() => {
@@ -109,6 +101,12 @@ const ProductDetail = () => {
 
   const handlShowFullDesc = () => {
     setShowFullDesc((prev) => !prev);
+  };
+
+  const handleBuyNow = async () => {
+    if (!productDetail) return;
+    const data = await addToCart({ productId: productDetail?.id, quantity: 1 });
+    navigate('/main/cart');
   };
   return (
     <div className="product-detail-container flex-1">
@@ -260,7 +258,9 @@ const ProductDetail = () => {
               </button>
             </div>
 
-            <button className="buy-now-btn full-height">Buy Now</button>
+            <button className="buy-now-btn full-height" onClick={handleBuyNow}>
+              Buy Now
+            </button>
 
             <button
               className={`wishlist-btn full-height ${

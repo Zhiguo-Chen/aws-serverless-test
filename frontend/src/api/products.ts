@@ -17,7 +17,7 @@ const config = {
 };
 
 export const getProducts = async () => {
-  const response = await axiosInstance.get(`/api/products`);
+  const response = await axiosInstance.get(`/api/products/list-all`);
   return response;
 };
 
@@ -34,7 +34,11 @@ export const searchProduct = async (searchStr: string) => {
 };
 
 export const createProduct = async (formData: any) => {
-  const response = await axiosInstance.post(`/api/products`, formData, config);
+  const response = await axiosInstance.post(
+    `/api/products/add`,
+    formData,
+    config,
+  );
   return response;
 };
 

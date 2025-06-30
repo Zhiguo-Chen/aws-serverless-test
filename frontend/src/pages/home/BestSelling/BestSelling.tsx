@@ -9,8 +9,9 @@ import cpu_cooler from '../../../assets/images/argb-1-500x500.png';
 import bookself from '../../../assets/images/sam-moghadam-khamseh.png';
 import ProductItem from '../../../components/ProductItem/ProductItem';
 import SectionName from '../../../components/SectionName/SectionName';
+import { Product, ProductsProps } from '../../../types/product';
 
-const BestSelling = () => {
+const BestSelling = ({ prdouctList }: ProductsProps) => {
   const totalStars = 5;
   const productsList = [
     {
@@ -48,22 +49,20 @@ const BestSelling = () => {
   ];
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  useEffect(() => {}, []);
 
-  const fetchProducts = async () => {
-    setLoading(true);
-    try {
-      const response = await getProducts();
-      console.log(response.data);
-      setProducts(response.data);
-    } catch (error) {
-      message.error('Failed to fetch products');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const fetchProducts = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await getProducts();
+  //     console.log(response.data);
+  //     setProducts(response.data);
+  //   } catch (error) {
+  //     message.error('Failed to fetch products');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   return (
     <div className="categories-component-container">
       <div className="flex justify-between align-end">
@@ -78,7 +77,7 @@ const BestSelling = () => {
         </div>
       </div>
       <div className="flex flex-gap-2 sales-container">
-        {productsList.map((product: any, index: any) => (
+        {prdouctList.map((product: Product, index: number) => (
           <ProductItem
             product={product}
             actionButtonPlace={

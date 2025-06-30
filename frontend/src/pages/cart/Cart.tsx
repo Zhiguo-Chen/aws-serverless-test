@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom';
 import './Cart.scss';
 import controller from '../../assets/images/controller.png';
 import monitor from '../../assets/images/monitor.png';
+import { useEffect, useState } from 'react';
+import { getCartItems, removeFromCart } from '../../api/cart';
+import { ProductImage } from '../../types/product';
+import { API_URL } from '../../const/API_URL';
 
 interface CartItem {
   id: number;
@@ -13,22 +17,72 @@ interface CartItem {
 }
 
 const Cart: React.FC = () => {
-  const cartItems: CartItem[] = [
-    {
-      id: 1,
-      image: controller,
-      name: 'LCD Monitor',
-      price: 650,
-      quantity: 1,
-    },
-    {
-      id: 2,
-      image: monitor,
-      name: 'H1 Gamepad',
-      price: 550,
-      quantity: 2,
-    },
-  ];
+  // const cartItems: CartItem[] = [
+  //   {
+  //     id: 1,
+  //     image: controller,
+  //     name: 'LCD Monitor',
+  //     price: 650,
+  //     quantity: 1,
+  //   },
+  //   {
+  //     id: 2,
+  //     image: monitor,
+  //     name: 'H1 Gamepad',
+  //     price: 550,
+  //     quantity: 2,
+  //   },
+  // ];
+
+  const [cartItems, setCartItems] = useState<any[]>([]);
+
+  useEffect(() => {
+    // This effect can be used to fetch cart items from an API or perform other side effects
+    console.log('Cart component mounted');
+    listCartItems();
+  }, []);
+
+  const listCartItems = async () => {
+    try {
+      const response = await getCartItems();
+      console.log('Cart items:', response.data);
+      const processedItems = processCartItems(response.data.cart.items || []);
+      setCartItems(processedItems || []);
+      setTimeout(() => {
+        console.log('Processed cart items:', cartItems);
+      }, 100);
+      // Update state or perform actions with the cart items
+    } catch (error) {
+      console.error('Error fetching cart items:', error);
+      // Handle error appropriately
+    }
+  };
+
+  const processCartItems = (items: any[]) => {
+    console.log('Processing cart items:', items);
+    return items?.map((item: any) => ({
+      id: item.id,
+      image:
+        `${API_URL}/public` +
+          item.product.productImages?.find(
+            (prdImg: ProductImage) => prdImg.isPrimary,
+          ).imageUrl || '',
+      name: item.product.name,
+      price: item.product.price,
+      quantity: item.quantity,
+    }));
+  };
+
+  const removeCartItem = (itemId: string) => {
+    console.log(`Removing item with ID: ${itemId}`);
+    return async () => {
+      setCartItems((prevItems) =>
+        prevItems.filter((item) => item.id !== itemId),
+      );
+      const data = await removeFromCart(itemId);
+      console.log('Remove from cart response:', data);
+    };
+  };
 
   const calculateSubtotal = (price: number, quantity: number) =>
     price * quantity;
@@ -61,7 +115,12 @@ const Cart: React.FC = () => {
           {cartItems.map((item) => (
             <div key={item.id} className="cart-item">
               <div className="product-col position-relative">
-                <button className="delete-btn">×</button>
+                <button
+                  className="delete-btn"
+                  onClick={removeCartItem(item.id)}
+                >
+                  ×
+                </button>
                 <img src={item.image} alt={item.name} />
                 <span>{item.name}</span>
               </div>

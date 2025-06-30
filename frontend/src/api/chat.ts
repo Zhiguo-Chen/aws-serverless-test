@@ -12,6 +12,6 @@ const getAuthHeaders = () => {
 };
 
 export const createChat = async (formData: any) => {
-  const response = await axiosInstance.post(`/api/chat`, formData);
+  const response = await axiosInstance.post(`/api/products/chat`, formData);
   return response;
 };
