@@ -9,7 +9,7 @@ import { testConnection, syncDatabase, closeConnection } from './models';
 import { connectMongoDB } from './config/mongodb';
 
 // 导入路由
-import productRoutes from './routes/productRoutes';
+import routes from './routes/routes';
 
 const publicDir = path.join(__dirname, '../public');
 if (!fs.existsSync(publicDir)) {
@@ -48,7 +48,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // 路由
-app.use('/api', productRoutes);
+app.use('/api', routes);
 
 // 健康检查路由
 app.get('/health', (req, res) => {
@@ -68,8 +68,6 @@ app.use(
   },
 );
 
-// 启动函数
-const PORT = process.env.PORT || 4000;
 const start = async () => {
   try {
     console.log('Starting application initialization...');

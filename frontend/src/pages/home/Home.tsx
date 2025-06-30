@@ -58,11 +58,8 @@ const HomePage = () => {
   };
 
   const filterProducts = () => {
-    console.log('======================');
-    console.log(products);
-    console.log('======================');
+    console.log('filterProducts', products);
     const featured = products.filter((prd: Product) => prd.isFeatured);
-    console.log('featured: ' + JSON.stringify(featured));
     const newArrival = products.filter((prd: Product) => prd.isNewArrival);
     const bestSelling = products.filter((prd: Product) => prd.isBestSelling);
     const explore = products.filter((prd: Product) => prd.isExplored);
@@ -73,7 +70,7 @@ const HomePage = () => {
 
     setFeaturedProducts(featured);
     setNewArrivalProducts(newArrival);
-    setBestSellingProducts(bestSelling);
+    setBestSellingProducts(featured); // TODO: fix this
     setExploreProducts(explore);
     setSpecialPromotionalProducts(specialPromotional);
     setFlashSalesProducts(flashSales);
@@ -90,7 +87,7 @@ const HomePage = () => {
         <Categories />
       </div>
       <div className="best-selling-container bottom-padding">
-        <BestSelling />
+        <BestSelling prdouctList={bestSellingProducts} />
       </div>
       <div className="special-promotional-container">
         <SpecialPromotional />

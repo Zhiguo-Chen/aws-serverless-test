@@ -30,3 +30,7 @@ export interface ProductImage {
   imageUrl: string;
   productId?: string;
 }
+
+export interface ProductsProps {
+  prdouctList: Product[];
+}
