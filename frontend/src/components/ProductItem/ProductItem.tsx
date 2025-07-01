@@ -30,7 +30,7 @@ const ProductItem: FC<ProductItemProps> = ({
         <img
           src={product.productImages && product.primaryImageUrl}
           alt={product.name}
-          style={{ maxWidth: '270px', maxHeight: '100%' }}
+          style={{ maxWidth: '270px', maxHeight: '90%' }}
         />
         {labelPlace && <>{labelPlace}</>}
         {actionButtonPlace && <>{actionButtonPlace}</>}

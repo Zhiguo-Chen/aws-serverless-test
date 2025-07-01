@@ -5,34 +5,14 @@ import gucci from '../../../assets/images/gucci.png';
 import SectionName from '../../../components/SectionName/SectionName';
 import { useEffect, useState } from 'react';
 import { getProducts } from '../../../api/products';
+import { ProductsProps } from '../../../types/product';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api';
 
-const NewArrival = () => {
-  const [products, setProducts] = useState<any[]>([]);
-  let index = 0;
-  useEffect(() => {
-    const getAllProducts = async () => {
-      console.log('index: ' + index);
-      index++;
-      const response = await getProducts();
-      const data = response.data as Array<any>;
-      const productList = data
-        .filter((prd) => prd.isNewArrival)
-        .map((prd) => ({
-          ...prd,
-          image: `${API_URL}/public${prd.imageUrl}`,
-          price: parseInt(prd.price),
-        }))
-        .reverse();
-      console.log(productList);
-      setProducts(productList);
-      setTimeout(() => {
-        console.log(products);
-      }, 100);
-    };
-    getAllProducts();
-  }, []);
+const NewArrival = ({ prdouctList }: ProductsProps) => {
+  // const [products, setProducts] = useState<any[]>([]);
+  // setProducts(prdouctList.slice(0, 4));
+  const products = prdouctList.slice(0, 4);
   return (
     <div className="new-arrival">
       <div className="flex justify-between align-end">
@@ -46,7 +26,7 @@ const NewArrival = () => {
       <div className="new-arrival-layout grid grid-gap-2">
         <div className="new-arrival-item item1 position-center position-relative">
           <img
-            src={products[0]?.image}
+            src={products[0]?.primaryImageUrl}
             alt={products[0]?.name}
             style={{
               width: '80%',
@@ -55,7 +35,9 @@ const NewArrival = () => {
           />
           <div className="flex flex-column flex-gap new-arrival-product-info">
             <div className="product-name">{products[0]?.name}</div>
-            <div className="product-desc">{products[0]?.description}</div>
+            <div className="product-desc text-elipsis-2">
+              {products[0]?.description}
+            </div>
             <div className="buy-button-container">
               <button className="buy-button">Shop Now</button>
             </div>
@@ -63,7 +45,7 @@ const NewArrival = () => {
         </div>
         <div className="new-arrival-item item2 postition-right position-relative">
           <img
-            src={products[1]?.image}
+            src={products[1]?.primaryImageUrl}
             alt={products[1]?.name}
             style={{
               width: 'auto',
@@ -72,7 +54,9 @@ const NewArrival = () => {
           />
           <div className="flex flex-column flex-gap new-arrival-product-info">
             <div className="product-name">{products[1]?.name}</div>
-            <div className="product-desc">{products[1]?.description}</div>
+            <div className="product-desc text-elipsis-2">
+              {products[1]?.description}
+            </div>
             <div className="buy-button-container">
               <button className="buy-button">Shop Now</button>
             </div>
@@ -80,7 +64,7 @@ const NewArrival = () => {
         </div>
         <div className="new-arrival-item item3 position-center position-relative">
           <img
-            src={products[2]?.image}
+            src={products[2]?.primaryImageUrl}
             alt={products[2]?.name}
             style={{
               width: 'auto',
@@ -89,7 +73,9 @@ const NewArrival = () => {
           />
           <div className="flex flex-column flex-gap new-arrival-product-info">
             <div className="product-name">{products[2]?.name}</div>
-            <div className="product-desc">{products[2]?.description}</div>
+            <div className="product-desc text-elipsis-2">
+              {products[2]?.description}
+            </div>
             <div className="buy-button-container">
               <button className="buy-button">Shop Now</button>
             </div>
@@ -97,7 +83,7 @@ const NewArrival = () => {
         </div>
         <div className="new-arrival-item item4 position-center position-relative">
           <img
-            src={products[3]?.image}
+            src={products[3]?.primaryImageUrl}
             alt={products[3]?.name}
             style={{
               width: 'auto',
@@ -106,7 +92,9 @@ const NewArrival = () => {
           />
           <div className="flex flex-column flex-gap new-arrival-product-info">
             <div className="product-name">{products[3]?.name}</div>
-            <div className="product-desc">{products[3]?.description}</div>
+            <div className="product-desc text-elipsis-2">
+              {products[3]?.description}
+            </div>
             <div className="buy-button-container">
               <button className="buy-button">Shop Now</button>
             </div>

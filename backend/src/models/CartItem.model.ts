@@ -8,7 +8,7 @@ import {
 } from 'sequelize-typescript';
 import { Cart } from './Cart.model';
 import { Product } from './Product.model';
-import { User } from './User.model';
+import { Order } from './Order.model';
 
 @Table({
   tableName: 'cart_items',
@@ -48,4 +48,14 @@ export class CartItem extends Model {
     defaultValue: 1,
   })
   quantity!: number;
+
+  @ForeignKey(() => Order)
+  @Column({
+    type: DataType.UUID,
+    allowNull: true, // 下单前可以为 null
+  })
+  orderId?: string;
+
+  @BelongsTo(() => Order)
+  order?: Order;
 }

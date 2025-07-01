@@ -13,6 +13,7 @@ import { getProducts } from '../../api/products';
 import { message } from 'antd';
 import { Product } from '../../types/product';
 import { API_URL } from '../../const/API_URL';
+import { processProduct } from '../../utils/processProduct';
 
 const HomePage = () => {
   const [loading, setLoading] = useState(false);
@@ -21,9 +22,8 @@ const HomePage = () => {
   const [newArrivalProducts, setNewArrivalProducts] = useState<Product[]>([]);
   const [bestSellingProducts, setBestSellingProducts] = useState<Product[]>([]);
   const [exploreProducts, setExploreProducts] = useState<Product[]>([]);
-  const [specialPromotionalProducts, setSpecialPromotionalProducts] = useState<
-    Product[]
-  >([]);
+  const [specialPromotionalProducts, setSpecialPromotionalProducts] =
+    useState<Product | null>(null);
   const [flashSalesProducts, setFlashSalesProducts] = useState<Product[]>([]);
   const handleScroll2Top = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -41,12 +41,12 @@ const HomePage = () => {
     try {
       const response = await getProducts();
       if (response.data.length > 0) {
-        const tmpData = response.data.map((prd: Product) => {
-          const primaryImage = prd.productImages.find((img) => img.isPrimary);
-          prd.primaryImageUrl = `${API_URL}/public${primaryImage?.imageUrl}`;
-          return prd;
-        });
-        setProducts(tmpData);
+        // const tmpData = response.data.map((prd: Product) => {
+        //   const primaryImage = prd.productImages.find((img) => img.isPrimary);
+        //   prd.primaryImageUrl = `${API_URL}/public${primaryImage?.imageUrl}`;
+        //   return prd;
+        // });
+        setProducts(processProduct(response.data));
       }
 
       // filterProducts();
@@ -63,9 +63,8 @@ const HomePage = () => {
     const newArrival = products.filter((prd: Product) => prd.isNewArrival);
     const bestSelling = products.filter((prd: Product) => prd.isBestSelling);
     const explore = products.filter((prd: Product) => prd.isExplored);
-    const specialPromotional = products.filter(
-      (prd: Product) => prd.isSpecialPromotional,
-    );
+    const specialPromotional =
+      products.filter((prd: Product) => prd.isHotSale)[0] || null; // Assuming only one product is special promotional
     const flashSales = products.filter((prd: Product) => prd.isFlashSale);
 
     setFeaturedProducts(featured);
@@ -90,13 +89,13 @@ const HomePage = () => {
         <BestSelling prdouctList={bestSellingProducts} />
       </div>
       <div className="special-promotional-container">
-        <SpecialPromotional />
+        <SpecialPromotional prdouct={specialPromotionalProducts} />
       </div>
       <div className="explore-products-container bottom-padding">
         <ExploreProducts />
       </div>
       <div className="new-arrival-container bottom-padding">
-        <NewArrival />
+        <NewArrival prdouctList={newArrivalProducts} />
       </div>
       <div className="customer-benefits-container flex justify-center">
         <CustomerBenefits />

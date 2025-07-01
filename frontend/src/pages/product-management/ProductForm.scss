@@ -47,14 +47,20 @@
 
 .primary-icon {
   position: absolute;
-  top: -5px;
-  left: -5px;
-  color: #faad14;
-  font-size: 18px;
-  z-index: 3;
-  pointer-events: none;
-  background: rgba(255, 255, 255, 0.85);
-  border-radius: 50%;
-  padding: 1px;
-  box-shadow: 0 0 2px #fff;
+  top: 5px;
+  right: 5px;
+  color: #ffc107;
+  font-size: 20px;
+}
+
+.switch-options-group {
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+  background-color: #fafafa;
+
+  .ant-form-item {
+    margin-bottom: 0;
+  }
 }

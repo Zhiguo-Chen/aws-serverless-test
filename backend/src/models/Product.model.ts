@@ -70,6 +70,12 @@ export class Product extends Model {
     type: DataType.BOOLEAN,
     defaultValue: false,
   })
+  isHotSale!: boolean; // Hot sale recommendation
+
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: false,
+  })
   isNewArrival!: boolean;
 
   @Column({

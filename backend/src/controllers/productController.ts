@@ -3,6 +3,7 @@ import sequelize, { Category, Product, ProductImage } from '../models';
 import * as fs from 'fs';
 import * as path from 'path';
 import { searchProducts } from '../services/search-products-service';
+import { Op } from 'sequelize';
 
 const createProduct = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -14,6 +15,7 @@ const createProduct = async (req: Request, res: Response): Promise<void> => {
       category,
       stockQuantity,
       isFeatured,
+      isHotSale,
       isNewArrival,
       isFlashSale,
       flashSaleEndsAt,
@@ -71,6 +73,7 @@ const createProduct = async (req: Request, res: Response): Promise<void> => {
       stockQuantity,
       isFeatured,
       isNewArrival,
+      isHotSale,
       isFlashSale,
       flashSaleEndsAt,
       imageUrl:
@@ -412,11 +415,97 @@ const searchProductsByStr = async (req: Request, res: Response) => {
     return res.status(400).json({ error: 'Query parameter is required' });
   }
   try {
-    const products = await searchProducts(query);
+    const products = await Product.findAll({
+      where: {
+        [Op.or]: [
+          { name: { [Op.iLike]: `%${query}%` } },
+          { description: { [Op.iLike]: `%${query}%` } },
+        ],
+      },
+      include: [
+        {
+          model: Category,
+          as: 'category',
+          where: {
+            name: { [Op.iLike]: `%${query}%` },
+          },
+          required: false,
+        },
+        {
+          model: ProductImage,
+          as: 'productImages',
+        },
+      ],
+      attributes: {
+        include: [
+          // 评分数量
+          [
+            sequelize.literal(
+              '(SELECT COUNT(*) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
+            ),
+            'reviewCount',
+          ],
+          // 平均评分
+          [
+            sequelize.literal(
+              '(SELECT AVG(rating) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
+            ),
+            'averageRating',
+          ],
+        ],
+      },
+    });
 
     res.status(200).json(products);
   } catch (error: any) {
     console.error('Error searching products:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const searchByCategory = async (req: Request, res: Response) => {
+  const { category } = req.params;
+  if (!category || typeof category !== 'string') {
+    return res.status(400).json({ error: 'Category parameter is required' });
+  }
+  try {
+    const products = await Product.findAll({
+      include: [
+        {
+          model: Category,
+          as: 'category',
+          where: {
+            name: { [Op.iLike]: `%${category}%` },
+          },
+        },
+        {
+          model: ProductImage,
+          as: 'productImages',
+        },
+      ],
+      attributes: {
+        include: [
+          // 评分数量
+          [
+            sequelize.literal(
+              '(SELECT COUNT(*) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
+            ),
+            'reviewCount',
+          ],
+          // 平均评分
+          [
+            sequelize.literal(
+              '(SELECT AVG(rating) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
+            ),
+            'averageRating',
+          ],
+        ],
+      },
+    });
+
+    res.status(200).json(products);
+  } catch (error: any) {
+    console.error('Error searching products by category:', error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -428,4 +517,5 @@ export default {
   getProductById,
   deleteProduct,
   searchProductsByStr,
+  searchByCategory,
 };
