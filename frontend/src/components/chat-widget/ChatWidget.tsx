@@ -166,9 +166,13 @@ const ChatWidget = () => {
       formData.append('sessionId', getOrCreateChatSessionId());
       setFile(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
-      const response = await axiosInstance.post('/api/chat', formData, {
-        signal: controller.signal,
-      });
+      const response = await axiosInstance.post(
+        '/api/products/chat',
+        formData,
+        {
+          signal: controller.signal,
+        },
+      );
       const botMessage = response?.data?.response || 'No response from bot.';
       setMessages((prev) => [...prev, { role: 'bot', content: botMessage }]);
     } catch (err: any) {

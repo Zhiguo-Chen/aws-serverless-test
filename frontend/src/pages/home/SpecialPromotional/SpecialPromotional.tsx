@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import boomBox from '../../../assets/images/JBL_BOOMBOX.png';
-const SpecialPromotional = () => {
+import { ProductProps } from '../../../types/product';
+import { useNavigate } from 'react-router-dom';
+
+const SpecialPromotional = ({ prdouct }: ProductProps) => {
+  const navigate = useNavigate();
   const initialDays = 4;
   const [timeLeft, setTimeLeft] = useState(initialDays * 24 * 60 * 60); // Convert days to seconds
 
@@ -21,10 +25,19 @@ const SpecialPromotional = () => {
   };
 
   const { days, hours, minutes, seconds } = calculateTimeLeft(timeLeft);
+
+  const handleBuy = () => {
+    if (!prdouct) {
+      console.error('Product is not available');
+      return;
+    }
+    navigate(`/main/${prdouct?.id}/product-detail`);
+  };
+
   return (
     <div className="special-promotional-product full-width flex">
       <div className="flex-1 flex flex-column desc-container flex-gap-2">
-        <div className="desc-title">Categories</div>
+        <div className="desc-title">{prdouct?.category?.name}</div>
         <div className="desc-text">Enhance Your Music Experience</div>
         <div className="flex flex-gap-15">
           <div className="time-container flex aligin-center justify-center">
@@ -53,12 +66,14 @@ const SpecialPromotional = () => {
           </div>
         </div>
         <div>
-          <button className="button-1">Buy Now!</button>
+          <button className="button-1" onClick={handleBuy}>
+            Buy Now!
+          </button>
         </div>
       </div>
       <div className="flex-1 flex align-center special-img-container position-relative">
         <img
-          src={boomBox}
+          src={prdouct?.primaryImageUrl}
           alt="boomBox"
           style={{
             width: '100%',

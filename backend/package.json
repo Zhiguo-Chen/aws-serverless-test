@@ -8,7 +8,9 @@
     "seed:categories": "tsx src/seeders/seedCategories.ts",
     "build": "tsc",
     "start": "node dist/app.js",
-    "dev": "nodemon --exec ts-node src/app.ts"
+    "dev": "nodemon --exec ts-node src/app.ts",
+    "add-isHotSale-column": "node src/db/script/add-isHotSale-column.js",
+    "add-orderId-to-cartItem": "node src/db/script/add-orderId-to-cartItem.js"
   },
   "author": "Henry Chen",
   "license": "MIT",

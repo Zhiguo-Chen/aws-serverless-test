@@ -18,14 +18,14 @@ const Categories = () => {
       icon: (
         <CellPhoneIcon width="56px" height="56px" className="cursor-pointer" />
       ),
-      name: 'Phones',
+      name: 'Phone',
       categoryId: 'aaa',
     },
     {
       icon: (
         <ComputerIcon width="56px" height="56px" className="cursor-pointer" />
       ),
-      name: 'Computers',
+      name: 'Computer',
       categoryId: 'aaa',
     },
     {
@@ -46,7 +46,7 @@ const Categories = () => {
       icon: (
         <HeadphoneIcon width="56px" height="56px" className="cursor-pointer" />
       ),
-      name: 'Headphones',
+      name: 'Headphone',
       categoryId: 'aaa',
     },
     {
@@ -57,9 +57,10 @@ const Categories = () => {
       categoryId: 'aaa',
     },
   ];
-  const handleCategoryClick = (categoryId: string) => {
-    // navigate to category page
-    navigate(`/main/${categoryId}/category/`);
+  const handleCategoryClick = (categoryName: string) => {
+    navigate(
+      `/main/search-products?searchStr=${encodeURIComponent(categoryName)}`,
+    );
   };
   useEffect(() => {}, []);
   return (
@@ -87,7 +88,7 @@ const Categories = () => {
           <div
             key={index}
             className="category-item-container flex align-center justify-center cursor-pointer"
-            onClick={() => handleCategoryClick(category.categoryId)}
+            onClick={() => handleCategoryClick(category.name)}
           >
             <div className="text-center">
               <div className="category-icon-container">{category.icon}</div>

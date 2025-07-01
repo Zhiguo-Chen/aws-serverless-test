@@ -123,8 +123,10 @@ const ProductDetail = () => {
               (image: ProductImage, index: number) => (
                 <div
                   key={index}
-                  className="product-detail-image-item"
-                  onClick={() => setMainImage(image)}
+                  className={`product-detail-image-item${
+                    mainImage?.imageUrl === image.imageUrl ? ' selected' : ''
+                  }`}
+                  onMouseEnter={() => setMainImage(image)}
                 >
                   <img
                     src={`${API_URL}/public${image?.imageUrl}`}
