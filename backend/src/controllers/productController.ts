@@ -275,7 +275,7 @@ const getProducts = async (req: Request, res: Response) => {
           ],
         ],
       },
-      order: [['createdAt', 'DESC']],
+      order: [['createdAt', 'ASC']],
     });
 
     // 格式化平均评分

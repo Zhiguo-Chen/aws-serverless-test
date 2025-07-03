@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import { getCartItems, removeFromCart } from '../../api/cart';
 import { ProductImage } from '../../types/product';
 import { API_URL } from '../../const/API_URL';
+import { createNewOrder } from '../../api/order';
 
 interface CartItem {
   id: number;
@@ -104,7 +105,7 @@ const Cart: React.FC = () => {
     }
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (selectedItems.length === 0) {
       alert('Please select at least one item to proceed to checkout.');
       return;
@@ -112,6 +113,17 @@ const Cart: React.FC = () => {
     // Implement checkout logic here
     console.log('Proceeding to checkout with items:', selectedItems);
     // For example, you might redirect to a checkout page or call an API
+    const response = await createNewOrder({
+      paymentMethod: 'Credit Card', // Example payment method
+      cartItemIds: selectedItems.map((id) => id.toString()), // Convert to string if needed
+      shippingAddress: {
+        address: '123 Example St',
+        city: 'City',
+        country: 'Country',
+        postalCode: '123456',
+      }, // Example shipping address
+    });
+    console.log('Checkout response:', response);
   };
 
   return (
