@@ -35,7 +35,7 @@ export const syncDatabase = async (
     });
 
     console.log('Database synchronized successfully');
-    console.log(`Total ${sequelize.models.length} models synced`);
+    console.log(`Total ${sequelize.models?.length} models synced`);
 
     if (force) {
       console.warn(

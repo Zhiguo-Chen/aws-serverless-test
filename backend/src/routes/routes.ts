@@ -4,6 +4,7 @@ import authenticationToken from '../middlewares/auth';
 import cartRoutes from './cartRoutes';
 import categoryRoutes from './categoryRoutes';
 import productsRoutes from './productRoutes';
+import orderRoutes from './orderRoutes';
 
 const router = express.Router();
 
@@ -18,5 +19,7 @@ router.use('/categories', categoryRoutes);
 // 保护所有后续路由
 router.use(authenticationToken);
 router.use('/cart', cartRoutes);
+
+router.use('/order', orderRoutes);
 
 export default router;

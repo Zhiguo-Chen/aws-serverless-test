@@ -1,70 +1,180 @@
 import { Request, Response } from 'express';
-import { Order } from '../models/Order.model';
-import { Cart } from '../models/Cart.model';
+import { MongoOrder } from '../models/Order.mongo'; // Import the new Mongoose model
 import { CartItem } from '../models/CartItem.model';
-import { User } from '../models/User.model';
 import { Product } from '../models/Product.model';
+import { IOrderProduct } from '../models/Order.mongo';
+import { ProductImage } from '../models';
 
-// 创建订单（支持选择部分 cartItem 结算）
+// Create an order from cart items and store it in MongoDB
 export const createOrder = async (req: Request | any, res: Response) => {
   try {
     const userId = req.user?.id;
-    const { paymentMethod, cartItemIds } = req.body;
-    if (!userId || !paymentMethod || !Array.isArray(cartItemIds) || cartItemIds.length === 0) {
-      return res.status(400).json({ error: 'Missing required fields' });
+    // Assuming shippingAddress is provided in the request body
+    const { paymentMethod, cartItemIds, shippingAddress } = req.body;
+
+    if (
+      !userId ||
+      !paymentMethod ||
+      !shippingAddress ||
+      !Array.isArray(cartItemIds) ||
+      cartItemIds.length === 0
+    ) {
+      res
+        .status(400)
+        .json({ error: 'Missing required fields, including shippingAddress.' });
+      return;
     }
-    // 查询指定 cartItem
-    const cartItems = await CartItem.findAll({
+
+    // 1. Find the selected cart items from the relational database
+    const cartItemsRaw = await CartItem.findAll({
       where: {
         id: cartItemIds,
-        orderId: null, // 只结算未下单的
+        orderId: null,
       },
-      include: [Product],
+      include: [
+        {
+          model: Product,
+          as: 'product',
+          include: [
+            {
+              model: ProductImage,
+              as: 'productImages',
+            },
+          ],
+        },
+      ],
     });
+    // 转为普通 object
+    const cartItems = cartItemsRaw.map((item) => item.toJSON());
+
     if (!cartItems || cartItems.length === 0) {
-      return res.status(400).json({ error: 'No valid cart items found' });
+      res.status(404).json({ error: 'No valid cart items found.' });
+      return;
     }
-    // 计算总价
-    const totalAmount = cartItems.reduce((sum, item) => sum + (item.quantity * (item.product as any).price), 0);
-    // 创建订单
-    const order = await Order.create({
+
+    // 2. Create product snapshots and calculate total amount
+    const productSnapshots: IOrderProduct[] = [];
+    let totalAmount = 0;
+
+    console.log('========== Order Creation Process ==========');
+    console.log('Cart items:', cartItems);
+    console.log('========== Order Creation Process ==========');
+
+    for (const item of cartItems) {
+      if (!item.product) {
+        // Handle case where a product might have been deleted
+        res
+          .status(400)
+          .json({ error: `Product with ID ${item.productId} not found.` });
+        return;
+      }
+      let primaryImageUrl = '';
+      if (item.product.productImages?.length) {
+        primaryImageUrl =
+          item.product.productImages.find((img: any) => img.isPrimary)
+            ?.imageUrl || item.product.productImages[0].imageUrl;
+      }
+      const productSnapshot: IOrderProduct = {
+        productId: item.product.id,
+        name: item.product.name,
+        description: item.product.description,
+        price: item.product.price,
+        originalPrice: item.product.originalPrice,
+        imageUrl: primaryImageUrl,
+        quantity: item.quantity,
+      };
+      productSnapshots.push(productSnapshot);
+      totalAmount += item.product.price * item.quantity;
+    }
+
+    // 3. Create the new order in MongoDB
+    const newOrder = new MongoOrder({
       userId,
-      paymentMethod,
+      products: productSnapshots,
       totalAmount,
-      status: 'pending',
+      paymentMethod,
+      shippingAddress,
+      status: 'Pending', // Initial status
     });
-    // 关联 cartItems 到 order
-    await Promise.all(
-      cartItems.map(async (item) => {
-        item.orderId = order.id;
-        await item.save();
-      })
-    );
-    res.status(201).json({ order });
+
+    await newOrder.save();
+
+    // 4. (Important) Clean up: Delete the cart items from the relational DB
+    const idsToDelete = cartItems.map((item) => item.id);
+    await CartItem.destroy({
+      where: {
+        id: idsToDelete,
+      },
+    });
+
+    res.status(201).json(newOrder);
   } catch (error) {
+    console.error('Order creation failed:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
 
-// 查询订单列表
+// List all orders for the authenticated user from MongoDB
 export const listOrders = async (req: Request | any, res: Response) => {
   try {
     const userId = req.user?.id;
     if (!userId) {
-      return res.status(401).json({ error: 'User not authenticated' });
+      res.status(401).json({ error: 'User not authenticated' });
+      return;
     }
-    const orders = await Order.findAll({
-      where: { userId },
-      include: [
-        {
-          model: CartItem,
-          as: 'cartItems',
-        },
-      ],
-      order: [['createdAt', 'DESC']],
-    });
+
+    const orders = await MongoOrder.find({ userId }).sort({ createdAt: -1 });
+
     res.status(200).json({ orders });
   } catch (error) {
+    console.error('Failed to list orders:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Get a single order by its MongoDB ObjectId
+export const getOrderById = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user?.id;
+    const { orderId } = req.params;
+
+    if (!userId) {
+      return res.status(401).json({ error: 'User not authenticated' });
+    }
+
+    const order = await MongoOrder.findOne({ _id: orderId, userId });
+
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    res.status(200).json(order);
+  } catch (error) {
+    console.error('Failed to get order by ID:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const deleteOrder = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user?.id;
+    const { orderId } = req.params;
+
+    if (!userId) {
+      res.status(401).json({ error: 'User not authenticated' });
+      return;
+    }
+
+    const order = await MongoOrder.findOneAndDelete({ _id: orderId, userId });
+
+    if (!order) {
+      res.status(404).json({ error: 'Order not found' });
+      return;
+    }
+
+    res.status(200).json({ message: 'Order deleted successfully' });
+  } catch (error) {
+    console.error('Failed to delete order:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };

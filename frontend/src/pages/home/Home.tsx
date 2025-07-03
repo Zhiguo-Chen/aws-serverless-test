@@ -62,7 +62,14 @@ const HomePage = () => {
     const featured = products.filter((prd: Product) => prd.isFeatured);
     const newArrival = products.filter((prd: Product) => prd.isNewArrival);
     const bestSelling = products.filter((prd: Product) => prd.isBestSelling);
-    const explore = products.filter((prd: Product) => prd.isExplored);
+    const explore = products.filter(
+      (prd: Product) =>
+        !prd.isFeatured &&
+        !prd.isNewArrival &&
+        !prd.isBestSelling &&
+        !prd.isHotSale &&
+        !prd.isFlashSale,
+    );
     const specialPromotional =
       products.filter((prd: Product) => prd.isHotSale)[0] || null; // Assuming only one product is special promotional
     const flashSales = products.filter((prd: Product) => prd.isFlashSale);
@@ -80,7 +87,7 @@ const HomePage = () => {
         <Promotional prdouctList={featuredProducts} />
       </div>
       <div className="today-sales-container dividing-line">
-        <TodaysSales />
+        <TodaysSales prdouctList={flashSalesProducts} />
       </div>
       <div className="categories-container dividing-line">
         <Categories />
@@ -92,7 +99,7 @@ const HomePage = () => {
         <SpecialPromotional prdouct={specialPromotionalProducts} />
       </div>
       <div className="explore-products-container bottom-padding">
-        <ExploreProducts />
+        <ExploreProducts prdouctList={exploreProducts} />
       </div>
       <div className="new-arrival-container bottom-padding">
         <NewArrival prdouctList={newArrivalProducts} />
