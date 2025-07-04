@@ -31,8 +31,11 @@ const MainHeader = () => {
   };
 
   const onSearch = async () => {
-    const data = await searchProduct(searchStr);
-    console.log(data);
+    // const data = await searchProduct(searchStr);
+    // console.log(data);
+    navigate(
+      `/main/search-products?searchStr=${encodeURIComponent(searchStr)}`,
+    );
   };
   const items: TabsProps['items'] = [
     {

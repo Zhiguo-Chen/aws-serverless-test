@@ -13,6 +13,8 @@ import {
   Card,
   Spin,
   Radio,
+  Row,
+  Col,
 } from 'antd';
 import { DeleteOutlined, UploadOutlined, StarFilled } from '@ant-design/icons';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -253,29 +255,46 @@ const ProductForm = () => {
             <InputNumber min={0} style={{ width: '100%' }} />
           </Form.Item>
 
-          <Form.Item
-            name="isFeatured"
-            label="Featured Product"
-            valuePropName="checked"
-          >
-            <Switch />
-          </Form.Item>
-
-          <Form.Item
-            name="isNewArrival"
-            label="New Arrival"
-            valuePropName="checked"
-          >
-            <Switch />
-          </Form.Item>
-
-          <Form.Item
-            name="isFlashSale"
-            label="Flash Sale"
-            valuePropName="checked"
-          >
-            <Switch />
-          </Form.Item>
+          <div className="switch-options-group">
+            <Row gutter={16}>
+              <Col span={6}>
+                <Form.Item
+                  name="isFeatured"
+                  label="Featured Product"
+                  valuePropName="checked"
+                >
+                  <Switch />
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item
+                  name="isHotSale"
+                  label="HotSale Product"
+                  valuePropName="checked"
+                >
+                  <Switch />
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item
+                  name="isNewArrival"
+                  label="New Arrival"
+                  valuePropName="checked"
+                >
+                  <Switch />
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item
+                  name="isFlashSale"
+                  label="Flash Sale"
+                  valuePropName="checked"
+                >
+                  <Switch />
+                </Form.Item>
+              </Col>
+            </Row>
+          </div>
 
           <Form.Item
             noStyle

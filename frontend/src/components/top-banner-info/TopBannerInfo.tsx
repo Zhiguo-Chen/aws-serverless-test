@@ -2,8 +2,11 @@ import { Dropdown, MenuProps, Space } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../../contexts/UserContext';
 
 const TopBannerInfo = () => {
+  const { user, isAuthenticated, logout } = useUser();
+  console.log('user', user);
   const navigate = useNavigate();
   const items: MenuProps['items'] = [
     {
@@ -12,7 +15,7 @@ const TopBannerInfo = () => {
           href="#"
           onClick={(e) => {
             e.preventDefault();
-            navigate('/main/about');
+            navigate('/main/order');
           }}
         >
           My orders
@@ -20,18 +23,25 @@ const TopBannerInfo = () => {
       ),
       key: '0',
     },
-    {
-      label: (
-        <a
-          href="https://www.aliyun.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          2nd menu item
-        </a>
-      ),
-      key: '1',
-    },
+    // 仅当 user.isSeller 为 true 时才添加 Management 菜单项
+    ...(user?.isSeller
+      ? [
+          {
+            label: (
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/management/product-list');
+                }}
+              >
+                Management
+              </a>
+            ),
+            key: '1',
+          },
+        ]
+      : []),
     {
       type: 'divider',
     },

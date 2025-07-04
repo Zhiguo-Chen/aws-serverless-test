@@ -2,10 +2,10 @@ import chair from '../../assets/images/chair.png';
 import controller from '../../assets/images/controller.png';
 import keyBoard from '../../assets/images/keyBoard.png';
 import monitor from '../../assets/images/monitor.png';
-import ProductList from '../product-list/ProductList';
 import { Product } from '../../types/product';
 import { useEffect, useState } from 'react';
 import { getProducts } from '../../api/products';
+import ProductList from '../../components/product-list/ProductList';
 
 const ByCategory = () => {
   const [productList, setProductList] = useState<Product[]>([]);

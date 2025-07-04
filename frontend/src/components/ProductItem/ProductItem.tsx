@@ -1,8 +1,10 @@
-import { StarFilled } from '@ant-design/icons';
+import { HeartFilled, HeartOutlined, StarFilled } from '@ant-design/icons';
 import React, { FC } from 'react';
-import './ProductItem.scss';
-import { Product } from '../../types/product';
+import { useNavigate } from 'react-router-dom';
 import { addToCart } from '../../api/cart';
+import { Product } from '../../types/product';
+import './ProductItem.scss';
+import { addToWishlist } from '../../api/wishlist';
 interface ProductItemProps {
   product: Product;
   labelPlace?: React.ReactNode;
@@ -16,6 +18,7 @@ const ProductItem: FC<ProductItemProps> = ({
   actionButtonPlace,
   isSocreShow = false,
 }) => {
+  const navigate = useNavigate();
   const totalStars = 5;
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -24,22 +27,51 @@ const ProductItem: FC<ProductItemProps> = ({
     const data = await addToCart({ productId: product.id, quantity: 1 });
     console.log('Add to cart response:', data);
   };
+
+  const handleProductClick = () => {
+    navigate(`/main/${product.id}/product-detail`);
+  };
+
+  const [isFavorite, setIsFavorite] = React.useState(false);
+  const handleAddToFavorite = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsFavorite((prev) => !prev);
+    // 可在此处调用后端API
+    const data = await addToWishlist(product.id);
+    console.log(`Toggled favorite for ${product.name}`);
+  };
+
   return (
     <div className="sales-item">
-      <div className="image-bg flex justify-center align-center position-relative">
+      <a
+        className="image-bg flex justify-center align-center position-relative"
+        onClick={handleProductClick}
+      >
         <img
           src={product.productImages && product.primaryImageUrl}
           alt={product.name}
-          style={{ maxWidth: '270px', maxHeight: '100%' }}
+          style={{ maxWidth: '270px', maxHeight: '90%' }}
         />
         {labelPlace && <>{labelPlace}</>}
-        {actionButtonPlace && <>{actionButtonPlace}</>}
+        {actionButtonPlace && (
+          <div className="action-button-container flex flex-column flex-gap-05">
+            <button onClick={handleAddToFavorite}>
+              {isFavorite ? (
+                <HeartFilled style={{ color: '#db4444' }} />
+              ) : (
+                <HeartOutlined />
+              )}
+            </button>
+          </div>
+        )}
         <button className="add-to-cart" onClick={handleAddToCart}>
           Add To Cart
         </button>
-      </div>
+      </a>
       <div className="product-info-container flex flex-column flex-gap-05">
-        <div className="product-name-container">{product.name}</div>
+        <div className="product-name-container text-elipsis-1">
+          {product.name}
+        </div>
         <div className="flex flex-gap-075">
           <div className="price">${product.price}</div>
           <div className="old-price">${product.originalPrice}</div>

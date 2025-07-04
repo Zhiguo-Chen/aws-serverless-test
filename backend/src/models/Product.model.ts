@@ -11,6 +11,7 @@ import {
 import { Category } from './Category.model';
 import { ProductImage } from './ProductImage.model';
 import { Review } from './Review.model';
+import { Wishlist } from './Wishlist.model';
 
 @Table({
   tableName: 'products',
@@ -70,6 +71,12 @@ export class Product extends Model {
     type: DataType.BOOLEAN,
     defaultValue: false,
   })
+  isHotSale!: boolean; // Hot sale recommendation
+
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: false,
+  })
   isNewArrival!: boolean;
 
   @Column({
@@ -108,4 +115,7 @@ export class Product extends Model {
     onDelete: 'CASCADE',
   })
   reviews?: Review[];
+
+  @HasMany(() => Wishlist)
+  wishlistEntries?: Wishlist[];
 }

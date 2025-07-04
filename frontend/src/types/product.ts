@@ -10,6 +10,7 @@ export interface Product {
   averageRating: number;
   discountPercentage: number;
   isFeatured: boolean;
+  isHotSale: boolean;
   isNewArrival: boolean;
   isFlashSale: boolean;
   isBestSelling?: boolean;
@@ -33,4 +34,8 @@ export interface ProductImage {
 
 export interface ProductsProps {
   prdouctList: Product[];
+}
+
+export interface ProductProps {
+  prdouct: Product | null;
 }

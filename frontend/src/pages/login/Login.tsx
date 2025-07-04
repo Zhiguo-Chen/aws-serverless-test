@@ -4,11 +4,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Login.scss';
 import axios from 'axios';
 import CenterContainer from '../../components/center-container/CenterContainer';
+import { useUser } from '../../contexts/UserContext';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 const authTokenKey = process.env.REACT_APP_AUTH_TOKEN || 'authToken';
 
 const Login: React.FC = () => {
+  const { login } = useUser();
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [email, setEmail] = useState('');
@@ -31,11 +33,8 @@ const Login: React.FC = () => {
           localStorage.setItem(authTokenKey, token);
           axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         }
-        if (user.isSeller) {
-          navigate('/management/product-list');
-        } else {
-          navigate('/main/home');
-        }
+        login(user);
+        navigate('/');
       } else {
         console.log('Login failed:');
         setEmail('');

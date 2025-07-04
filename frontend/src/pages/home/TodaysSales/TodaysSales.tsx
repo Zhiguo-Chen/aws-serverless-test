@@ -1,86 +1,40 @@
-import { StarFilled } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
-import { ReactComponent as EyeIcon } from '../../../assets/icons/eye.svg';
 import { ReactComponent as LeftArrowIcon } from '../../../assets/icons/Vector_left.svg';
 import { ReactComponent as RightArrowIcon } from '../../../assets/icons/Vector_right.svg';
-import { ReactComponent as WishlistIcon } from '../../../assets/icons/Wishlist2.svg';
-import chair from '../../../assets/images/chair.png';
-import controller from '../../../assets/images/controller.png';
-import keyBoard from '../../../assets/images/keyBoard.png';
-import monitor from '../../../assets/images/monitor.png';
 import ProductItem from '../../../components/ProductItem/ProductItem';
 import SectionName from '../../../components/SectionName/SectionName';
-import { getProducts } from '../../../api/products';
+import { Product, ProductsProps } from '../../../types/product';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api';
 
-const TodaysSales = () => {
-  const initialDays = 4;
-  const totalStars = 5;
-  let productsList = [
-    {
-      image: controller,
-      name: 'HAVIT HV-G92 Gamepad',
-      price: 120,
-      originalPrice: 160,
-      score: 5,
-      reviews: 88,
-    },
-    {
-      image: keyBoard,
-      name: 'AK-900 Wired Keyboard',
-      price: 960,
-      originalPrice: 1160,
-      score: 4,
-      reviews: 75,
-    },
-    {
-      image: monitor,
-      name: 'IPS LCD Gaming Monitor',
-      price: 370,
-      originalPrice: 400,
-      score: 5,
-      reviews: 99,
-    },
-    {
-      image: chair,
-      name: 'S-Series Comfort Chair ',
-      price: 375,
-      originalPrice: 400,
-      score: 4,
-      reviews: 99,
-    },
-  ];
-  const [products, setProducts] = useState<any[]>([]);
+const TodaysSales = ({ prdouctList }: ProductsProps) => {
+  // 假设所有商品的 flashSaleEndsAt 一致，取第一个商品的 flashSaleEndsAt
+  const flashSaleEndsAt = prdouctList[0]?.flashSaleEndsAt;
+  // 兼容 flashSaleEndsAt 可能为 Date 类型或字符串
+  const getTimeLeft = (endTime: string | Date) => {
+    const now = new Date();
+    const end = typeof endTime === 'string' ? new Date(endTime) : endTime;
+    const diff = Math.max(
+      0,
+      Math.floor((end.getTime() - now.getTime()) / 1000),
+    ); // 秒数
+    return diff;
+  };
 
-  const [timeLeft, setTimeLeft] = useState(initialDays * 24 * 60 * 60); // Convert days to seconds
+  const [timeLeft, setTimeLeft] = useState(() =>
+    flashSaleEndsAt ? getTimeLeft(flashSaleEndsAt) : 0,
+  );
 
+  // 定时器每秒刷新
   useEffect(() => {
-    // const intervalId = setInterval(() => {
-    //   setTimeLeft(timeLeft - 1);
-    // }, 1000);
+    if (!flashSaleEndsAt) return;
+    const timer = setInterval(() => {
+      setTimeLeft(getTimeLeft(flashSaleEndsAt));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [flashSaleEndsAt]);
 
-    // return () => clearInterval(intervalId);
-    const getAllProducts = async () => {
-      const response = await getProducts();
-      const data = response.data as Array<any>;
-      setProducts(
-        data
-          .filter((prd) => prd.isFlashSale)
-          .map((prd) => ({
-            ...prd,
-            image: `${API_URL}/public${prd.imageUrl}`,
-            price: parseInt(prd.price),
-          })),
-      );
-      setTimeout(() => {
-        console.log(products);
-      });
-    };
-    getAllProducts();
-  }, [timeLeft]);
-
-  const calculateTimeLeft = (_seconds: any) => {
+  const calculateTimeLeft = (_seconds: number) => {
     const days = Math.floor(_seconds / (24 * 60 * 60));
     const hours = Math.floor((_seconds % (24 * 60 * 60)) / (60 * 60));
     const minutes = Math.floor((_seconds % (60 * 60)) / 60);
@@ -131,7 +85,7 @@ const TodaysSales = () => {
         </div>
       </div>
       <div className="flex flex-gap-2 sales-container">
-        {products.map((product: any, index: any) => (
+        {prdouctList.map((product: Product, index: number) => (
           <ProductItem
             product={product}
             labelPlace={
@@ -143,16 +97,7 @@ const TodaysSales = () => {
                   : ''}
               </label>
             }
-            actionButtonPlace={
-              <div className="action-button-container flex flex-column flex-gap-05">
-                <button>
-                  <WishlistIcon />
-                </button>
-                <button>
-                  <EyeIcon />
-                </button>
-              </div>
-            }
+            actionButtonPlace={true}
             isSocreShow={true}
             key={index}
           />
