@@ -7,21 +7,17 @@ import {
 import { Button } from 'antd';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { addToCart } from '../../api/cart';
 import { getProductById } from '../../api/products';
+import { getRecommendations } from '../../api/recommendation';
 import { ReactComponent as DeliveryIcon } from '../../assets/icons/icon-delivery_2.svg';
 import { ReactComponent as ReturnIcon } from '../../assets/icons/Icon-return.svg';
-import controller from '../../assets/images/controller.png';
-import ideapad from '../../assets/images/ideapad-gaming-3i.png';
-import keyBoard from '../../assets/images/keyBoard.png';
-import monitor from '../../assets/images/monitor.png';
 import ProductItem from '../../components/ProductItem/ProductItem';
 import SectionName from '../../components/SectionName/SectionName';
 import { API_URL } from '../../const/API_URL';
 import { Product, ProductImage } from '../../types/product';
-import './ProductDetail.scss';
-import { addToCart } from '../../api/cart';
-import { getRecommendations } from '../../api/recommendation';
 import { processProduct } from '../../utils/processProduct';
+import './ProductDetail.scss';
 
 const ProductDetail = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -43,7 +39,8 @@ const ProductDetail = () => {
   const [mainImage, setMainImage] = useState<ProductImage | null>(null);
   const [showFullDesc, setShowFullDesc] = useState(false);
   useEffect(() => {
-    console.log(productId);
+    // 页面加载或 productId 变化时自动滚动到顶部
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     getProdustDetail();
     getRecomProducts();
   }, [productId]);
@@ -61,6 +58,10 @@ const ProductDetail = () => {
   const getRecomProducts = async () => {
     if (!productId) return;
     const data = await getRecommendations(productId);
+    if (!data || data.length === 0) {
+      console.log('No recommendations found for this product.');
+      return;
+    }
     setRecommendationProducts(processProduct(data));
     console.log('Recommendations:', data);
   };
@@ -121,20 +122,6 @@ const ProductDetail = () => {
               alt="Main Product Image"
             />
           </div>
-          {/* <div className="product-detail-image-list grid grid-gap">
-            {images.map((image, index) => (
-              <div
-                key={index}
-                className="product-detail-image-item"
-                onClick={() => setMainImage(image)}
-              >
-                <img src={image} alt={`Product Image ${index + 1}`} />
-              </div>
-            ))}
-          </div>
-          <div className="product-detail-image-main">
-            <img src={mainImage} alt="Main Product Image" />
-          </div> */}
         </div>
         <div className="product-detail-desc flex flex-column flex-gap-15">
           <div className="product-base-info flex flex-column flex-gap">
@@ -278,31 +265,33 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
-      <div className="product-related-items-container flex flex-column">
-        <SectionName title="Related Item" />
-        <div className="product-related-items">
-          {recommendationProducts.map((product: any, index: any) => (
-            <ProductItem
-              product={product}
-              {...(product.oldPrice > 0
-                ? {
-                    labelPlace: (
-                      <label className="discount-info text-center">
-                        {product.oldPrice && product.oldPrice > 0
-                          ? -Math.ceil(
-                              (1 - product.price / product.oldPrice) * 100,
-                            ) + '%'
-                          : ''}
-                      </label>
-                    ),
-                  }
-                : {})}
-              isSocreShow={true}
-              key={index}
-            />
-          ))}
+      {recommendationProducts.length > 0 && (
+        <div className="product-related-items-container flex flex-column">
+          <SectionName title="Related Item" />
+          <div className="product-related-items">
+            {recommendationProducts.map((product: any, index: any) => (
+              <ProductItem
+                product={product}
+                {...(product.oldPrice > 0
+                  ? {
+                      labelPlace: (
+                        <label className="discount-info text-center">
+                          {product.oldPrice && product.oldPrice > 0
+                            ? -Math.ceil(
+                                (1 - product.price / product.oldPrice) * 100,
+                              ) + '%'
+                            : ''}
+                        </label>
+                      ),
+                    }
+                  : {})}
+                isSocreShow={true}
+                key={index}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

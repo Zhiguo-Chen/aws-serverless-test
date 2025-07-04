@@ -1,0 +1,105 @@
+.about-page {
+  max-width: 950px;
+  margin: 40px auto 0 auto;
+  padding: 48px 32px 40px 32px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.about-header h1 {
+  font-size: 2.8rem;
+  color: #db4444;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+.about-header .about-subtitle {
+  color: #555;
+  font-size: 1.25rem;
+  margin-bottom: 32px;
+}
+
+.about-section {
+  margin-bottom: 32px;
+}
+.about-description p {
+  font-size: 1.15rem;
+  color: #222;
+  margin: 0 auto;
+  max-width: 700px;
+}
+
+.about-values {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  margin-top: 32px;
+}
+.about-value-card {
+  flex: 1;
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 32px 18px 28px 18px;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
+  text-align: center;
+  min-width: 220px;
+  max-width: 320px;
+  transition: box-shadow 0.2s;
+}
+.about-value-card:hover {
+  box-shadow: 0 4px 16px rgba(219, 68, 68, 0.1);
+}
+.about-value-card h3 {
+  color: #db4444;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.about-value-card p {
+  color: #444;
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .about-page {
+    padding: 32px 8px 24px 8px;
+  }
+  .about-values {
+    flex-direction: column;
+    gap: 18px;
+  }
+  .about-value-card {
+    max-width: 100%;
+  }
+}
+
+/* 可选：团队成员区样式
+.about-team {
+  margin-top: 40px;
+  h2 {
+    text-align: center;
+    margin-bottom: 24px;
+    color: #222;
+  }
+  .about-team-list {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+  }
+  .about-team-member {
+    text-align: center;
+    img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-bottom: 8px;
+    }
+    span {
+      color: #888;
+      font-size: 0.95rem;
+    }
+  }
+}
+*/
