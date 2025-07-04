@@ -1,5 +1,5 @@
 .product-detail-container {
-  padding: 20px 0;
+  padding: 20px 0 120px;
   .back-btn {
     border: none;
     padding: 0;
@@ -157,7 +157,7 @@
     }
   }
   .product-related-items-container {
-    margin: 120px 0;
+    margin: 120px 0 0;
     gap: 60px;
     .product-related-items {
       display: grid;

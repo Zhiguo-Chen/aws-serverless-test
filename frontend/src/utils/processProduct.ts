@@ -2,7 +2,7 @@ import { API_URL } from '../const/API_URL';
 import { Product } from '../types/product';
 
 export const processProduct = (products: Product[]) => {
-  if (!products || products.length === 0) {
+  if (!Array.isArray(products) || !products || products.length === 0) {
     return [];
   }
   return products.map((prd: Product) => {

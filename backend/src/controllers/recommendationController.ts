@@ -19,7 +19,7 @@ export const getProductRecommendations = async (
 
     if (recommendations.length === 0) {
       return res
-        .status(404)
+        .status(200)
         .json({ message: 'No recommendations found for this product.' });
     }
 
