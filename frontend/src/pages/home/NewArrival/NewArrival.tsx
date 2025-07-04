@@ -1,17 +1,14 @@
-import ps5 from '../../../assets/images/ps5-slim.png';
-import womanHat from '../../../assets/images/attractive-woman-wearing-hat.png';
-import speakers from '../../../assets/images/amazon-echo-png-clipart.png';
-import gucci from '../../../assets/images/gucci.png';
+import { useNavigate } from 'react-router-dom';
 import SectionName from '../../../components/SectionName/SectionName';
-import { useEffect, useState } from 'react';
-import { getProducts } from '../../../api/products';
 import { ProductsProps } from '../../../types/product';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api';
-
 const NewArrival = ({ prdouctList }: ProductsProps) => {
-  // const [products, setProducts] = useState<any[]>([]);
-  // setProducts(prdouctList.slice(0, 4));
+  const navigate = useNavigate();
+  const handleShopNow = (productId: string) => {
+    return () => {
+      navigate(`/main/${productId}/product-detail`);
+    };
+  };
   const products = prdouctList.slice(0, 4);
   return (
     <div className="new-arrival">
@@ -39,7 +36,12 @@ const NewArrival = ({ prdouctList }: ProductsProps) => {
               {products[0]?.description}
             </div>
             <div className="buy-button-container">
-              <button className="buy-button">Shop Now</button>
+              <button
+                className="buy-button"
+                onClick={handleShopNow(products[0]?.id)}
+              >
+                Shop Now
+              </button>
             </div>
           </div>
         </div>
@@ -58,7 +60,12 @@ const NewArrival = ({ prdouctList }: ProductsProps) => {
               {products[1]?.description}
             </div>
             <div className="buy-button-container">
-              <button className="buy-button">Shop Now</button>
+              <button
+                className="buy-button"
+                onClick={handleShopNow(products[1]?.id)}
+              >
+                Shop Now
+              </button>
             </div>
           </div>
         </div>
@@ -77,7 +84,12 @@ const NewArrival = ({ prdouctList }: ProductsProps) => {
               {products[2]?.description}
             </div>
             <div className="buy-button-container">
-              <button className="buy-button">Shop Now</button>
+              <button
+                className="buy-button"
+                onClick={handleShopNow(products[2]?.id)}
+              >
+                Shop Now
+              </button>
             </div>
           </div>
         </div>
@@ -96,7 +108,12 @@ const NewArrival = ({ prdouctList }: ProductsProps) => {
               {products[3]?.description}
             </div>
             <div className="buy-button-container">
-              <button className="buy-button">Shop Now</button>
+              <button
+                className="buy-button"
+                onClick={handleShopNow(products[3]?.id)}
+              >
+                Shop Now
+              </button>
             </div>
           </div>
         </div>

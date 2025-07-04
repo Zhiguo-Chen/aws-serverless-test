@@ -53,7 +53,7 @@ const ProductList = ({
       </div>
       <ul
         className={
-          isGrid ? 'grid auto-fit grid-gap-2 ' : 'flex flex-column flex-gap '
+          isGrid ? 'grid auto-fit grid-gap-2' : 'flex flex-column flex-gap '
         }
       >
         {productsList.map((product: Product, index: number) =>
@@ -63,8 +63,9 @@ const ProductList = ({
               labelPlace={
                 <label className="discount-info text-center">
                   {product.originalPrice && product.originalPrice > 0
-                    ? -Math.ceil((1 - product.price / product.originalPrice) * 100) +
-                      '%'
+                    ? -Math.ceil(
+                        (1 - product.price / product.originalPrice) * 100,
+                      ) + '%'
                     : ''}
                 </label>
               }
