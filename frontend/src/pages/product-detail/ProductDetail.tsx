@@ -20,10 +20,15 @@ import { API_URL } from '../../const/API_URL';
 import { Product, ProductImage } from '../../types/product';
 import './ProductDetail.scss';
 import { addToCart } from '../../api/cart';
+import { getRecommendations } from '../../api/recommendation';
+import { processProduct } from '../../utils/processProduct';
 
 const ProductDetail = () => {
   const { productId } = useParams<{ productId: string }>();
   const [productDetail, setProductDetail] = useState<Product | null>(null);
+  const [recommendationProducts, setRecommendationProducts] = useState<
+    Product[]
+  >([]);
   const [activeColor, setActiveColor] = useState<string>('');
   const [activeSize, setActiveSize] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
@@ -34,46 +39,13 @@ const ProductDetail = () => {
 
   const navigate = useNavigate();
   const totalStars = 5;
-  const recommendationProducts = [
-    {
-      image: ideapad,
-      name: 'ASUS FHD Gaming Laptop',
-      price: 700,
-      oldPrice: 800,
-      score: 5,
-      reviews: 325,
-    },
-    {
-      image: monitor,
-      name: 'IPS LCD Gaming Monitor',
-      price: 370,
-      oldPrice: 400,
-      score: 5,
-      reviews: 99,
-    },
-    {
-      image: controller,
-      name: 'HAVIT HV-G92 Gamepad',
-      price: 120,
-      oldPrice: 160,
-      score: 5,
-      reviews: 88,
-    },
-    {
-      image: keyBoard,
-      name: 'AK-900 Wired Keyboard',
-      price: 960,
-      oldPrice: 1160,
-      score: 4,
-      reviews: 75,
-    },
-  ];
 
   const [mainImage, setMainImage] = useState<ProductImage | null>(null);
   const [showFullDesc, setShowFullDesc] = useState(false);
   useEffect(() => {
     console.log(productId);
     getProdustDetail();
+    getRecomProducts();
   }, [productId]);
 
   const getProdustDetail = async () => {
@@ -84,6 +56,13 @@ const ProductDetail = () => {
     );
     setMainImage(primaryImage);
     console.log(data);
+  };
+
+  const getRecomProducts = async () => {
+    if (!productId) return;
+    const data = await getRecommendations(productId);
+    setRecommendationProducts(processProduct(data));
+    console.log('Recommendations:', data);
   };
   const handleDecrease = () => {
     if (quantity > 1) {
@@ -123,8 +102,10 @@ const ProductDetail = () => {
               (image: ProductImage, index: number) => (
                 <div
                   key={index}
-                  className="product-detail-image-item"
-                  onClick={() => setMainImage(image)}
+                  className={`product-detail-image-item${
+                    mainImage?.imageUrl === image.imageUrl ? ' selected' : ''
+                  }`}
+                  onMouseEnter={() => setMainImage(image)}
                 >
                   <img
                     src={`${API_URL}/public${image?.imageUrl}`}

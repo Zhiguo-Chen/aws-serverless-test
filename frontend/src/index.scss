@@ -7,6 +7,11 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
+a:hover {
+  text-decoration: none;
+  cursor: pointer;
+}
+
 #root {
   // padding: 24px;
 }
@@ -102,7 +107,7 @@ button {
 }
 
 .auto-fit {
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 23.75rem));
   // gap: 1rem;
   // padding: 1rem;
 }
@@ -324,7 +329,7 @@ ul {
 }
 
 .list-page-padding {
-  padding: 24px 0;
+  // padding: 24px 0;
 }
 
 .center-container {
@@ -333,4 +338,12 @@ ul {
   align-items: center; /* Vertically center */
   height: 100vh; /* Make it take full height of its parent */
   width: 100vw; /* Make it take full width of its parent */
+}
+
+.center-container-element {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
 }

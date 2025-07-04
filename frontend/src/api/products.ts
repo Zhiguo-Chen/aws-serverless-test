@@ -33,6 +33,11 @@ export const searchProduct = async (searchStr: string) => {
   return response;
 };
 
+export const searchByCategory = async (category: string) => {
+  const response = await axiosInstance.get(`/api/products/search/${category}`);
+  return response;
+};
+
 export const createProduct = async (formData: any) => {
   const response = await axiosInstance.post(
     `/api/products/add`,

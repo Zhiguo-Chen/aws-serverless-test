@@ -51,6 +51,7 @@ router.post(
 );
 router.get('/list-all', productController.getProducts);
 router.post('/search', productController.searchProductsByStr as any);
+router.get('/search/:category', productController.searchByCategory as any);
 router.get('/:id', productController.getProductById);
 router.put(
   '/:id',
@@ -61,6 +62,6 @@ router.put(
 router.delete('/:id', authenticationToken, productController.deleteProduct);
 
 // 聊天相关路由
-router.post('/chat', upload.single('image'), chat);
+router.post('/chat', authenticationToken, upload.single('image'), chat);
 
 export default router;

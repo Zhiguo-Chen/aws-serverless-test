@@ -21,7 +21,7 @@ const ProductListItem: FC<ProductItemProps> = ({
       <div className="flex flex-gap list-item-container">
         <div className="list-item-img-container image-bg flex justify-center align-center position-relative">
           <img
-            src={product.productImages && product.productImages[0]?.imageUrl}
+            src={product.productImages && product.primaryImageUrl}
             alt={product.name}
           />
           {labelPlace && <>{labelPlace}</>}

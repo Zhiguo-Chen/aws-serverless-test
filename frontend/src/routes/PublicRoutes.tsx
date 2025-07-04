@@ -1,7 +1,8 @@
 import AboutPage from '../pages/about/About';
 import HomePage from '../pages/home/Home';
 import MainPageLayout from '../pages/main-layout/MainPageLayout';
-import ViewProducts from '../pages/view-products/ViewProducts';
+import ProductDetail from '../pages/product-detail/ProductDetail';
+import FilteredProducts from '../pages/filtered-products/FilteredProducts';
 
 const PublicRoutes = {
   path: '/main',
@@ -12,13 +13,21 @@ const PublicRoutes = {
       element: <HomePage />,
     },
     {
+      path: ':productId/product-detail',
+      element: <ProductDetail />,
+    },
+    {
       path: 'about',
       element: <AboutPage />,
     },
     {
-      path: 'view-products',
-      element: <ViewProducts />,
-    }
+      path: 'search-products',
+      element: <FilteredProducts />,
+    },
+    {
+      path: 'search-products/:category',
+      element: <FilteredProducts />,
+    },
   ],
 };
 

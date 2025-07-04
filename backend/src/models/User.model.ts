@@ -1,5 +1,6 @@
 import * as bcrypt from 'bcrypt';
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { Wishlist } from './Wishlist.model';
 
 @Table({
   tableName: 'users',
@@ -61,4 +62,7 @@ export class User extends Model<User> {
     allowNull: false,
   })
   password!: string;
+
+  @HasMany(() => Wishlist)
+  wishlistItems?: Wishlist[];
 }
