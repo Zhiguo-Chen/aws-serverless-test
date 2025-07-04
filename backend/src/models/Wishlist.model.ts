@@ -1,36 +1,39 @@
 import {
-  BelongsTo,
+  Table,
+  Model,
   Column,
   DataType,
   ForeignKey,
-  Model,
-  Table,
+  BelongsTo,
+  Unique,
 } from 'sequelize-typescript';
-import { Cart } from './Cart.model';
+import { User } from './User.model';
 import { Product } from './Product.model';
 
 @Table({
-  tableName: 'cart_items',
+  tableName: 'wishlists',
   timestamps: true,
 })
-export class CartItem extends Model {
+export class Wishlist extends Model<Wishlist> {
   @Column({
-    type: DataType.UUID,
-    defaultValue: DataType.UUIDV4,
+    type: DataType.INTEGER,
+    autoIncrement: true,
     primaryKey: true,
   })
-  declare id: string;
+  declare id: number;
 
-  @ForeignKey(() => Cart)
+  @Unique('user_product_unique')
+  @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
     allowNull: false,
   })
-  cartId!: string;
+  userId!: string;
 
-  @BelongsTo(() => Cart)
-  cart!: Cart;
+  @BelongsTo(() => User)
+  user!: User;
 
+  @Unique('user_product_unique')
   @ForeignKey(() => Product)
   @Column({
     type: DataType.UUID,
@@ -40,11 +43,4 @@ export class CartItem extends Model {
 
   @BelongsTo(() => Product)
   product!: Product;
-
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-    defaultValue: 1,
-  })
-  quantity!: number;
 }

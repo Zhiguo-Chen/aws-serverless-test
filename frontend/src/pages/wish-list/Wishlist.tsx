@@ -9,58 +9,13 @@ import controller from '../../assets/images/controller.png';
 import keyBoard from '../../assets/images/keyBoard.png';
 import monitor from '../../assets/images/monitor.png';
 import SectionName from '../../components/SectionName/SectionName';
+import { useEffect, useState } from 'react';
+import { Product } from '../../types/product';
+import { getWishlist } from '../../api/wishlist';
+import { API_URL } from '../../const/API_URL';
 
 const Wishlist = () => {
-  const productsList = [
-    {
-      image: bag,
-      name: 'Gucci duffle bag',
-      price: 960,
-      oldPrice: 1160,
-      score: 5,
-      reviews: 88,
-    },
-    {
-      image: cpu_cooler,
-      name: 'RGB liquid CPU Cooler',
-      price: 1960,
-      oldPrice: 0,
-      score: 4,
-      reviews: 75,
-    },
-    {
-      image: GamePad,
-      name: 'GP11 Shooter USB Gamepad',
-      price: 550,
-      oldPrice: 0,
-      score: 5,
-      reviews: 99,
-    },
-    {
-      image: Jacket,
-      name: 'Quilted Satin Jacket',
-      price: 750,
-      oldPrice: 0,
-      score: 4,
-      reviews: 99,
-    },
-    {
-      image: GamePad,
-      name: 'GP11 Shooter USB Gamepad',
-      price: 550,
-      oldPrice: 0,
-      score: 5,
-      reviews: 99,
-    },
-    {
-      image: Jacket,
-      name: 'Quilted Satin Jacket',
-      price: 750,
-      oldPrice: 0,
-      score: 4,
-      reviews: 99,
-    },
-  ];
+  const [productsList, setProductsList] = useState<Product[]>([]);
   const recommendationProducts = [
     {
       image: ideapad,
@@ -95,6 +50,27 @@ const Wishlist = () => {
       reviews: 75,
     },
   ];
+  useEffect(() => {
+    const listWishlist = async () => {
+      try {
+        const response = await getWishlist();
+        console.log('Wishlist fetched:', response.data);
+        setProductsList(
+          response.data?.map((item: any) => {
+            const primaryImage = item.product?.productImages.find(
+              (img: any) => img.isPrimary,
+            );
+            item.product.primaryImageUrl =
+              `${API_URL}/public${primaryImage?.imageUrl}` || '';
+            return item.product;
+          }),
+        );
+      } catch (error) {
+        console.error('Error fetching wishlist:', error);
+      }
+    };
+    listWishlist();
+  }, []);
   return (
     <div className="wishlist-page child-page-padding flex flex-column flex-1">
       <div className="wishlist-page-container flex flex-column">
@@ -103,16 +79,16 @@ const Wishlist = () => {
           <button>Move All To Bag</button>
         </div>
         <div className="wishlist-page-content">
-          {productsList.map((product: any, index: any) => (
+          {productsList.map((product: Product, index: any) => (
             <ProductItem
               product={product}
-              {...(product.oldPrice > 0
+              {...(product.originalPrice > 0
                 ? {
                     labelPlace: (
                       <label className="discount-info text-center">
-                        {product.oldPrice && product.oldPrice > 0
+                        {product.originalPrice && product.originalPrice > 0
                           ? -Math.ceil(
-                              (1 - product.price / product.oldPrice) * 100,
+                              (1 - product.price / product.originalPrice) * 100,
                             ) + '%'
                           : ''}
                       </label>
