@@ -1,31 +1,51 @@
-import { ReactComponent as WishlistIcon } from '../../assets/icons/Wishlist.svg';
-import { ReactComponent as CartIcon } from '../../assets/icons/Cart1.svg';
-import { MenuProps, Tabs, Input } from 'antd';
 import type { TabsProps } from 'antd';
-import { FC, useState } from 'react';
-import { ReactComponent as SearchIcon } from '../../assets/icons/search.svg';
+import { Input, Tabs } from 'antd';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { searchProduct } from '../../api/products';
+import { ReactComponent as CartIcon } from '../../assets/icons/Cart1.svg';
+import { ReactComponent as SearchIcon } from '../../assets/icons/search.svg';
+import { ReactComponent as WishlistIcon } from '../../assets/icons/Wishlist.svg';
 
 const { Search } = Input;
 const MainHeader = () => {
   const [searchStr, setSearchStr] = useState('');
   const navigate = useNavigate();
+  // 根据当前路径设置激活 tab
+  const getActiveKey = () => {
+    const path = window.location.pathname;
+    if (path.startsWith('/main')) return '1';
+    if (path.startsWith('/contact')) return '2';
+    if (path.startsWith('/about')) return '3';
+    if (path.startsWith('/sign-up')) return '4';
+    return '1';
+  };
+  const [activeKey, setActiveKey] = useState(getActiveKey());
+
+  // 监听路由变化，自动切换 tab
+  useEffect(() => {
+    const handlePopState = () => {
+      setActiveKey(getActiveKey());
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
   const onChange = (key: string) => {
-    console.log(key);
+    setActiveKey(key);
     switch (key) {
       case '1':
         navigate('/main/home');
         break;
       case '2':
-        // navigate('/main/contact');
-        navigate('/main/view-products');
+        navigate('/contact');
         break;
       case '3':
-        navigate('/main/about');
+        navigate('/about');
         break;
       case '4':
-        navigate('/main/sign-up');
+        navigate('/sign-up');
         break;
     }
   };
@@ -48,11 +68,7 @@ const MainHeader = () => {
     },
     {
       key: '3',
-      label: 'Aout',
-    },
-    {
-      key: '4',
-      label: 'Sign Up',
+      label: 'About',
     },
   ];
   const handleWishlistClick = (e: React.MouseEvent) => {
@@ -66,7 +82,7 @@ const MainHeader = () => {
       <h3 className="header-title">Exclusive</h3>
       <div className="header-tabs-container">
         <Tabs
-          defaultActiveKey="1"
+          activeKey={activeKey}
           items={items}
           onChange={onChange}
           size="large"

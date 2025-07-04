@@ -3,30 +3,44 @@ import HomePage from '../pages/home/Home';
 import MainPageLayout from '../pages/main-layout/MainPageLayout';
 import ProductDetail from '../pages/product-detail/ProductDetail';
 import FilteredProducts from '../pages/filtered-products/FilteredProducts';
+import Contact from '../pages/contact/Contact';
+import { Outlet } from 'react-router-dom';
 
 const PublicRoutes = {
-  path: '/main',
-  element: <MainPageLayout />,
+  path: '/',
+  element: <Outlet />,
   children: [
     {
-      path: 'home',
-      element: <HomePage />,
+      path: 'main',
+      element: <MainPageLayout />,
+      children: [
+        {
+          path: 'home',
+          element: <HomePage />,
+        },
+        {
+          path: ':productId/product-detail',
+          element: <ProductDetail />,
+        },
+        {
+          path: 'search-products',
+          element: <FilteredProducts />,
+        },
+        {
+          path: 'search-products/:category',
+          element: <FilteredProducts />,
+        },
+      ],
     },
     {
-      path: ':productId/product-detail',
-      element: <ProductDetail />,
+      path: 'contact',
+      element: <MainPageLayout />,
+      children: [{ path: '', element: <Contact /> }],
     },
     {
       path: 'about',
-      element: <AboutPage />,
-    },
-    {
-      path: 'search-products',
-      element: <FilteredProducts />,
-    },
-    {
-      path: 'search-products/:category',
-      element: <FilteredProducts />,
+      element: <MainPageLayout />,
+      children: [{ path: '', element: <AboutPage /> }],
     },
   ],
 };

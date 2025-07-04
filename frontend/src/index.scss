@@ -107,9 +107,13 @@ button {
 }
 
 .auto-fit {
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 23.75rem));
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   // gap: 1rem;
   // padding: 1rem;
+}
+
+.item-max-width {
+  max-width: 23.75rem;
 }
 
 .full-width {
