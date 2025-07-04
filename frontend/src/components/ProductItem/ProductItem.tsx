@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { addToCart } from '../../api/cart';
 import { Product } from '../../types/product';
 import './ProductItem.scss';
+import { addToWishlist } from '../../api/wishlist';
 interface ProductItemProps {
   product: Product;
   labelPlace?: React.ReactNode;
@@ -32,10 +33,11 @@ const ProductItem: FC<ProductItemProps> = ({
   };
 
   const [isFavorite, setIsFavorite] = React.useState(false);
-  const handleAdd2Favorite = (e: React.MouseEvent) => {
+  const handleAddToFavorite = async (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsFavorite((prev) => !prev);
     // 可在此处调用后端API
+    const data = await addToWishlist(product.id);
     console.log(`Toggled favorite for ${product.name}`);
   };
 
@@ -53,7 +55,7 @@ const ProductItem: FC<ProductItemProps> = ({
         {labelPlace && <>{labelPlace}</>}
         {actionButtonPlace && (
           <div className="action-button-container flex flex-column flex-gap-05">
-            <button onClick={handleAdd2Favorite}>
+            <button onClick={handleAddToFavorite}>
               {isFavorite ? (
                 <HeartFilled style={{ color: '#db4444' }} />
               ) : (

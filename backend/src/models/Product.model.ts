@@ -11,6 +11,7 @@ import {
 import { Category } from './Category.model';
 import { ProductImage } from './ProductImage.model';
 import { Review } from './Review.model';
+import { Wishlist } from './Wishlist.model';
 
 @Table({
   tableName: 'products',
@@ -114,4 +115,7 @@ export class Product extends Model {
     onDelete: 'CASCADE',
   })
   reviews?: Review[];
+
+  @HasMany(() => Wishlist)
+  wishlistEntries?: Wishlist[];
 }
