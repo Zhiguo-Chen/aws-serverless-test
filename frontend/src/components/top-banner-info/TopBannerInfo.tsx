@@ -45,10 +45,6 @@ const TopBannerInfo = () => {
     {
       type: 'divider',
     },
-    {
-      label: '3rd menu item',
-      key: '3',
-    },
   ];
 
   return (

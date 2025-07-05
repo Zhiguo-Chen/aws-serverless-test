@@ -113,7 +113,7 @@ const updateProduct = async (req: Request, res: Response) => {
     } = req.body;
 
     const product = await Product.findByPk(id, {
-      include: [{ model: ProductImage, as: 'productImages' }],
+      include: [{ model: ProductImage }],
       transaction,
     });
 
@@ -127,19 +127,27 @@ const updateProduct = async (req: Request, res: Response) => {
     if (deletedImageIdsJson) {
       const deletedImageIds = JSON.parse(deletedImageIdsJson);
       if (Array.isArray(deletedImageIds) && deletedImageIds.length > 0) {
-        const imagesToDelete = await ProductImage.findAll({
+        const imagesToDeleteArr = await ProductImage.findAll({
           where: { id: deletedImageIds },
           transaction,
         });
+
+        // Convert to plain object array
+        const imagesToDelete = imagesToDeleteArr.map((img) =>
+          img.get({ plain: true }),
+        );
+
+        console.log('Images to delete:', imagesToDelete);
 
         for (const image of imagesToDelete) {
           if (image.imageUrl) {
             const imagePath = path.join(
               __dirname,
-              '..',
+              '../..',
               'public',
               image.imageUrl.substring(1),
             );
+            console.log('Deleting image at path:', imagePath);
             if (fs.existsSync(imagePath)) {
               fs.unlinkSync(imagePath);
             }
