@@ -13,9 +13,7 @@ const MessageRenderer = ({
   content: string;
   products?: any[];
 }) => {
-  console.log('Rendering content:', content);
   const findProductByName = (name: string) => {
-    console.log('products is ====>:', products);
     if (!products) return null;
     // 尝试通过模糊匹配找到最相关的产品
     const normalizedName = name.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -31,7 +29,6 @@ const MessageRenderer = ({
     const lines = text?.split('\n');
 
     return lines.map((line, index) => {
-      console.log('Processing line:', line);
       if (line.trim() === '') {
         return <div key={index} style={{ height: '8px' }}></div>;
       }
@@ -45,11 +42,9 @@ const MessageRenderer = ({
       const match = line.trim().match(/^\*\s*\*\*([^*]+)\*\*\s*:?\s*(.*)/);
       if (match) {
         const title = match[1].trim();
-        console.log('Matched title:', title);
         let description = match[2].trim();
         description = description.replace(/\*\*/g, '').trim();
         const product = findProductByName(title);
-        console.log('Product found:', product);
         return (
           <div
             key={index}
@@ -122,7 +117,6 @@ const MessageRenderer = ({
       // 清理描述中的所有 **
       description = description.replace(/\*\*/g, '').trim();
       const product = findProductByName(title);
-      console.log('Product found:', product);
 
       return (
         <div key={index} style={{ marginBottom: '12px', paddingLeft: '16px' }}>
@@ -187,11 +181,6 @@ const ChatWidget = () => {
   const [loading, setLoading] = useState(false);
   const [abortController, setAbortController] =
     useState<AbortController | null>(null);
-
-  useEffect(() => {
-    // 初始化消息
-    console.log('messages is:  ++++++++', messages);
-  }, [messages]);
 
   const handleSend = async () => {
     if (!input.trim() && !file) return;
@@ -285,18 +274,8 @@ const ChatWidget = () => {
     return sessionId;
   };
 
-  useEffect(() => {
-    if (file) {
-      console.log('File state updated:', file);
-    }
-  }, [file]);
-
   const handleFileSubmit = (e: any): any => {
-    console.log(e.target.files?.[0]);
     setFile(e.target.files?.[0]);
-    setTimeout(() => {
-      console.log(file);
-    }, 1000);
   };
 
   return (
