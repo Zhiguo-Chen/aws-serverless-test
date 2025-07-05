@@ -1,11 +1,29 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { axiosInstance } from '../../auth/axiosInstance';
 import './ChatWidget.scss';
 
 const MODELS = ['langchain-service', 'gpt-4o-mini', 'gemini-2.0-flash'];
 
 // 消息内容渲染组件
-const MessageRenderer = ({ content }: { content: string }) => {
+const MessageRenderer = ({
+  content,
+  products,
+}: {
+  content: string;
+  products?: any[];
+}) => {
+  const findProductByName = (name: string) => {
+    if (!products) return null;
+    // 尝试通过模糊匹配找到最相关的产品
+    const normalizedName = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+    return products.find((p) =>
+      p.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, '')
+        .includes(normalizedName),
+    );
+  };
   const renderContent = (text: string) => {
     // 按 \n 分割文本
     const lines = text?.split('\n');
@@ -26,6 +44,7 @@ const MessageRenderer = ({ content }: { content: string }) => {
         const title = match[1].trim();
         let description = match[2].trim();
         description = description.replace(/\*\*/g, '').trim();
+        const product = findProductByName(title);
         return (
           <div
             key={index}
@@ -35,7 +54,16 @@ const MessageRenderer = ({ content }: { content: string }) => {
               <span style={{ color: '#1976d2', marginRight: '8px' }}>•</span>
               <div>
                 <span style={{ fontWeight: 'bold', color: '#1976d2' }}>
-                  {title}
+                  {product ? (
+                    <Link
+                      to={`/main/${product.id}/product-detail`}
+                      className="product-link cursor-pointer"
+                    >
+                      {title}
+                    </Link>
+                  ) : (
+                    title
+                  )}
                 </span>
                 {description && (
                   <span style={{ color: '#333', marginLeft: '4px' }}>
@@ -88,6 +116,7 @@ const MessageRenderer = ({ content }: { content: string }) => {
 
       // 清理描述中的所有 **
       description = description.replace(/\*\*/g, '').trim();
+      const product = findProductByName(title);
 
       return (
         <div key={index} style={{ marginBottom: '12px', paddingLeft: '16px' }}>
@@ -100,7 +129,16 @@ const MessageRenderer = ({ content }: { content: string }) => {
                   color: '#1976d2',
                 }}
               >
-                {title}
+                {product ? (
+                  <Link
+                    to={`/main/${product.id}/product-detail`}
+                    className="product-link cursor-pointer"
+                  >
+                    {title}
+                  </Link>
+                ) : (
+                  title
+                )}
               </span>
               {description && (
                 <span style={{ color: '#333', marginLeft: '4px' }}>
@@ -128,7 +166,13 @@ const MessageRenderer = ({ content }: { content: string }) => {
 const ChatWidget = () => {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<
-    { role: string; content: string; type?: string; imageUrl?: string }[]
+    {
+      role: string;
+      content: string;
+      type?: string;
+      imageUrl?: string;
+      products?: any[];
+    }[]
   >([]);
   const [input, setInput] = useState('');
   const [model, setModel] = useState(MODELS[0]);
@@ -174,7 +218,11 @@ const ChatWidget = () => {
         },
       );
       const botMessage = response?.data?.response || 'No response from bot.';
-      setMessages((prev) => [...prev, { role: 'bot', content: botMessage }]);
+      const products = response?.data?.products || [];
+      setMessages((prev) => [
+        ...prev,
+        { role: 'bot', content: botMessage, products: products },
+      ]);
     } catch (err: any) {
       if (err.name === 'CanceledError' || err.name === 'AbortError') {
         setMessages((prev) => [
@@ -226,18 +274,8 @@ const ChatWidget = () => {
     return sessionId;
   };
 
-  useEffect(() => {
-    if (file) {
-      console.log('File state updated:', file);
-    }
-  }, [file]);
-
   const handleFileSubmit = (e: any): any => {
-    console.log(e.target.files?.[0]);
     setFile(e.target.files?.[0]);
-    setTimeout(() => {
-      console.log(file);
-    }, 1000);
   };
 
   return (
@@ -285,7 +323,10 @@ const ChatWidget = () => {
                 )}
                 {msg.content &&
                   (msg.role === 'bot' ? (
-                    <MessageRenderer content={msg.content} />
+                    <MessageRenderer
+                      content={msg.content}
+                      products={msg.products}
+                    />
                   ) : (
                     msg.content
                   ))}
