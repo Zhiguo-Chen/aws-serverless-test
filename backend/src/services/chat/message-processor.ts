@@ -7,6 +7,7 @@ import { searchProducts } from '../search-products-service';
 import { getChatHistory, MongoChatHistory } from '../../utils/MongoChatHistory';
 import { createChatModel } from './model-config';
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
+import { AgentState } from './workflow-builder';
 
 export class MessageProcessor {
   model: ChatGoogleGenerativeAI;
@@ -14,7 +15,10 @@ export class MessageProcessor {
     this.model = createChatModel();
   }
 
-  async processMessage(state: any, config: any) {
+  async processMessage(
+    state: AgentState,
+    config: any,
+  ): Promise<Partial<AgentState>> {
     this.validateConfig(config);
 
     const { sessionId, userId } = config.configurable;
@@ -25,15 +29,18 @@ export class MessageProcessor {
       chatHistory,
     );
 
-    const responseText: any = await this.generateResponse(
+    const response: any = await this.generateResponse(
       currentMessages,
       allMessages,
     );
 
-    const aiMessage = new AIMessage(responseText);
+    const aiMessage = new AIMessage(response.content);
     await chatHistory.addMessage(aiMessage);
 
-    return { messages: [aiMessage] };
+    return {
+      messages: [aiMessage],
+      products: response.formattedProducts || [],
+    };
   }
 
   validateConfig(config: any) {
@@ -211,9 +218,12 @@ export class MessageProcessor {
         new HumanMessage(productSummaryPrompt),
       ]);
 
-      return llmResponse.content;
+      return { content: llmResponse.content, formattedProducts };
     } else {
-      return `抱歉，没有找到关于"${intent.categories[0]}"的商品。`;
+      return {
+        content: `抱歉，没有找到关于"${intent.categories[0]}"的商品。`,
+        formattedProducts: [],
+      };
     }
   }
 
@@ -226,6 +236,6 @@ export class MessageProcessor {
     }
 
     const llmResponse = await this.model.invoke(validMessages);
-    return llmResponse.content;
+    return { content: llmResponse.content, products: [] };
   }
 }
