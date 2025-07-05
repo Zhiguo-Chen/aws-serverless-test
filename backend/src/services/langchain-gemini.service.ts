@@ -45,11 +45,6 @@ export const langChainGeminiChatService = async (
       }
     }
 
-    if (finalState && finalState.products) {
-      console.log('products is: ', finalState.products);
-    }
-
-    console.log('Final response text:', finalResult);
     return {
       result: finalResult || '抱歉，我没有生成有效的回复。',
       sessionId,
