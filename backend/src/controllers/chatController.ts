@@ -33,6 +33,14 @@ export const chat = async (
         sessionId,
         imageBase64,
       );
+      res
+        .status(200)
+        .json({
+          response: modelResponse.result,
+          products: modelResponse.products,
+          sessionId: modelResponse.sessionId,
+        });
+      return;
     } else if (model.toLowerCase().includes('grok')) {
       modelResponse = await grokService(message);
     } else if (model.toLowerCase().includes('gemini')) {

@@ -32,25 +32,28 @@ export const langChainGeminiChatService = async (
     // 配置
     const config = {
       configurable: { sessionId, userId },
-      streamMode: 'values',
     };
 
     // 通过 LangGraph 处理消息
+    const finalState = await app.invoke({ messages: [inputMessage] }, config);
+
     let finalResult = null;
-    for await (const event of await app.stream(
-      { messages: [inputMessage] },
-      config,
-    )) {
-      const lastMessage = event.messages[event.messages.length - 1];
+    if (finalState && finalState.messages && finalState.messages.length > 0) {
+      const lastMessage = finalState.messages[finalState.messages.length - 1];
       if (lastMessage instanceof AIMessage) {
         finalResult = lastMessage.content;
       }
+    }
+
+    if (finalState && finalState.products) {
+      console.log('products is: ', finalState.products);
     }
 
     console.log('Final response text:', finalResult);
     return {
       result: finalResult || '抱歉，我没有生成有效的回复。',
       sessionId,
+      products: finalState?.products || [],
     };
   } catch (error: any) {
     console.error('Error in chat service:', error);
