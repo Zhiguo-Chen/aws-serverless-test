@@ -6,7 +6,6 @@ import { ReactComponent as CartIcon } from '../../assets/icons/Cart1.svg';
 import { ReactComponent as SearchIcon } from '../../assets/icons/search.svg';
 import { ReactComponent as WishlistIcon } from '../../assets/icons/Wishlist.svg';
 
-const { Search } = Input;
 const MainHeader = () => {
   const [searchStr, setSearchStr] = useState('');
   const navigate = useNavigate();
