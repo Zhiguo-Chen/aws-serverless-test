@@ -55,16 +55,16 @@ export class MessageProcessor {
     const historicalMessages = await chatHistory.getMessages();
     const currentMessages = state.messages || [];
 
-    // 过滤掉无效的历史消息
+    // Filter out invalid historical messages
     const validHistoricalMessages = historicalMessages.filter((msg: any) => {
       if (!msg || !msg.content) return false;
 
-      // 如果是字符串内容，检查是否为空
+      // If the content is a string, check if it is empty
       if (typeof msg.content === 'string') {
         return msg.content.trim().length > 0;
       }
 
-      // 如果是数组内容，检查是否有有效的部分
+      // If the content is an array, check if it has valid parts
       if (Array.isArray(msg.content)) {
         return msg.content.some((part: any) => {
           if (
@@ -90,7 +90,7 @@ export class MessageProcessor {
 
     const allMessages = [...validHistoricalMessages, ...currentMessages];
 
-    // 添加新的用户消息到历史记录
+    // Add new user messages to the history
     if (currentMessages.length > 0) {
       const lastMessage = currentMessages[currentMessages.length - 1];
       if (
@@ -164,15 +164,15 @@ export class MessageProcessor {
         imageContent.image_url &&
         imageContent.image_url.url
       ) {
-        // 提取纯 base64 数据，去掉 data:image/jpeg;base64, 前缀
+        // Extract pure base64 data, remove the data:image/jpeg;base64, prefix
         const fullUrl = imageContent.image_url.url;
         if (fullUrl.startsWith('data:image/')) {
           const base64Match = fullUrl.match(/^data:image\/[^;]+;base64,(.+)$/);
           if (base64Match) {
-            imageBase64 = base64Match[1]; // 只保留纯 base64 部分
+            imageBase64 = base64Match[1]; // Keep only the pure base64 part
           }
         } else {
-          imageBase64 = fullUrl; // 如果已经是纯 base64，直接使用
+          imageBase64 = fullUrl; // If it is already pure base64, use it directly
         }
       }
 
@@ -228,7 +228,7 @@ export class MessageProcessor {
   }
 
   async handleGeneralChat(allMessages: any[]) {
-    // 过滤掉无效的消息
+    // Filter out invalid messages
     const validMessages = allMessages.filter((msg) => this.isValidMessage(msg));
 
     if (validMessages.length === 0) {

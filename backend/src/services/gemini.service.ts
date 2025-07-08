@@ -8,7 +8,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 let chatSession: any;
 
 const initChatSession = (history = []) => {
-  // 获取模型
+  // Get the model
   chatSession = ai.chats.create({
     model: 'gemini-2.0-flash',
     history,
@@ -25,7 +25,7 @@ export const geminiChatService = async (
     return { error: 'Message is required and must be a non-empty string.' };
   }
   // await connectMongoDB();
-  // 1. 获取或创建 session
+  // 1. Get or create session
   let session: any;
   if (sessionId) {
     session = await Session.findOne({ sessionId, userId });
@@ -35,13 +35,13 @@ export const geminiChatService = async (
     }
   }
 
-  // 2. 加载历史消息
+  // 2. Load historical messages
   const loadedDbHistory = await Dialogue.find({
     sessionId: session.sessionId,
   }).sort({ createdAt: 1 });
-  // 格式化为大模型需要的历史格式
+  // Format to the history format required by the large model
   const historyForModel = loadedDbHistory.map((d) => ({
-    role: d.role, // 你需要在Dialogue表中加role字段（"user"或"model"）
+    role: d.role, // You need to add a role field ("user" or "model") to the Dialogue table
     parts: [{ text: d.message }],
   })) as any;
 
@@ -70,7 +70,7 @@ export const geminiChatService = async (
       message,
     });
     await userDialogue.save();
-    // 保存AI回复
+    // Save AI reply
     const aiDialogue = new Dialogue({
       sessionId: session.sessionId,
       role: 'model',

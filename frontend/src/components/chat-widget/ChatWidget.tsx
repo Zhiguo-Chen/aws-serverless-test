@@ -6,7 +6,7 @@ import { testChat } from '../../api/chat';
 
 const MODELS = ['langchain-service', 'gpt-4o-mini', 'gemini-2.0-flash'];
 
-// 消息内容渲染组件
+// Message content rendering component
 const MessageRenderer = ({
   content,
   products,
@@ -16,7 +16,7 @@ const MessageRenderer = ({
 }) => {
   const findProductByName = (name: string) => {
     if (!products) return null;
-    // 尝试通过模糊匹配找到最相关的产品
+    // Try to find the most relevant product through fuzzy matching
     const normalizedName = name.toLowerCase().replace(/[^a-z0-9]/g, '');
     return products.find((p) =>
       p.name
@@ -26,7 +26,8 @@ const MessageRenderer = ({
     );
   };
   const renderContent = (text: string) => {
-    // 按 \n 分割文本
+    // Split text by 
+
     const lines = text?.split('\n');
 
     return lines.map((line, index) => {
@@ -34,12 +35,12 @@ const MessageRenderer = ({
         return <div key={index} style={{ height: '8px' }}></div>;
       }
 
-      // 三个*或两个*开头，保持原有逻辑
+      // Starts with three or two *, keep the original logic
       if (line.trim().match(/^(\*{2,})/)) {
         return renderListItem(line, index);
       }
 
-      // * **标题**: 内容 这种格式，优先判断
+      // * **Title**: Content format, prioritized judgment
       const match = line.trim().match(/^\*\s*\*\*([^*]+)\*\*\s*:?\s*(.*)/);
       if (match) {
         const title = match[1].trim();
@@ -77,7 +78,7 @@ const MessageRenderer = ({
         );
       }
 
-      // 单个*开头，渲染为有缩进的普通列表项
+      // Starts with a single *, rendered as an indented normal list item
       if (line.trim().match(/^\*\s+/)) {
         return (
           <div
@@ -98,7 +99,7 @@ const MessageRenderer = ({
         );
       }
 
-      // 普通文本行
+      // Normal text line
       return (
         <div key={index} style={{ marginBottom: '8px' }}>
           {line}
@@ -108,14 +109,14 @@ const MessageRenderer = ({
   };
 
   const renderListItem = (line: string, index: number) => {
-    // 使用正则表达式匹配 * **标题**: 内容 或 * **标题** 内容 格式
+    // Use regular expressions to match * **Title**: Content or * **Title** Content format
     const match = line.trim().match(/^\*\s*\*\*([^*]+)\*\*\s*:?\s*(.*)/);
 
     if (match) {
       const title = match[1].trim();
       let description = match[2].trim();
 
-      // 清理描述中的所有 **
+      // Clean up all ** in the description
       description = description.replace(/\*\*/g, '').trim();
       const product = findProductByName(title);
 
@@ -152,7 +153,7 @@ const MessageRenderer = ({
       );
     }
 
-    // 如果格式不匹配，返回原始内容（去掉 **）
+    // If the format does not match, return the original content (remove **)
     return (
       <div key={index} style={{ marginBottom: '8px', paddingLeft: '16px' }}>
         <span style={{ color: '#1976d2', marginRight: '8px' }}>•</span>
@@ -229,7 +230,7 @@ const ChatWidget = () => {
       if (err.name === 'CanceledError' || err.name === 'AbortError') {
         setMessages((prev) => [
           ...prev,
-          { role: 'bot', content: '⏹️ 已停止回复。' },
+          { role: 'bot', content: '⏹️ Stopped replying.' },
         ]);
       } else {
         setMessages((prev) => [
@@ -250,14 +251,14 @@ const ChatWidget = () => {
   };
 
   const getOrCreateChatSessionId = () => {
-    let sessionId = localStorage.getItem('chatSessionId'); // 尝试从 localStorage 获取
+    let sessionId = localStorage.getItem('chatSessionId'); // Try to get from localStorage
     if (!sessionId) {
-      // 如果不存在，则生成一个新的 UUID
-      // 现代浏览器支持 crypto.randomUUID()
+      // If it does not exist, generate a new UUID
+      // Modern browsers support crypto.randomUUID()
       if (typeof crypto !== 'undefined' && crypto.randomUUID) {
         sessionId = crypto.randomUUID();
       } else {
-        // 兼容旧浏览器，或者使用第三方库如 'uuid'
+        // Compatible with old browsers, or use third-party libraries such as 'uuid'
         sessionId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
           /[xy]/g,
           function (c) {
@@ -270,7 +271,7 @@ const ChatWidget = () => {
           'Using fallback UUID generation. Consider using a dedicated UUID library or modern browser API.',
         );
       }
-      localStorage.setItem('chatSessionId', sessionId); // 存储到 localStorage
+      localStorage.setItem('chatSessionId', sessionId); // Store to localStorage
     }
     console.log('sessionId', sessionId);
     return sessionId;

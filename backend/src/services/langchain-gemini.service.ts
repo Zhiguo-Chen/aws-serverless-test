@@ -4,18 +4,18 @@ import { MessageBuilder } from './chat/message-builder';
 import { ChatHistoryService } from './chat/chat-history-service';
 import { ChatValidation } from './chat/validation';
 
-// 创建工作流实例
+// Create workflow instance
 const workflowBuilder = new WorkflowBuilder();
 const app: any = workflowBuilder.buildWorkflow();
 
-// 主要的聊天服务函数
+// Main chat service function
 export const langChainGeminiChatService = async (
   message: string,
   userId = null,
   sessionId = null,
   imageBase64 = null,
 ) => {
-  // 验证请求
+  // Validate request
   const validation = ChatValidation.validateChatRequest(
     message,
     sessionId,
@@ -26,15 +26,15 @@ export const langChainGeminiChatService = async (
   }
 
   try {
-    // 构建用户消息
+    // Build user message
     const inputMessage = MessageBuilder.buildUserMessage(message, imageBase64);
 
-    // 配置
+    // Config
     const config = {
       configurable: { sessionId, userId },
     };
 
-    // 通过 LangGraph 处理消息
+    // Process message through LangGraph
     const finalState = await app.invoke({ messages: [inputMessage] }, config);
 
     let finalResult = null;
@@ -46,7 +46,7 @@ export const langChainGeminiChatService = async (
     }
 
     return {
-      result: finalResult || '抱歉，我没有生成有效的回复。',
+      result: finalResult || 'Sorry, I did not generate a valid response.',
       sessionId,
       products: finalState?.products || [],
     };
@@ -60,7 +60,7 @@ export const langChainGeminiChatService = async (
   }
 };
 
-// 导出历史记录相关函数
+// Export history related functions
 export const clearChatHistory = ChatHistoryService.clearHistory;
 export const getChatHistoryMessages = ChatHistoryService.getHistoryMessages;
 export const cleanInvalidMessages = ChatHistoryService.cleanInvalidMessages;

@@ -27,7 +27,7 @@ export const getRecommendationsForProduct = async (
   const categoryId = originalProduct.categoryId;
   console.log('Category ID:', categoryId);
   if (!categoryId) {
-    return []; // 或 throw new Error('categoryId is required');
+    return []; // or throw new Error('categoryId is required');
   }
 
   // 2. Find all products belonging to the same category to create a pool for matching
@@ -98,20 +98,20 @@ export const getRecommendationsForProduct = async (
       },
       {
         model: ProductImage,
-        as: 'productImages', // 确保和你的关联别名一致
+        as: 'productImages', // Make sure it matches your association alias
         attributes: ['id', 'imageUrl', 'altText', 'isPrimary', 'createdAt'],
       },
     ],
     attributes: {
       include: [
-        // 评分数量
+        // Number of ratings
         [
           sequelize.literal(
             '(SELECT COUNT(*) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
           ),
           'reviewCount',
         ],
-        // 平均评分
+        // Average rating
         [
           sequelize.literal(
             '(SELECT AVG(rating) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
