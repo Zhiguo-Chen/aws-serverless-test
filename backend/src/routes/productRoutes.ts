@@ -12,7 +12,7 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// 文件上传配置
+// File upload configuration
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, uploadDir);
@@ -42,11 +42,11 @@ const upload = multer({
   },
 });
 
-// 产品管理路由
+// Product management routes
 router.post(
   '/add',
   authenticationToken,
-  upload.array('images', 10), // 最多10张图片
+  upload.array('images', 10), // Maximum 10 images
   productController.createProduct,
 );
 router.get('/list-all', productController.getProducts);
@@ -61,7 +61,7 @@ router.put(
 );
 router.delete('/:id', authenticationToken, productController.deleteProduct);
 
-// 聊天相关路由
+// Chat related routes
 router.post('/chat', authenticationToken, upload.single('image'), chat);
 
 export default router;

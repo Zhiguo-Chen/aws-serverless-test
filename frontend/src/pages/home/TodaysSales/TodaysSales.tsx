@@ -8,16 +8,16 @@ import { Product, ProductsProps } from '../../../types/product';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api';
 
 const TodaysSales = ({ prdouctList }: ProductsProps) => {
-  // 假设所有商品的 flashSaleEndsAt 一致，取第一个商品的 flashSaleEndsAt
+  // Assume that all products have the same flashSaleEndsAt, take the flashSaleEndsAt of the first product
   const flashSaleEndsAt = prdouctList[0]?.flashSaleEndsAt;
-  // 兼容 flashSaleEndsAt 可能为 Date 类型或字符串
+  // Compatible with flashSaleEndsAt which can be Date type or string
   const getTimeLeft = (endTime: string | Date) => {
     const now = new Date();
     const end = typeof endTime === 'string' ? new Date(endTime) : endTime;
     const diff = Math.max(
       0,
       Math.floor((end.getTime() - now.getTime()) / 1000),
-    ); // 秒数
+    ); // seconds
     return diff;
   };
 
@@ -25,7 +25,7 @@ const TodaysSales = ({ prdouctList }: ProductsProps) => {
     flashSaleEndsAt ? getTimeLeft(flashSaleEndsAt) : 0,
   );
 
-  // 定时器每秒刷新
+  // The timer refreshes every second
   useEffect(() => {
     if (!flashSaleEndsAt) return;
     const timer = setInterval(() => {

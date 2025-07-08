@@ -154,7 +154,7 @@ export const extractQueryIntent = async (
   if (userInput && typeof userInput === 'string' && userInput.trim() !== '') {
     messageContent.push({ type: 'text', text: prompt });
   } else {
-    // 如果没有文本输入，但有图片，也需要一个基础提示
+    // If there is no text input but there is an image, a basic prompt is also needed
     messageContent.push({
       type: 'text',
       text: `Please extract the intent based on the image content and user's request. Then call the intent_parser tool with the extracted information. User request: "${userInput}"`,
@@ -200,9 +200,9 @@ export const extractQueryIntent = async (
 
 // -------------------- 4. New Function: Get Last Query Intent --------------------
 /**
- * 从消息历史中查询用户上一次的查询意图
- * @param {Array} allMessages - 包含历史消息和当前消息的数组
- * @returns {Object|null} 最近一次的查询意图，如果没有找到则返回null
+ * Queries the user's last query intent from the message history
+ * @param {Array} allMessages - An array containing historical and current messages
+ * @returns {Object|null} The most recent query intent, or null if not found
  */
 export const getLastQueryIntent = async (allMessages: any[]) => {
   if (!allMessages || !Array.isArray(allMessages) || allMessages.length === 0) {
@@ -211,11 +211,11 @@ export const getLastQueryIntent = async (allMessages: any[]) => {
   }
 
   try {
-    // 从最新消息开始向前搜索，跳过当前最新的消息
+    // Search backwards from the latest message, skipping the current newest message
     for (let i = allMessages.length - 2; i >= 0; i--) {
       const message = allMessages[i];
 
-      // 检查是否是用户消息
+      // Check if it is a user message
       if (message.role === 'user' || message.type === 'human') {
         const userContent = extractUserContent(message);
 
@@ -225,14 +225,14 @@ export const getLastQueryIntent = async (allMessages: any[]) => {
             userContent,
           );
 
-          // 提取该消息的意图
+          // Extract the intent of the message
           const intent = await extractQueryIntent(
             userContent.text,
             userContent.imageBase64,
             userContent.imageMimeType,
           );
 
-          // 如果是有效的查询意图（非general_chat和error），则返回
+          // If it is a valid query intent (not general_chat and not error), then return
           if (
             intent &&
             intent.intentType &&
@@ -259,9 +259,9 @@ export const getLastQueryIntent = async (allMessages: any[]) => {
 };
 
 /**
- * 从消息对象中提取用户内容
- * @param {Object} message - 消息对象
- * @returns {Object|null} 包含文本和图片信息的对象
+ * Extracts user content from a message object
+ * @param {Object} message - The message object
+ * @returns {Object|null} An object containing text and image information
  */
 const extractUserContent = (message: any) => {
   let text = '';
@@ -269,16 +269,16 @@ const extractUserContent = (message: any) => {
   let imageMimeType = 'image/jpeg';
 
   try {
-    // 处理不同的消息格式
+    // Handle different message formats
     if (typeof message.content === 'string') {
       text = message.content;
     } else if (Array.isArray(message.content)) {
-      // 处理包含多种内容类型的消息
+      // Handle messages containing multiple content types
       for (const content of message.content) {
         if (content.type === 'text') {
           text += content.text || '';
         } else if (content.type === 'image_url') {
-          // 提取base64图片数据
+          // Extract base64 image data
           const imageUrl = content.image_url?.url || '';
           if (imageUrl.startsWith('data:')) {
             const matches = imageUrl.match(/^data:([^;]+);base64,(.+)$/);
@@ -305,7 +305,7 @@ const extractUserContent = (message: any) => {
       text = message.text;
     }
 
-    // 如果既没有文本也没有图片，返回null
+    // If there is neither text nor image, return null
     if (!text.trim() && !imageBase64) {
       return null;
     }
@@ -323,24 +323,24 @@ const extractUserContent = (message: any) => {
 
 // -------------------- 5. Enhanced Intent Merging Function --------------------
 /**
- * 合并当前意图和历史意图，补充缺失的信息
- * @param {Object} currentIntent - 当前查询的意图
- * @param {Object} lastIntent - 上一次查询的意图
- * @returns {Object} 合并后的完整意图
+ * Merges the current intent with the historical intent, supplementing missing information
+ * @param {Object} currentIntent - The current query's intent
+ * @param {Object} lastIntent - The previous query's intent
+ * @returns {Object} The merged, complete intent
  */
 export const mergeIntentWithHistory = (currentIntent: any, lastIntent: any) => {
   if (!currentIntent) return lastIntent;
   if (!lastIntent) return currentIntent;
 
-  // 创建合并后的意图对象
+  // Create the merged intent object
   const mergedIntent = { ...currentIntent };
 
-  // 如果当前意图是product_query但缺少categories，尝试从历史中获取
+  // If the current intent is product_query but lacks categories, try to get them from history
   if (
     currentIntent.intentType === 'product_query' &&
     (!currentIntent.categories || currentIntent.categories.length === 0)
   ) {
-    // 从历史意图中获取categories（适用于product_query和use_case_query）
+    // Get categories from historical intent (applicable to product_query and use_case_query)
     if (
       (lastIntent.intentType === 'product_query' ||
         lastIntent.intentType === 'use_case_query') &&
@@ -351,7 +351,7 @@ export const mergeIntentWithHistory = (currentIntent: any, lastIntent: any) => {
       console.log('Merged categories from history:', mergedIntent.categories);
     }
 
-    // 如果历史意图有tags，也可以继承
+    // If the historical intent has tags, they can also be inherited
     if (
       lastIntent.tags &&
       lastIntent.tags.length > 0 &&
@@ -362,20 +362,20 @@ export const mergeIntentWithHistory = (currentIntent: any, lastIntent: any) => {
     }
   }
 
-  // 如果当前没有价格范围，但历史查询有，可以考虑继承（可选）
+  // If there is no price range currently, but the historical query has one, consider inheriting it (optional)
   if (!currentIntent.priceRange && lastIntent.priceRange) {
     mergedIntent.priceRange = { ...lastIntent.priceRange };
     console.log('Merged price range from history:', mergedIntent.priceRange);
   }
 
-  // 添加历史上下文信息
+  // Add historical context information
   mergedIntent._historyContext = {
     lastIntent: lastIntent,
     merged: true,
     mergedFields: [],
   };
 
-  // 记录哪些字段是从历史中合并的
+  // Record which fields were merged from history
   if (mergedIntent.categories !== currentIntent.categories) {
     mergedIntent._historyContext.mergedFields.push('categories');
   }
@@ -390,16 +390,16 @@ export const mergeIntentWithHistory = (currentIntent: any, lastIntent: any) => {
 };
 
 /**
- * 处理产品查询的增强版本，自动合并历史上下文
- * @param {Object} currentIntent - 当前意图
- * @param {Array} allMessages - 所有消息历史
- * @returns {Object} 增强后的意图，包含历史上下文
+ * An enhanced version for handling product queries that automatically merges historical context
+ * @param {Object} currentIntent - The current intent
+ * @param {Array} allMessages - All message history
+ * @returns {Object} The enhanced intent, including historical context
  */
 export const enhanceIntentWithHistory = async (
   currentIntent: any,
   allMessages: any,
 ) => {
-  // 如果当前意图不是product_query，或者已经有完整信息，直接返回
+  // If the current intent is not product_query, or if it already has complete information, return directly
   if (
     !currentIntent ||
     currentIntent.intentType !== 'product_query' ||
@@ -410,7 +410,7 @@ export const enhanceIntentWithHistory = async (
 
   console.log('Current intent lacks categories, searching history...');
 
-  // 获取历史查询意图
+  // Get historical query intent
   const lastIntent = await getLastQueryIntent(allMessages);
 
   if (!lastIntent) {
@@ -420,7 +420,7 @@ export const enhanceIntentWithHistory = async (
 
   console.log('Found history intent:', getIntentSummary(lastIntent));
 
-  // 合并意图
+  // Merge intents
   const enhancedIntent = mergeIntentWithHistory(currentIntent, lastIntent);
 
   console.log('Enhanced intent:', getIntentSummary(enhancedIntent));
@@ -430,9 +430,9 @@ export const enhanceIntentWithHistory = async (
 
 // -------------------- 6. Helper Function: Get Intent Summary --------------------
 /**
- * 获取意图的简要描述
- * @param {Object} intent - 意图对象
- * @returns {string} 意图的简要描述
+ * Gets a brief description of the intent
+ * @param {Object} intent - The intent object
+ * @returns {string} A brief description of the intent
  */
 export const getIntentSummary = (intent: any) => {
   if (!intent || !intent.intentType) {
@@ -469,7 +469,7 @@ export const getIntentSummary = (intent: any) => {
       summary = `${intent.intentType} query`;
   }
 
-  // 如果是合并的意图，添加标记
+  // If it is a merged intent, add a flag
   if (intent._historyContext?.merged) {
     summary += ` (merged: ${intent._historyContext.mergedFields.join(', ')})`;
   }
