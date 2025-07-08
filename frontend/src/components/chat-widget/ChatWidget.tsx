@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { axiosInstance } from '../../auth/axiosInstance';
 import './ChatWidget.scss';
+import { testChat } from '../../api/chat';
 
 const MODELS = ['langchain-service', 'gpt-4o-mini', 'gemini-2.0-flash'];
 
@@ -217,6 +218,7 @@ const ChatWidget = () => {
           signal: controller.signal,
         },
       );
+      // const response = await testChat(formData);
       const botMessage = response?.data?.response || 'No response from bot.';
       const products = response?.data?.products || [];
       setMessages((prev) => [

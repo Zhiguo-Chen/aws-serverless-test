@@ -44,7 +44,7 @@ export const createOrder = async (req: Request | any, res: Response) => {
         },
       ],
     });
-    // 转为普通 object
+    // Convert to plain object
     const cartItems = cartItemsRaw.map((item) => item.toJSON());
 
     if (!cartItems || cartItems.length === 0) {
@@ -55,10 +55,6 @@ export const createOrder = async (req: Request | any, res: Response) => {
     // 2. Create product snapshots and calculate total amount
     const productSnapshots: IOrderProduct[] = [];
     let totalAmount = 0;
-
-    console.log('========== Order Creation Process ==========');
-    console.log('Cart items:', cartItems);
-    console.log('========== Order Creation Process ==========');
 
     for (const item of cartItems) {
       if (!item.product) {

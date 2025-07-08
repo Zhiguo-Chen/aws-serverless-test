@@ -6,7 +6,7 @@ let dbConnection: typeof mongoose | null = null;
 export let mongoClientReady = false;
 export const connectMongoDB = async () => {
   if (dbConnection && mongoose.connection.readyState === 1) {
-    // 如果已经连接且状态正常，则直接返回现有连接
+    // If already connected and the state is normal, return the existing connection
     console.log('Already connected to MongoDB.');
     mongoClientReady = true;
     return dbConnection;
@@ -22,7 +22,7 @@ export const connectMongoDB = async () => {
     return dbConnection;
   } catch (err) {
     console.error('MongoDB connection error:', err);
-    // 在生产环境中，你可能希望重试或记录更详细的错误
-    process.exit(1); // 连接失败时退出进程
+    // In a production environment, you might want to retry or log more detailed errors
+    process.exit(1); // Exit the process on connection failure
   }
 };

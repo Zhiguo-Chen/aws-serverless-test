@@ -13,12 +13,12 @@ const sequelize = new Sequelize({
   dialectModule: pg,
   models: [path.join(__dirname, '../models/**/*.model.{ts,js}')],
   modelMatch: (filename, member) => {
-    // 排除 MongoDB 模型文件
+    // Exclude MongoDB model files
     const lower = filename.toLowerCase();
     if (lower.includes('mongo') || lower.includes('index')) {
       return false;
     }
-    // 默认匹配规则
+    // Default matching rule
     return (
       member.toLowerCase() === filename.toLowerCase().replace('.model', '')
     );
