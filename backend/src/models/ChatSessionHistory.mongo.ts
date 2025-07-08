@@ -8,7 +8,7 @@ const ChatHistorySchema = new mongoose.Schema({
     {
       type: { type: String, enum: ['human', 'ai'], required: true },
       content: {
-        type: mongoose.Schema.Types.Mixed, // 支持文本和图片内容
+        type: mongoose.Schema.Types.Mixed, // Support text and image content
         required: true,
       },
       timestamp: { type: Date, default: Date.now },
@@ -18,7 +18,7 @@ const ChatHistorySchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
-// 确保同一个 sessionId 只有一个文档
+// Ensure that there is only one document for the same sessionId
 ChatHistorySchema.index({ sessionId: 1 }, { unique: true });
 
 export const ChatHistory = mongoose.model('ChatHistory', ChatHistorySchema);

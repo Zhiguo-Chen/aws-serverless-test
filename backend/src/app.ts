@@ -8,7 +8,7 @@ import fs from 'fs';
 import { testConnection, syncDatabase, closeConnection } from './models';
 import { connectMongoDB } from './config/mongodb';
 
-// 导入路由
+// Import routes
 import routes from './routes/routes';
 
 const publicDir = path.join(__dirname, '../public');
@@ -20,42 +20,42 @@ const app = express();
 
 app.use('/public', express.static(publicDir));
 
-// 中间件
+// Middleware
 const corsOptions = {
-  // 在这里放入您所有前端应用的URL
+  // Add all your frontend application URLs here
   origin: [
     'https://my-demo.camdvr.org',
     'https://icy-sky-08145be00.6.azurestaticapps.net',
     'http://localhost:3001',
     'http://127.0.0.1:3001',
   ],
-  // 明确允许所有标准的HTTP方法
+  // Explicitly allow all standard HTTP methods
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  // 允许前端在请求头中携带 'Content-Type' 和 'Authorization' 等字段
+  // Allow frontend to carry fields like 'Content-Type' and 'Authorization' in request headers
   allowedHeaders: ['Content-Type', 'Authorization'],
-  // 响应预检请求时，返回200状态码，确保兼容性
+  // Respond to preflight requests with a 200 status code to ensure compatibility
   optionsSuccessStatus: 200,
 };
 
-// 2. 将带有详细选项的配置应用到CORS中间件
+// 2. Apply the configuration with detailed options to the CORS middleware
 app.use(cors(corsOptions));
 
-// 3. 继续使用其他中间件
+// 3. Continue to use other middleware
 app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 路由
+// Routes
 app.use('/api', routes);
 
-// 健康检查路由
+// Health check route
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: Date.now() });
 });
 
-// 错误处理中间件
+// Error handling middleware
 app.use(
   (
     err: Error,
@@ -72,17 +72,17 @@ const start = async () => {
   try {
     console.log('Starting application initialization...');
 
-    // 1. 测试数据库连接（模型已自动加载）
+    // 1. Test database connection (models are loaded automatically)
     const isConnected = await testConnection();
     if (!isConnected) {
       throw new Error('Failed to connect to database');
     }
 
-    // 2. 连接 MongoDB
+    // 2. Connect to MongoDB
     await connectMongoDB();
     console.log('MongoDB connected successfully');
 
-    // 3. 同步数据库
+    // 3. Sync database
     await syncDatabase({
       force:
         process.env.NODEENV === 'development' &&
@@ -93,14 +93,14 @@ const start = async () => {
     });
     console.log('Database synced successfully');
 
-    // 4. 启动服务器
+    // 4. Start the server
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
       console.log('Application startup completed successfully');
     });
 
-    // 优雅关闭处理
+    // Graceful shutdown handling
     process.on('SIGTERM', async () => {
       console.log('SIGTERM received, shutting down gracefully');
       await closeConnection();
