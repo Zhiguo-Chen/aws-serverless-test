@@ -9,20 +9,20 @@ const seedCategories = async () => {
     const results: any[] = [];
     const filePath = path.join(__dirname, 'categories.csv');
 
-    // 读取 CSV 文件
+    // Read CSV file
     fs.createReadStream(filePath)
       .pipe(csv())
       .on('data', (data) => results.push(data))
       .on('end', async () => {
         console.log('CSV file successfully processed');
 
-        // 同步数据库
+        // Sync database
         await sequelize.sync();
 
-        // 清空现有分类
+        // Clear existing categories
         await Category.destroy({ truncate: true });
 
-        // 插入新分类
+        // Insert new categories
         await Category.bulkCreate(results);
 
         console.log(`${results.length} categories seeded successfully`);

@@ -33,7 +33,7 @@ const About = () => {
           <p>Integrity, Innovation, Customer First.</p>
         </div>
       </div>
-      {/* 可选：团队成员区 */}
+      {/* Optional: Team members section */}
       {/* <div className="about-team">
         <h2>Meet Our Team</h2>
         <div className="about-team-list">

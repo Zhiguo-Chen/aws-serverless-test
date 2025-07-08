@@ -36,7 +36,7 @@ const ProductItem: FC<ProductItemProps> = ({
   const handleAddToFavorite = async (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsFavorite((prev) => !prev);
-    // 可在此处调用后端API
+    // You can call the backend API here
     const data = await addToWishlist(product.id);
     console.log(`Toggled favorite for ${product.name}`);
   };
