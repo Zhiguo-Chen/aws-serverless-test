@@ -18,7 +18,7 @@ export class MongoChatHistory {
         return [];
       }
 
-      // 转换为 LangChain Message 格式
+      // Convert to LangChain Message format
       return chatHistory.messages.map((msg) => {
         if (msg.type === 'human') {
           return new HumanMessage(msg.content);
@@ -72,7 +72,7 @@ export class MongoChatHistory {
   }
 }
 
-// 获取聊天历史的工厂函数
+// Factory function to get chat history
 export const getChatHistory = (sessionId: string, userId = null) => {
   return new MongoChatHistory(sessionId, userId);
 };

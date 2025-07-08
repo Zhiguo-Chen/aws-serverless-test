@@ -9,7 +9,7 @@ import { ReactComponent as WishlistIcon } from '../../assets/icons/Wishlist.svg'
 const MainHeader = () => {
   const [searchStr, setSearchStr] = useState('');
   const navigate = useNavigate();
-  // 根据当前路径设置激活 tab
+  // Set the active tab according to the current path
   const getActiveKey = () => {
     const path = window.location.pathname;
     if (path.startsWith('/main')) return '1';
@@ -20,7 +20,7 @@ const MainHeader = () => {
   };
   const [activeKey, setActiveKey] = useState(getActiveKey());
 
-  // 监听路由变化，自动切换 tab
+  // Listen to route changes and switch tabs automatically
   useEffect(() => {
     const handlePopState = () => {
       setActiveKey(getActiveKey());

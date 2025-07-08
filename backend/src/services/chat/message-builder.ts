@@ -4,22 +4,22 @@ export class MessageBuilder {
   static buildUserMessage(message: string, imageBase64: string | null) {
     const messageContent = [];
 
-    // 验证并添加文本内容
+    // Validate and add text content
     if (message && typeof message === 'string' && message.trim() !== '') {
       messageContent.push({ type: 'text', text: message.trim() });
     }
 
-    // 验证并添加图片内容
+    // Validate and add image content
     if (imageBase64 && imageBase64.trim() !== '') {
-      // 确保 imageBase64 格式正确
+      // Ensure the imageBase64 format is correct
       let formattedImageUrl;
       const trimmedBase64 = imageBase64.trim();
 
       if (trimmedBase64.startsWith('data:image/')) {
-        // 如果已经包含 data URL 前缀，直接使用
+        // If it already contains the data URL prefix, use it directly
         formattedImageUrl = trimmedBase64;
       } else {
-        // 如果是纯 base64，添加前缀
+        // If it is pure base64, add the prefix
         formattedImageUrl = `data:image/jpeg;base64,${trimmedBase64}`;
       }
 
@@ -35,7 +35,7 @@ export class MessageBuilder {
       throw new Error('No valid text or image content to process.');
     }
 
-    // 如果只有一个文本内容，直接使用字符串；否则使用数组
+    // If there is only one text content, use a string directly; otherwise, use an array
     const content: any =
       messageContent.length === 1 && messageContent[0].type === 'text'
         ? messageContent[0].text

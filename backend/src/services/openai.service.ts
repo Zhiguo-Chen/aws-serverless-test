@@ -74,7 +74,7 @@ export const chatService = async (
       message,
     });
     await userDialogue.save();
-    // 保存AI回复
+    // Save AI reply
     const aiDialogue = new Dialogue({
       sessionId: session.sessionId,
       role: 'model',
