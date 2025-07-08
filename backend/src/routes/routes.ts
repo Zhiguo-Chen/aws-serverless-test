@@ -6,21 +6,32 @@ import categoryRoutes from './categoryRoutes';
 import productsRoutes from './productRoutes';
 import orderRoutes from './orderRoutes';
 import wishlistRoutes from './wishlistRoutes';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 import recommendationRoutes from './recommendationRoutes';
 
 const router = express.Router();
 
-// 登录路由
+// Chat service proxy
+router.use('/chat', createProxyMiddleware({
+  target: 'http://localhost:5001',
+  changeOrigin: true,
+  pathRewrite: {
+    '^/': '/chat', // Rewrite root to /chat
+  },
+}));
+
+// Login route
 router.post('/login', login);
 
-// 注册路由
+
+// Register route
 router.post('/register', register);
 
 router.use('/products', productsRoutes);
 router.use('/categories', categoryRoutes);
 router.use('/recommendations', recommendationRoutes);
 
-// 保护所有后续路由
+// Protect all subsequent routes
 router.use(authenticationToken);
 router.use('/cart', cartRoutes);
 

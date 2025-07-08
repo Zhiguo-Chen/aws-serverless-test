@@ -1,13 +1,13 @@
 import { Sequelize } from 'sequelize-typescript';
 import sequelize from '../config/database';
 
-// 如果你的 database.ts 还是普通的 sequelize，需要升级为 sequelize-typescript
-// 这里假设你已经升级了配置，如果没有，请参考下面的升级说明
+// If your database.ts is still plain sequelize, you need to upgrade to sequelize-typescript
+// It is assumed here that you have upgraded the configuration, if not, please refer to the upgrade instructions below
 
-// 导出数据库实例
+// Export database instance
 export { sequelize };
 
-// 数据库连接测试
+// Database connection test
 export const testConnection = async (): Promise<boolean> => {
   try {
     await sequelize.authenticate();
@@ -19,7 +19,7 @@ export const testConnection = async (): Promise<boolean> => {
   }
 };
 
-// 同步数据库
+// Sync database
 export const syncDatabase = async (
   options: { force?: boolean; alter?: boolean } = {},
 ): Promise<void> => {
@@ -51,7 +51,7 @@ export const syncDatabase = async (
   }
 };
 
-// 关闭数据库连接
+// Close database connection
 export const closeConnection = async (): Promise<void> => {
   try {
     await sequelize.close();
@@ -62,7 +62,7 @@ export const closeConnection = async (): Promise<void> => {
   }
 };
 
-// 数据库健康检查
+// Database health check
 export const healthCheck = async (): Promise<{
   status: string;
   message: string;
@@ -80,7 +80,7 @@ export const healthCheck = async (): Promise<{
   }
 };
 
-// 获取数据库统计信息
+// Get database statistics
 export const getStats = async (): Promise<any> => {
   try {
     const modelNames = Object.keys(sequelize.models);
@@ -95,7 +95,7 @@ export const getStats = async (): Promise<any> => {
       },
     };
 
-    // 获取每个表的记录数（可选）
+    // Get the number of records for each table (optional)
     if (process.env.INCLUDE_TABLE_COUNTS === 'true') {
       stats.tableCounts = {};
       for (const modelName of modelNames) {
@@ -119,13 +119,13 @@ export const getStats = async (): Promise<any> => {
   }
 };
 
-// 导出所有模型（如果需要的话）
-// 这里可以导出你的具体模型，但通常通过 sequelize.models 访问就足够了
+// Export all models (if needed)
+// You can export your specific models here, but usually accessing them through sequelize.models is sufficient
 export { Category } from './Category.model';
 export { Product } from './Product.model';
 export { ProductImage } from './ProductImage.model';
 export { Review } from './Review.model';
 export { User } from './User.model';
 
-// 默认导出 sequelize 实例
+// Export the sequelize instance by default
 export default sequelize;

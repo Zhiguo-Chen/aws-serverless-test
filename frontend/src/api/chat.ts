@@ -15,3 +15,8 @@ export const createChat = async (formData: any) => {
   const response = await axiosInstance.post(`/api/products/chat`, formData);
   return response;
 };
+
+export const testChat = async (formData: any) => {
+  const response = await axiosInstance.post(`/api/chat`, formData);
+  return response;
+};
