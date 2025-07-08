@@ -150,7 +150,7 @@ const ProductForm = () => {
 
       // Other fields
       Object.keys(values).forEach((key) => {
-        if (key === 'image') return; // 已处理
+        if (key === 'image') return; // Handled
         if (key === 'flashSaleEndsAt' && values[key]) {
           formData.append(key, values[key].format('YYYY-MM-DD HH:mm:ss'));
         } else if (values[key] !== undefined && values[key] !== null) {
@@ -332,7 +332,7 @@ const ProductForm = () => {
               multiple
               beforeUpload={beforeUpload}
               accept="image/*"
-              showUploadList={false} // 不用默认的列表
+              showUploadList={false} // Don't use the default list
               onChange={({ fileList }) => {
                 const currentImages = form.getFieldValue('image') || [];
                 const newImages = fileList.map((file) => {
@@ -363,7 +363,7 @@ const ProductForm = () => {
                 forceUpdate({});
               }}
               customRequest={({ file, onSuccess }) => {
-                // 仅本地预览，不上传
+                // Local preview only, no upload
                 setTimeout(() => {
                   onSuccess && onSuccess('ok');
                 }, 0);
@@ -371,7 +371,7 @@ const ProductForm = () => {
             >
               <Button icon={<UploadOutlined />}>Click to upload</Button>
             </Upload>
-            {/* 自定义图片预览 */}
+            {/* Custom image preview */}
             <div className="custom-upload-list">
               {(form.getFieldValue('image') || []).map(
                 (file: any, idx: number) => {

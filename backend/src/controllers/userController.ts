@@ -1,6 +1,4 @@
 import jwt from 'jsonwebtoken';
-// Try to install type definitions first. If that doesn't work, use the declare statement in a .d.ts file.
-// For now, you can suppress the type error if you are sure about the usage.
 // @ts-ignore
 import bcrypt from 'bcryptjs';
 import { User } from '../models';

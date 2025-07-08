@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
-import sequelize, { Category, Product, ProductImage } from '../models';
 import * as fs from 'fs';
 import * as path from 'path';
-import { searchProducts } from '../services/search-products-service';
 import { Op } from 'sequelize';
+import sequelize, { Category, Product, ProductImage } from '../models';
 
 const createProduct = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -49,12 +48,12 @@ const createProduct = async (req: Request, res: Response): Promise<void> => {
         };
       });
 
-      // 确保只有一张主图
+      // Ensure there is only one primary image
       const primaryImages = productImages.filter((img) => img.isPrimary);
       if (primaryImages.length === 0 && productImages.length > 0) {
         productImages[0].isPrimary = true;
       } else if (primaryImages.length > 1) {
-        // 如果有多张主图，只保留第一张为主图
+        // If there are multiple primary images, only keep the first one as the primary
         productImages.forEach((img, index) => {
           img.isPrimary = index === productImages.findIndex((p) => p.isPrimary);
         });
@@ -69,7 +68,7 @@ const createProduct = async (req: Request, res: Response): Promise<void> => {
       discountPercentage: originalPrice
         ? Math.round((1 - price / originalPrice) * 100)
         : 0,
-      categoryId: categoryRecord.id, // 明确设置 categoryId
+      categoryId: categoryRecord.id, // Explicitly set categoryId
       stockQuantity,
       isFeatured,
       isNewArrival,
@@ -261,20 +260,20 @@ const getProducts = async (req: Request, res: Response) => {
         },
         {
           model: ProductImage,
-          as: 'productImages', // 确保和你的关联别名一致
+          as: 'productImages', // Ensure it matches your association alias
           attributes: ['id', 'imageUrl', 'altText', 'isPrimary', 'createdAt'],
         },
       ],
       attributes: {
         include: [
-          // 评分数量
+          // Number of ratings
           [
             sequelize.literal(
               '(SELECT COUNT(*) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
             ),
             'reviewCount',
           ],
-          // 平均评分
+          // Average rating
           [
             sequelize.literal(
               '(SELECT AVG(rating) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
@@ -286,7 +285,7 @@ const getProducts = async (req: Request, res: Response) => {
       order: [['createdAt', 'ASC']],
     });
 
-    // 格式化平均评分
+    // Format average rating
     const formattedProducts = products.map((product) => {
       const productJson = product.toJSON();
       productJson.averageRating = productJson.averageRating
@@ -314,20 +313,20 @@ const getProductById = async (req: Request, res: Response) => {
         },
         {
           model: ProductImage,
-          as: 'productImages', // 确保和你的关联别名一致
+          as: 'productImages', // Ensure it matches your association alias
           attributes: ['id', 'imageUrl', 'altText', 'isPrimary', 'createdAt'],
         },
       ],
       attributes: {
         include: [
-          // 评分数量
+          // Number of ratings
           [
             sequelize.literal(
               '(SELECT COUNT(*) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
             ),
             'reviewCount',
           ],
-          // 平均评分
+          // Average rating
           [
             sequelize.literal(
               '(SELECT AVG(rating) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
@@ -341,14 +340,14 @@ const getProductById = async (req: Request, res: Response) => {
     if (product) {
       const productData = product.toJSON();
 
-      // 格式化平均评分
+      // Format average rating
       productData.averageRating = productData.averageRating
         ? parseFloat(productData.averageRating).toFixed(1)
         : 0;
 
-      // 计算评分分布
+      // Calculate rating distribution
       if (productData.Reviews && productData.Reviews.length > 0) {
-        productData.ratingDistribution = [0, 0, 0, 0, 0]; // 1-5星的计数
+        productData.ratingDistribution = [0, 0, 0, 0, 0]; // Count of 1-5 stars
         productData.Reviews.forEach((review: any) => {
           if (review.rating >= 1 && review.rating <= 5) {
             productData.ratingDistribution[review.rating - 1]++;
@@ -383,7 +382,7 @@ const deleteProduct = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // 删除所有附属图片文件
+    // Delete all associated image files
     const images = product.productImages || [];
     for (const image of images) {
       if (image.imageUrl) {
@@ -396,13 +395,13 @@ const deleteProduct = async (req: Request, res: Response): Promise<void> => {
       }
     }
 
-    // 删除所有附属图片数据库记录
+    // Delete all associated image database records
     await ProductImage.destroy({
       where: { productId: product.id },
       transaction,
     });
 
-    // 删除产品本身
+    // Delete the product itself
     if (rawProduct) {
       await rawProduct.destroy({ transaction });
     }
@@ -446,14 +445,14 @@ const searchProductsByStr = async (req: Request, res: Response) => {
       ],
       attributes: {
         include: [
-          // 评分数量
+          // Number of ratings
           [
             sequelize.literal(
               '(SELECT COUNT(*) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
             ),
             'reviewCount',
           ],
-          // 平均评分
+          // Average rating
           [
             sequelize.literal(
               '(SELECT AVG(rating) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
@@ -493,14 +492,14 @@ const searchByCategory = async (req: Request, res: Response) => {
       ],
       attributes: {
         include: [
-          // 评分数量
+          // Number of ratings
           [
             sequelize.literal(
               '(SELECT COUNT(*) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
             ),
             'reviewCount',
           ],
-          // 平均评分
+          // Average rating
           [
             sequelize.literal(
               '(SELECT AVG(rating) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',

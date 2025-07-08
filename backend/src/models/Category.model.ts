@@ -7,7 +7,7 @@ import { Product } from './Product.model';
   timestamps: true,
 })
 export class Category extends Model {
-  // 改为默认导出
+  // Changed to default export
   @Column({
     type: DataType.INTEGER,
     primaryKey: true,
@@ -22,7 +22,7 @@ export class Category extends Model {
   })
   name!: string;
 
-  // 修复重复的@Column装饰器
+  // Fix duplicate @Column decorator
   @Column({
     type: DataType.STRING,
     allowNull: false,
