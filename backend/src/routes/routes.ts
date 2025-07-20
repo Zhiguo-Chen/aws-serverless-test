@@ -12,17 +12,19 @@ import recommendationRoutes from './recommendationRoutes';
 const router = express.Router();
 
 // Chat service proxy
-router.use('/chat', createProxyMiddleware({
-  target: 'http://localhost:5001',
-  changeOrigin: true,
-  pathRewrite: {
-    '^/': '/chat', // Rewrite root to /chat
-  },
-}));
+router.use(
+  '/chat',
+  createProxyMiddleware({
+    target: 'http://localhost:5001',
+    changeOrigin: true,
+    pathRewrite: {
+      '^/': '/chat', // Rewrite root to /chat
+    },
+  }),
+);
 
 // Login route
 router.post('/login', login);
-
 
 // Register route
 router.post('/register', register);
