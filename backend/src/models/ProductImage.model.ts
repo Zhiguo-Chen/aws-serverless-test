@@ -26,26 +26,26 @@ export class ProductImage extends Model {
     allowNull: false,
     defaultValue: false,
   })
-  isPrimary!: boolean;
+  declare isPrimary: boolean;
 
   @Column({
     type: DataType.STRING,
     allowNull: true,
   })
-  altText?: string;
+  declare altText: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  imageUrl!: string;
+  declare imageUrl: string;
 
   @ForeignKey(() => Product)
   @Column({
     type: DataType.UUID,
     allowNull: false,
   })
-  productId!: string;
+  declare productId: string;
 
   @BelongsTo(() => Product)
   product?: Product;
