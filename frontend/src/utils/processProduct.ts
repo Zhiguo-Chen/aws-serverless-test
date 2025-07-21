@@ -7,7 +7,11 @@ export const processProduct = (products: Product[]) => {
   }
   return products.map((prd: Product) => {
     const primaryImage = prd.productImages.find((img) => img.isPrimary);
-    prd.primaryImageUrl = `${API_URL}/public${primaryImage?.imageUrl}`;
+    if (!primaryImage?.imageUrl.includes('https')) {
+      prd.primaryImageUrl = `${API_URL}/public${primaryImage?.imageUrl}`;
+    } else {
+      prd.primaryImageUrl = primaryImage?.imageUrl;
+    }
     return prd;
   });
 };
