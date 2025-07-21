@@ -81,7 +81,9 @@ const ProductForm = () => {
                 uid: img.id,
                 name: img.imageUrl.split('/').pop(),
                 status: 'done',
-                url: `${API_URL}/public${img.imageUrl}`,
+                url: img.imageUrl.includes('https')
+                  ? `${img.imageUrl}`
+                  : `${API_URL}/public${img.imageUrl}`,
               };
             },
           );
