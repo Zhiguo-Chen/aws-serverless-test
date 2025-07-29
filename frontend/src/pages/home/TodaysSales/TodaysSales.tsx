@@ -5,7 +5,7 @@ import ProductItem from '../../../components/ProductItem/ProductItem';
 import SectionName from '../../../components/SectionName/SectionName';
 import { Product, ProductsProps } from '../../../types/product';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
 const TodaysSales = ({ prdouctList }: ProductsProps) => {
   // Assume that all products have the same flashSaleEndsAt, take the flashSaleEndsAt of the first product
