@@ -3,7 +3,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Checkbox } from 'antd';
 
-const apiUrl = process.env.REACT_APP_API_URL;
+const apiUrl = import.meta.env.VITE_API_URL;
 
 type FieldType = {
   name: string;
@@ -55,7 +55,7 @@ const Register: React.FC = () => {
         email,
         phone,
         password,
-        isSeller
+        isSeller,
       })
       .then((res) => console.log(res));
   };

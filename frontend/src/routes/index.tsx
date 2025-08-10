@@ -6,7 +6,7 @@ import LoginRoutes from './LoginRoutes';
 import MainPageLayout from '../pages/main-layout/MainPageLayout';
 import NotFound from '../pages/not-found/NotFound';
 
-const authTokenKey = process.env.REACT_APP_AUTH_TOKEN || 'authToken';
+const authTokenKey = import.meta.env.VITE_AUTH_TOKEN || 'authToken';
 
 export default function BaseRoutes() {
   const isAuthenticated = !!localStorage.getItem(authTokenKey);

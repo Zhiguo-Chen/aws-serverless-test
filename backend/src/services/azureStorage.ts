@@ -222,8 +222,21 @@ class AzureStorageService implements ImageUploadService {
   }
 }
 
-// 创建 Azure 存储服务实例
-export const azureStorageService = new AzureStorageService();
+// 创建 Azure 存储服务实例（仅在需要时）
+export const azureStorageService =
+  process.env.UPLOAD_STRATEGY === 'azure'
+    ? new AzureStorageService()
+    : ({
+        upload: async () => {
+          throw new Error('Azure storage not configured');
+        },
+        delete: async () => {
+          throw new Error('Azure storage not configured');
+        },
+        getPublicUrl: () => {
+          throw new Error('Azure storage not configured');
+        },
+      } as any);
 
 // Multer 内存存储配置（用于 Azure）
 const memoryStorage = multer.memoryStorage();

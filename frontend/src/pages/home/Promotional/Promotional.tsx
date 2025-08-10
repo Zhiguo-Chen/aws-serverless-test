@@ -7,20 +7,33 @@ import { ReactComponent as VectorIcon } from '../../../assets/icons/Vector2.svg'
 import { Product, ProductsProps } from '../../../types/product';
 
 const Promotional = ({ prdouctList }: ProductsProps) => {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<any[]>([]);
   const navigate = useNavigate();
   useEffect(() => {
     // Fetch categories from API or define them statically
     const fetchCategories = async () => {
       try {
         const data = await getCategories();
-        console.log(data);
-        setCategories(data);
-        setTimeout(() => {
-          console.log(categories);
-        }, 100);
+        console.log('Categories data:', data);
+        // 确保 data 是数组，如果不是则使用空数组
+        const categoriesArray = Array.isArray(data)
+          ? data
+          : data?.categories || [];
+        setCategories(categoriesArray);
       } catch (error) {
         console.error('Failed to fetch categories:', error);
+        // 设置默认分类作为后备
+        setCategories([
+          { id: 1, name: "Woman's Fashion" },
+          { id: 2, name: "Men's Fashion" },
+          { id: 3, name: 'Electronics' },
+          { id: 4, name: 'Home & Lifestyle' },
+          { id: 5, name: 'Medicine' },
+          { id: 6, name: 'Sports & Outdoor' },
+          { id: 7, name: "Baby's & Toys" },
+          { id: 8, name: 'Groceries & Pets' },
+          { id: 9, name: 'Health & Beauty' },
+        ]);
       }
     };
     fetchCategories();

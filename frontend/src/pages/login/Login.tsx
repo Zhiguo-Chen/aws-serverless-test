@@ -6,8 +6,8 @@ import axios from 'axios';
 import CenterContainer from '../../components/center-container/CenterContainer';
 import { useUser } from '../../contexts/UserContext';
 
-const apiUrl = process.env.REACT_APP_API_URL;
-const authTokenKey = process.env.REACT_APP_AUTH_TOKEN || 'authToken';
+const apiUrl = import.meta.env.VITE_API_URL;
+const authTokenKey = import.meta.env.VITE_AUTH_TOKEN || 'authToken';
 
 const Login: React.FC = () => {
   const { login } = useUser();

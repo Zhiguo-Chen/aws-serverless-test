@@ -7,7 +7,7 @@ import { ReactComponent as GoogleIcon } from '../../assets/icons/Icon-Google.svg
 import './SignUp.scss';
 import axios from 'axios';
 
-const apiUrl = process.env.REACT_APP_API_URL;
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
