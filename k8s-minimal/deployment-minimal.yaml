@@ -60,11 +60,11 @@ spec:
               value: 'password123'
           resources:
             requests:
-              memory: '64Mi'
-              cpu: '50m'
-            limits:
               memory: '128Mi'
               cpu: '100m'
+            limits:
+              memory: '256Mi'
+              cpu: '200m'
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
@@ -106,11 +106,11 @@ spec:
             - containerPort: 27017
           resources:
             requests:
-              memory: '64Mi'
-              cpu: '50m'
-            limits:
               memory: '128Mi'
               cpu: '100m'
+            limits:
+              memory: '256Mi'
+              cpu: '200m'
           volumeMounts:
             - name: mongo-storage
               mountPath: /data/db
@@ -218,23 +218,27 @@ spec:
                   key: MONGODB_URI
           resources:
             requests:
-              memory: '128Mi' # 最小内存
-              cpu: '100m' # 最小CPU
+              memory: '256Mi' # 增加最小内存
+              cpu: '200m' # 增加最小CPU
             limits:
-              memory: '256Mi' # 限制内存使用
-              cpu: '200m' # 限制CPU使用
+              memory: '512Mi' # 增加内存限制
+              cpu: '500m' # 增加CPU限制
           livenessProbe:
             httpGet:
               path: /health
               port: 3000
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60 # 增加初始延迟
             periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
           readinessProbe:
             httpGet:
               path: /health
               port: 3000
-            initialDelaySeconds: 5
+            initialDelaySeconds: 30 # 增加初始延迟
             periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
 ---
 apiVersion: v1
 kind: Service
