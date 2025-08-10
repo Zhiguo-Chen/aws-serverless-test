@@ -1,0 +1,90 @@
+name: Deploy Backend to AKS (Minimal Cost)
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'backend/**'
+      - 'k8s-minimal/**'
+      - '.github/workflows/deploy-backend-minimal.yml'
+  workflow_dispatch:
+
+env:
+  AZURE_CONTAINER_REGISTRY: ecommercetest2025 # 替换为你的ACR名称
+  CONTAINER_NAME: ecommerce-backend
+  RESOURCE_GROUP: E-commerce # 测试资源组
+  CLUSTER_NAME: ecommerce-test-aks # 测试集群名
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Check if AKS cluster is running
+        id: check-aks
+        run: |
+          STATUS=$(az aks show --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.CLUSTER_NAME }} --query "powerState.code" --output tsv)
+          echo "AKS Status: $STATUS"
+          if [ "$STATUS" != "Running" ]; then
+            echo "🚀 启动AKS集群..."
+            az aks start --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.CLUSTER_NAME }}
+            echo "⏳ 等待集群启动..."
+            sleep 60
+          fi
+
+      - name: Login to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and push Docker image
+        run: |
+          cd backend
+          docker build -t ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }} .
+          docker build -t ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:latest .
+          docker push ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}
+          docker push ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:latest
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Get AKS credentials
+        run: |
+          az aks get-credentials --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.CLUSTER_NAME }}
+
+      - name: Update deployment image
+        run: |
+          sed -i 's|your-acr.azurecr.io/ecommerce-backend:latest|${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}|g' k8s-minimal/deployment-minimal.yaml
+
+      - name: Deploy to AKS
+        run: |
+          kubectl apply -f k8s-minimal/deployment-minimal.yaml
+
+          # 等待部署完成
+          kubectl rollout status deployment/backend-deployment -n ecommerce --timeout=300s
+
+      - name: Verify deployment
+        run: |
+          echo "📊 部署状态："
+          kubectl get pods -n ecommerce
+          kubectl get services -n ecommerce
+
+          echo "🔗 获取外部访问地址："
+          kubectl get service backend-service -n ecommerce -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+
+      - name: Optional - Schedule cluster shutdown
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "💡 提示：为节省成本，请考虑在不使用时关闭集群"
+          echo "关闭命令: az aks stop --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.CLUSTER_NAME }}"
+          echo "启动命令: az aks start --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.CLUSTER_NAME }}"
