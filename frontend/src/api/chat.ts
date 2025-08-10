@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { axiosInstance } from '../auth/axiosInstance';
 
-const authTokenKey = process.env.REACT_APP_AUTH_TOKEN || 'authToken';
+const authTokenKey = import.meta.env.VITE_AUTH_TOKEN || 'authToken';
 const getAuthHeaders = () => {
   const token = localStorage.getItem(authTokenKey);
   return {

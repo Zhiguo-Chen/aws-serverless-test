@@ -5,7 +5,7 @@ import ChatWidget from './components/chat-widget/ChatWidget';
 import BaseRoutes from './routes';
 import { UserProvider, useUser } from './contexts/UserContext';
 
-const authTokenKey = process.env.REACT_APP_AUTH_TOKEN || 'authToken';
+const authTokenKey = import.meta.env.VITE_AUTH_TOKEN || 'authToken';
 
 const App = () => {
   const navigate = useNavigate();

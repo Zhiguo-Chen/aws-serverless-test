@@ -20,7 +20,7 @@ import SignUp from './pages/sign-up/SignUp';
 import Wishlist from './pages/wish-list/Wishlist';
 import ViewProducts from './pages/filtered-products/FilteredProducts';
 
-const authTokenKey = process.env.REACT_APP_AUTH_TOKEN || 'authToken';
+const authTokenKey = import.meta.env.VITE_AUTH_TOKEN || 'authToken';
 
 const App = () => {
   const navigate = useNavigate();

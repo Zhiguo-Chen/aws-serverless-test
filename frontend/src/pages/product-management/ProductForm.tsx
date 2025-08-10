@@ -30,7 +30,7 @@ import './ProductForm.scss';
 const { Option } = Select;
 const { TextArea } = Input;
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
 const normFile = (e: any) => {
   if (Array.isArray(e)) {

@@ -1,0 +1,154 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  namespace: ecommerce
+  labels:
+    app: backend
+spec:
+  replicas: 3 # 初始3个实例
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: your-acr-name.azurecr.io/ecommerce-backend:latest # 将被GitHub Actions自动替换
+          ports:
+            - containerPort: 3000
+          env:
+            # 从ConfigMap获取配置
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: PORT
+            - name: NODEENV
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: NODEENV
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: DB_PORT
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: DB_NAME
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: DB_USER
+            - name: DB_SSL
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: DB_SSL
+            - name: DB_FORCE_SYNC
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: DB_FORCE_SYNC
+            - name: UPLOAD_STRATEGY
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: UPLOAD_STRATEGY
+            - name: AZURE_USE_SAS_URLS
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: AZURE_USE_SAS_URLS
+            - name: AZURE_SAS_EXPIRY_HOURS
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: AZURE_SAS_EXPIRY_HOURS
+            # 从Secret获取敏感信息
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: JWT_SECRET
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: DB_PASSWORD
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: OPENAI_API_KEY
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: GEMINI_API_KEY
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: MONGODB_URI
+            - name: AZURE_STORAGE_ACCOUNT_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: AZURE_STORAGE_ACCOUNT_NAME
+            - name: AZURE_STORAGE_ACCOUNT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: AZURE_STORAGE_ACCOUNT_KEY
+            - name: AZURE_STORAGE_CONTAINER_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: AZURE_STORAGE_CONTAINER_NAME
+            - name: AZURE_STORAGE_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: AZURE_STORAGE_CONNECTION_STRING
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '250m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+      restartPolicy: Always
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1

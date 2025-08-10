@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  # 后端服务
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev # 使用开发版Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=E-Commerce
+      - DB_USER=postgres
+      - DB_PASSWORD=password123
+      - DB_SSL=false
+      - DB_FORCE_SYNC=true
+      - MONGODB_URI=mongodb://mongo:27017/ecommerce
+      - JWT_SECRET=your-jwt-secret-key
+      - OPENAI_API_KEY=your-openai-key
+      - GEMINI_API_KEY=your-gemini-key
+      - UPLOAD_STRATEGY=local
+      - UPLOAD_DIR=./uploads
+      - AZURE_STORAGE_ACCOUNT_NAME=dummy
+      - AZURE_STORAGE_ACCOUNT_KEY=dummy
+      - AZURE_STORAGE_CONTAINER_NAME=dummy
+      - AZURE_STORAGE_CONNECTION_STRING=dummy
+    volumes:
+      - ./uploads:/app/uploads
+      - ./src:/app/src # 开发时代码热重载
+      - /app/node_modules # 防止本地node_modules覆盖
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongo:
+        condition: service_started
+    networks:
+      - ecommerce-network
+    restart: unless-stopped
+
+  # PostgreSQL数据库
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=E-Commerce
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password123
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ecommerce-network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # MongoDB数据库
+  mongo:
+    image: mongo:7-jammy
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - ecommerce-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  # 数据库管理工具 (可选)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@example.com
+      - PGLADMIN_DEFAULT_PASSWORD=admin123
+    ports:
+      - '8080:80'
+    depends_on:
+      - postgres
+    networks:
+      - ecommerce-network
+
+volumes:
+  postgres_data:
+  mongo_data:
+
+networks:
+  ecommerce-network:
+    driver: bridge

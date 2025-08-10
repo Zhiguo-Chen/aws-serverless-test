@@ -1,0 +1,250 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ecommerce
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: ecommerce
+data:
+  PORT: '3000'
+  NODE_ENV: 'production'
+  DB_HOST: 'postgres-service'
+  DB_PORT: '5432'
+  DB_NAME: 'E-Commerce'
+  DB_USER: 'postgres'
+  DB_SSL: 'false'
+  DB_FORCE_SYNC: 'false'
+  UPLOAD_STRATEGY: 'local'
+  UPLOAD_DIR: './uploads'
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backend-secret
+  namespace: ecommerce
+type: Opaque
+data:
+  JWT_SECRET: dGVzdC1qd3Qtc2VjcmV0 # test-jwt-secret
+  DB_PASSWORD: cGFzc3dvcmQxMjM= # password123
+  MONGODB_URI: bW9uZ29kYjovL21vbmdvLXNlcnZpY2UvZWNvbW1lcmNl # mongodb://mongo-service/ecommerce
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+  namespace: ecommerce
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15-alpine
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: 'E-Commerce'
+            - name: POSTGRES_USER
+              value: 'postgres'
+            - name: POSTGRES_PASSWORD
+              value: 'password123'
+          resources:
+            requests:
+              memory: '64Mi'
+              cpu: '50m'
+            limits:
+              memory: '128Mi'
+              cpu: '100m'
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-storage
+          emptyDir: {} # 测试用，重启会丢失数据
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: ecommerce
+spec:
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-deployment
+  namespace: ecommerce
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+        - name: mongo
+          image: mongo:7-jammy
+          ports:
+            - containerPort: 27017
+          resources:
+            requests:
+              memory: '64Mi'
+              cpu: '50m'
+            limits:
+              memory: '128Mi'
+              cpu: '100m'
+          volumeMounts:
+            - name: mongo-storage
+              mountPath: /data/db
+      volumes:
+        - name: mongo-storage
+          emptyDir: {} # 测试用，重启会丢失数据
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-service
+  namespace: ecommerce
+spec:
+  selector:
+    app: mongo
+  ports:
+    - port: 27017
+      targetPort: 27017
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  namespace: ecommerce
+spec:
+  replicas: 1 # 只运行1个实例
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: your-acr.azurecr.io/ecommerce-backend:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: PORT
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: NODE_ENV
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: DB_PORT
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: DB_NAME
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: DB_USER
+            - name: DB_SSL
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: DB_SSL
+            - name: DB_FORCE_SYNC
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: DB_FORCE_SYNC
+            - name: UPLOAD_STRATEGY
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: UPLOAD_STRATEGY
+            - name: UPLOAD_DIR
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: UPLOAD_DIR
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: JWT_SECRET
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: DB_PASSWORD
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: MONGODB_URI
+          resources:
+            requests:
+              memory: '128Mi' # 最小内存
+              cpu: '100m' # 最小CPU
+            limits:
+              memory: '256Mi' # 限制内存使用
+              cpu: '200m' # 限制CPU使用
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: ecommerce
+spec:
+  selector:
+    app: backend
+  ports:
+    - port: 80
+      targetPort: 3000
+  type: LoadBalancer # 用于外部访问
