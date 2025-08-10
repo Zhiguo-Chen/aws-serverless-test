@@ -1,18 +1,28 @@
 import express from 'express';
 import productController from '../controllers/productController';
-import { azureUpload } from '../services/azureStorage';
-import {
-  createProduct,
-  deleteProduct,
-  updateProduct,
-} from '../controllers/productController.azure';
 import authenticationToken from '../middlewares/auth';
 import { chat } from '../controllers/chatController';
 
-const router = express.Router();
+// 解构默认导出的方法
+const { createProduct, deleteProduct, updateProduct } = productController;
 
-// 使用 Azure 存储上传
-const upload = azureUpload;
+// 根据环境选择上传策略
+import multer from 'multer';
+const localStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
+
+const upload =
+  process.env.UPLOAD_STRATEGY === 'azure'
+    ? require('../services/azureStorage').azureUpload
+    : multer({ storage: localStorage });
+
+const router = express.Router();
 
 // 产品相关路由
 router.get('/list-all', productController.getProducts);

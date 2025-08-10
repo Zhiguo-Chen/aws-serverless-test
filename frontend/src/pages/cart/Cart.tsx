@@ -55,10 +55,9 @@ const Cart: React.FC = () => {
     return items?.map((item: any) => ({
       id: item.id,
       image:
-        `${API_URL}/public` +
-          item.product.productImages?.find(
-            (prdImg: ProductImage) => prdImg.isPrimary,
-          ).imageUrl || '',
+        item.product.productImages?.find(
+          (prdImg: ProductImage) => prdImg.isPrimary,
+        ).imageUrl || '',
       name: item.product.name,
       price: item.product.price,
       quantity: item.quantity,

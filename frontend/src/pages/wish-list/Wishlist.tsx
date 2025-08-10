@@ -60,8 +60,7 @@ const Wishlist = () => {
             const primaryImage = item.product?.productImages.find(
               (img: any) => img.isPrimary,
             );
-            item.product.primaryImageUrl =
-              `${API_URL}/public${primaryImage?.imageUrl}` || '';
+            item.product.primaryImageUrl = `${primaryImage?.imageUrl}` || '';
             return item.product;
           }),
         );

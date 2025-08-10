@@ -1,0 +1,17 @@
+# 开发环境覆盖配置
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./src:/app/src
+      - ./package.json:/app/package.json
+      - /app/node_modules # 防止本地node_modules覆盖容器内的
+    environment:
+      - NODE_ENV=development
+      - DB_FORCE_SYNC=true
+      - DB_ALTER_SYNC=true
+    command: npm run dev

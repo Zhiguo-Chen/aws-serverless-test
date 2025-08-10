@@ -109,7 +109,7 @@ const ProductDetail = () => {
                   onMouseEnter={() => setMainImage(image)}
                 >
                   <img
-                    src={`${API_URL}/public${image?.imageUrl}`}
+                    src={`${image?.imageUrl}`}
                     alt={`Product Image ${index + 1}`}
                   />
                 </div>
@@ -117,10 +117,7 @@ const ProductDetail = () => {
             )}
           </div>
           <div className="product-detail-image-main flex justify-center align-center position-relative">
-            <img
-              src={`${API_URL}/public${mainImage?.imageUrl}`}
-              alt="Main Product Image"
-            />
+            <img src={`${mainImage?.imageUrl}`} alt="Main Product Image" />
           </div>
         </div>
         <div className="product-detail-desc flex flex-column flex-gap-15">
