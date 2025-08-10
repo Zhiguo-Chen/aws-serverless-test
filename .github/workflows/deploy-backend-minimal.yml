@@ -67,8 +67,14 @@ jobs:
         run: |
           kubectl apply -f k8s-minimal/deployment-minimal.yaml
 
-          # 等待部署完成
-          kubectl rollout status deployment/backend-deployment -n ecommerce --timeout=300s
+          # 等待数据库部署完成
+          echo "等待数据库部署..."
+          kubectl rollout status deployment/postgres-deployment -n ecommerce --timeout=300s
+          kubectl rollout status deployment/mongo-deployment -n ecommerce --timeout=300s
+
+          # 等待后端部署完成
+          echo "等待后端部署..."
+          kubectl rollout status deployment/backend-deployment -n ecommerce --timeout=600s
 
       - name: Verify deployment
         run: |
@@ -76,8 +82,14 @@ jobs:
           kubectl get pods -n ecommerce
           kubectl get services -n ecommerce
 
+          echo "🔍 检查 Pod 详情："
+          kubectl describe pods -n ecommerce -l app=backend
+
+          echo "📋 查看后端日志："
+          kubectl logs -n ecommerce -l app=backend --tail=50 || echo "暂无日志"
+
           echo "🔗 获取外部访问地址："
-          kubectl get service backend-service -n ecommerce -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+          kubectl get service backend-service -n ecommerce -o jsonpath='{.status.loadBalancer.ingress[0].ip}' || echo "LoadBalancer IP 还未分配"
 
       - name: Optional - Schedule cluster shutdown
         if: github.ref == 'refs/heads/main'
