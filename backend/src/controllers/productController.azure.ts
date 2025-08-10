@@ -5,6 +5,7 @@ import {
 } from '../services/azureStorage';
 import { ImageService } from '../services/imageService';
 import { Category, Product, ProductImage } from '../models';
+import { UploadResult, ImageMeta, ProductImageData } from '../types/azure';
 
 // 创建产品（使用 Azure 存储）
 export const createProduct = async (
@@ -38,10 +39,12 @@ export const createProduct = async (
     }
 
     // 处理图片上传
-    let productImages: any[] = [];
+    let productImages: ProductImageData[] = [];
     if (req.files && Array.isArray(req.files) && req.files.length > 0) {
       const files = req.files as Express.Multer.File[];
-      const imagesMetaData = imagesMeta ? JSON.parse(imagesMeta) : [];
+      const imagesMetaData: ImageMeta[] = imagesMeta
+        ? JSON.parse(imagesMeta)
+        : [];
 
       try {
         // 验证所有图片文件
@@ -57,17 +60,19 @@ export const createProduct = async (
         // 上传到 Azure
         const uploadResults = await azureStorageService.uploadMultiple(files);
 
-        productImages = uploadResults.map((result, index) => {
-          const metaInfo = imagesMetaData.find(
-            (meta: any) => meta.name === result.originalName,
-          );
-          return {
-            imageUrl: result.url,
-            originalName: result.originalName,
-            isPrimary: metaInfo?.isPrimary || false,
-            sortOrder: index,
-          };
-        });
+        productImages = uploadResults.map(
+          (result: UploadResult, index: number) => {
+            const metaInfo = imagesMetaData.find(
+              (meta: ImageMeta) => meta.name === result.originalName,
+            );
+            return {
+              imageUrl: result.url,
+              originalName: result.originalName,
+              isPrimary: metaInfo?.isPrimary || false,
+              sortOrder: index,
+            };
+          },
+        );
 
         // 确保只有一个主图
         const primaryImages = productImages.filter((img) => img.isPrimary);
@@ -186,7 +191,9 @@ export const updateProduct = async (
     }
 
     // 处理新上传的图片
-    const imagesMeta = imagesMetaJson ? JSON.parse(imagesMetaJson) : [];
+    const imagesMeta: ImageMeta[] = imagesMetaJson
+      ? JSON.parse(imagesMetaJson)
+      : [];
     const newFiles = (req.files as Express.Multer.File[]) || [];
 
     if (newFiles.length > 0) {
@@ -206,18 +213,20 @@ export const updateProduct = async (
           newFiles,
         );
 
-        const newImageRecords = uploadResults.map((result, index) => {
-          const meta = imagesMeta.find(
-            (m: any) => m.name === result.originalName,
-          );
-          return {
-            productId: product.id,
-            imageUrl: result.url,
-            altText: result.originalName,
-            isPrimary: meta ? meta.isPrimary : false,
-            sortOrder: index,
-          };
-        });
+        const newImageRecords = uploadResults.map(
+          (result: UploadResult, index: number) => {
+            const meta = imagesMeta.find(
+              (m: ImageMeta) => m.name === result.originalName,
+            );
+            return {
+              productId: product.id,
+              imageUrl: result.url,
+              altText: result.originalName,
+              isPrimary: meta ? meta.isPrimary : false,
+              sortOrder: index,
+            };
+          },
+        );
 
         await ProductImage.bulkCreate(newImageRecords);
       } catch (uploadError) {
@@ -235,7 +244,7 @@ export const updateProduct = async (
 
       for (const image of allImages) {
         const meta = imagesMeta.find(
-          (m: any) =>
+          (m: ImageMeta) =>
             m.name === image.altText || image.imageUrl.includes(m.name),
         );
         if (meta && image.isPrimary !== meta.isPrimary) {
