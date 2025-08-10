@@ -1,5 +1,68 @@
 # Azure 门户部署指南
 
+## 🚨 修复 GitHub Actions 权限问题
+
+如果你遇到类似这样的错误：
+
+```
+ERROR: (AuthorizationFailed) The client does not have authorization to perform action 'Microsoft.ContainerService/managedClusters/read'
+```
+
+### 通过 Azure 门户修复权限
+
+#### 步骤 1：找到你的服务主体
+
+1. 登录 [Azure 门户](https://portal.azure.com)
+2. 搜索并进入 **"Azure Active Directory"**
+3. 左侧菜单点击 **"应用注册"**
+4. 找到你为 GitHub Actions 创建的应用（如 `ecommerce-github-actions`）
+
+#### 步骤 2：为 AKS 集群分配权限
+
+1. 搜索并进入你的 **AKS 集群** (`ecommerce-test-aks`)
+2. 左侧菜单点击 **"访问控制 (IAM)"**
+3. 点击 **"+ 添加"** → **"添加角色分配"**
+4. 在 **"角色"** 标签页：
+   - 搜索并选择 **"Azure Kubernetes Service Cluster User Role"**
+   - 点击 **"下一步"**
+5. 在 **"成员"** 标签页：
+   - 选择 **"用户、组或服务主体"**
+   - 点击 **"+ 选择成员"**
+   - 搜索你的应用名称（如 `ecommerce-github-actions`）
+   - 选择并点击 **"选择"**
+6. 点击 **"查看 + 分配"** → **"分配"**
+
+#### 步骤 3：为 ACR 分配权限
+
+1. 搜索并进入你的 **容器注册表** (`ecommercetest2025`)
+2. 左侧菜单点击 **"访问控制 (IAM)"**
+3. 重复上面的步骤，但这次分配以下角色：
+   - **"AcrPush"** 角色（用于推送镜像）
+   - **"AcrPull"** 角色（用于拉取镜像）
+
+#### 步骤 4：为资源组分配权限
+
+1. 进入你的资源组 **"E-commerce"**
+2. 左侧菜单点击 **"访问控制 (IAM)"**
+3. 添加角色分配：
+   - 角色：**"Contributor"**
+   - 成员：你的服务主体应用
+
+#### 步骤 5：验证权限
+
+1. 在资源组的 **"访问控制 (IAM)"** 页面
+2. 点击 **"角色分配"** 标签页
+3. 确认你的服务主体有以下权限：
+   - 资源组级别：`Contributor`
+   - AKS 级别：`Azure Kubernetes Service Cluster User Role`
+   - ACR 级别：`AcrPush` 和 `AcrPull`
+
+### 简化方案：使用 Azure CLI 登录
+
+如果权限设置太复杂，你也可以修改 GitHub Actions 工作流使用更简单的认证方式。我已经更新了你的工作流文件，移除了 ACR 用户名/密码认证，改用 Azure CLI 直接登录。
+
+---
+
 ## 概述
 
 通过 Azure 门户界面创建 AKS 集群和容器注册表，然后使用 GitHub Actions 自动部署。
