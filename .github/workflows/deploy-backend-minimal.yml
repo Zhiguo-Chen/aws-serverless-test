@@ -63,6 +63,20 @@ jobs:
         run: |
           sed -i 's|your-acr.azurecr.io/ecommerce-backend:latest|${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}|g' k8s-minimal/deployment-minimal.yaml
 
+      - name: Update secrets with real API keys
+        run: |
+          # 更新 Kubernetes secrets 中的 API 密钥
+          kubectl create secret generic backend-secret \
+            --from-literal=JWT_SECRET="${{ secrets.JWT_SECRET }}" \
+            --from-literal=DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+            --from-literal=MONGODB_URI="${{ secrets.MONGODB_URI }}" \
+            --from-literal=OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" \
+            --from-literal=GOOGLE_API_KEY="${{ secrets.GOOGLE_API_KEY }}" \
+            --from-literal=GEMINI_API_KEY="${{ secrets.GEMINI_API_KEY }}" \
+            --from-literal=XAI_API_KEY="${{ secrets.XAI_API_KEY }}" \
+            --namespace=ecommerce \
+            --dry-run=client -o yaml | kubectl apply -f -
+
       - name: Deploy to AKS
         run: |
           kubectl apply -f k8s-minimal/deployment-minimal.yaml

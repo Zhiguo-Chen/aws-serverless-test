@@ -30,6 +30,8 @@ data:
   JWT_SECRET: dGVzdC1qd3Qtc2VjcmV0 # test-jwt-secret
   DB_PASSWORD: cGFzc3dvcmQxMjM= # password123
   MONGODB_URI: bW9uZ29kYjovL21vbmdvLXNlcnZpY2UvZWNvbW1lcmNl # mongodb://mongo-service/ecommerce
+  # API 密钥将通过 GitHub Actions 或 Azure Key Vault 注入
+  # 不要在此处放置真实的 API 密钥！
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -147,7 +149,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: your-acr.azurecr.io/ecommerce-backend:latest
+          image: ecommercetest2025.azurecr.io/ecommerce-backend:latest
           ports:
             - containerPort: 3000
           env:
@@ -216,6 +218,26 @@ spec:
                 secretKeyRef:
                   name: backend-secret
                   key: MONGODB_URI
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: OPENAI_API_KEY
+            - name: GOOGLE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: GOOGLE_API_KEY
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: GEMINI_API_KEY
+            - name: XAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: XAI_API_KEY
           resources:
             requests:
               memory: '256Mi' # 增加最小内存
