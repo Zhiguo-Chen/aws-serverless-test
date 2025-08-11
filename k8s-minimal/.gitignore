@@ -1,0 +1,5 @@
+# 永远不要提交包含真实密钥的文件
+*-secrets.yaml
+*-production.yaml
+*.env
+.env.*
