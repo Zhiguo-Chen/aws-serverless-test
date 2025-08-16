@@ -1,0 +1,364 @@
+service: ecommerce-serverless
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ${opt:region, 'us-east-1'}
+  stage: ${opt:stage, 'dev'}
+
+  # 全局 CORS 配置
+  httpApi:
+    cors:
+      allowedOrigins:
+        - https://my-demo.camdvr.org
+        - https://icy-sky-08145be00.6.azurestaticapps.net
+        - http://localhost:3001
+        - http://127.0.0.1:3001
+      allowedHeaders:
+        - Content-Type
+        - Authorization
+        - X-Amz-Date
+        - X-Api-Key
+      allowedMethods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - OPTIONS
+      allowCredentials: true
+
+  environment:
+    STAGE: ${self:provider.stage}
+    # PostgreSQL (RDS)
+    DB_HOST: ${env:DB_HOST, 'localhost'}
+    DB_NAME: ${env:DB_NAME, 'ecommerce_dev'}
+    DB_USER: ${env:DB_USER, 'postgres'}
+    DB_PASSWORD: ${env:DB_PASSWORD, 'password'}
+    DB_PORT: ${env:DB_PORT, '5432'}
+    # MongoDB (DocumentDB)
+    MONGODB_URI: ${env:MONGODB_URI, 'mongodb://localhost:27017/ecommerce_dev'}
+    # S3 for file storage
+    S3_BUCKET: ${self:custom.s3Bucket}
+    # Other env vars
+    JWT_SECRET: ${env:JWT_SECRET, 'development-jwt-secret-key'}
+    # AI API Keys
+    OPENAI_API_KEY: ${env:OPENAI_API_KEY, ''}
+    GEMINI_API_KEY: ${env:GEMINI_API_KEY, ''}
+    GROK_API_KEY: ${env:GROK_API_KEY, ''}
+    XAI_API_KEY: ${env:XAI_API_KEY, ''}
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3:GetObject
+            - s3:PutObject
+            - s3:DeleteObject
+            - s3:ListBucket
+          Resource:
+            - 'arn:aws:s3:::${self:custom.s3Bucket}'
+            - 'arn:aws:s3:::${self:custom.s3Bucket}/*'
+        - Effect: Allow
+          Action:
+            - rds:DescribeDBInstances
+          Resource: '*'
+
+custom:
+  s3Bucket: ${self:service}-${self:provider.stage}-uploads
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules:
+      forceInclude:
+        - pg
+        - pg-hstore
+      forceExclude:
+        - aws-sdk
+  serverless-offline:
+    httpPort: 3000
+    lambdaPort: 3001
+    host: 0.0.0.0
+
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-webpack
+  - serverless-offline
+
+functions:
+  # Auth functions
+  login:
+    handler: src/handlers/auth.login
+    events:
+      - http:
+          path: /api/login
+          method: post
+          cors: true
+
+  register:
+    handler: src/handlers/auth.register
+    events:
+      - http:
+          path: /api/register
+          method: post
+          cors: true
+
+  # Category functions
+  getCategories:
+    handler: src/handlers/categories.getCategories
+    events:
+      - http:
+          path: /api/categories
+          method: get
+          cors: true
+
+  getCategory:
+    handler: src/handlers/categories.getCategory
+    events:
+      - http:
+          path: /api/categories/{id}
+          method: get
+          cors: true
+
+  createCategory:
+    handler: src/handlers/categories.createCategory
+    events:
+      - http:
+          path: /api/categories
+          method: post
+          cors: true
+
+  updateCategory:
+    handler: src/handlers/categories.updateCategory
+    events:
+      - http:
+          path: /api/categories/{id}
+          method: put
+          cors: true
+
+  deleteCategory:
+    handler: src/handlers/categories.deleteCategory
+    events:
+      - http:
+          path: /api/categories/{id}
+          method: delete
+          cors: true
+
+  # Product functions
+  getProducts:
+    handler: src/handlers/products.getProducts
+    events:
+      - http:
+          path: /api/products
+          method: get
+          cors: true
+
+  listAllProducts:
+    handler: src/handlers/products.listAll
+    events:
+      - http:
+          path: /api/products/list-all
+          method: get
+          cors: true
+
+  getProduct:
+    handler: src/handlers/products.getProduct
+    events:
+      - http:
+          path: /api/products/{id}
+          method: get
+          cors: true
+
+  createProduct:
+    handler: src/handlers/products.createProduct
+    events:
+      - http:
+          path: /api/products
+          method: post
+          cors: true
+    timeout: 30
+
+  updateProduct:
+    handler: src/handlers/products.updateProduct
+    events:
+      - http:
+          path: /api/products/{id}
+          method: put
+          cors: true
+    timeout: 30
+
+  deleteProduct:
+    handler: src/handlers/products.deleteProduct
+    events:
+      - http:
+          path: /api/products/{id}
+          method: delete
+          cors: true
+
+  # Cart functions
+  getCart:
+    handler: src/handlers/cart.getCart
+    events:
+      - http:
+          path: /api/cart
+          method: get
+          cors: true
+          authorizer:
+            name: authorizerFunc
+            type: request
+
+  addToCart:
+    handler: src/handlers/cart.addToCart
+    events:
+      - http:
+          path: /api/cart
+          method: post
+          cors: true
+          authorizer:
+            name: authorizerFunc
+            type: request
+
+  # Order functions
+  createOrder:
+    handler: src/handlers/orders.createOrder
+    events:
+      - http:
+          path: /api/order
+          method: post
+          cors: true
+          authorizer:
+            name: authorizerFunc
+            type: request
+
+  # Chat functions
+  chatMessage:
+    handler: src/handlers/chat.handleMessage
+    events:
+      - http:
+          path: /api/chat/message
+          method: post
+          cors: true
+    timeout: 30
+    memorySize: 512
+
+  getChatHistory:
+    handler: src/handlers/chat.getChatHistory
+    events:
+      - http:
+          path: /api/chat/history/{sessionId}
+          method: get
+          cors: true
+          authorizer:
+            name: authorizerFunc
+            type: request
+
+  clearChatHistory:
+    handler: src/handlers/chat.clearChatHistory
+    events:
+      - http:
+          path: /api/chat/history/{sessionId}
+          method: delete
+          cors: true
+          authorizer:
+            name: authorizerFunc
+            type: request
+
+  # File upload
+  uploadImage:
+    handler: src/handlers/upload.uploadImage
+    events:
+      - http:
+          path: /api/upload
+          method: post
+          cors: true
+    timeout: 30
+
+  getSignedUploadUrl:
+    handler: src/handlers/upload.getSignedUploadUrl
+    events:
+      - http:
+          path: /api/upload/signed-url
+          method: post
+          cors: true
+
+  deleteImage:
+    handler: src/handlers/upload.deleteImage
+    events:
+      - http:
+          path: /api/upload/{key+}
+          method: delete
+          cors: true
+
+  # CORS preflight handler
+  corsHandler:
+    handler: src/handlers/cors.corsHandler
+    events:
+      - http:
+          path: /api/{proxy+}
+          method: options
+          cors: true
+
+  # Authorizer
+  authorizerFunc:
+    handler: src/handlers/auth.authorizer
+
+  # Health check
+  health:
+    handler: src/handlers/health.check
+    events:
+      - http:
+          path: /health
+          method: get
+          cors: true
+
+resources:
+  Resources:
+    # S3 bucket for file uploads
+    UploadsBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.s3Bucket}
+        CorsConfiguration:
+          CorsRules:
+            - AllowedHeaders:
+                - '*'
+              AllowedMethods:
+                - GET
+                - PUT
+                - POST
+                - DELETE
+              AllowedOrigins:
+                - '*'
+              MaxAge: 3000
+
+    # CloudFront distribution for S3
+    CloudFrontDistribution:
+      Type: AWS::CloudFront::Distribution
+      Properties:
+        DistributionConfig:
+          Origins:
+            - DomainName: ${self:custom.s3Bucket}.s3.amazonaws.com
+              Id: S3Origin
+              S3OriginConfig:
+                OriginAccessIdentity: !Ref OriginAccessIdentity
+          Enabled: true
+          DefaultCacheBehavior:
+            TargetOriginId: S3Origin
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods:
+              - GET
+              - HEAD
+            CachedMethods:
+              - GET
+              - HEAD
+            ForwardedValues:
+              QueryString: false
+              Cookies:
+                Forward: none
+
+    OriginAccessIdentity:
+      Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+      Properties:
+        CloudFrontOriginAccessIdentityConfig:
+          Comment: OAI for uploads bucket
