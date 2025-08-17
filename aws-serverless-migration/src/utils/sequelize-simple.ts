@@ -1,4 +1,6 @@
 import { Sequelize, DataTypes, Model } from 'sequelize';
+// 显式导入 pg 以确保它被打包
+import pg from 'pg';
 
 let sequelize: Sequelize | null = null;
 
@@ -9,6 +11,7 @@ export const getSequelize = async (): Promise<Sequelize> => {
 
     sequelize = new Sequelize({
       dialect: 'postgres',
+      dialectModule: pg, // 显式指定 pg 模块
       host: process.env.DB_HOST,
       port: parseInt(process.env.DB_PORT || '5432'),
       database: process.env.DB_NAME,
@@ -39,7 +42,7 @@ export const getSequelize = async (): Promise<Sequelize> => {
   return sequelize;
 };
 
-// 简化的产品模型定义
+// 产品和分类模型定义，匹配实际数据库表结构
 export const defineModels = (sequelize: Sequelize) => {
   const Product = sequelize.define(
     'Product',
@@ -65,9 +68,43 @@ export const defineModels = (sequelize: Sequelize) => {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: true,
       },
-      stock: {
+      discountPercentage: {
         type: DataTypes.INTEGER,
         defaultValue: 0,
+      },
+      stockQuantity: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        field: 'stockQuantity', // 映射到数据库字段
+      },
+      stock: {
+        type: DataTypes.VIRTUAL, // 虚拟字段，用于兼容
+        get() {
+          return this.getDataValue('stockQuantity');
+        },
+        set(value: number) {
+          this.setDataValue('stockQuantity', value);
+        },
+      },
+      isFeatured: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      isNewArrival: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      isHotSale: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      isFlashSale: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      flashSaleEndsAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
       },
       imageUrl: {
         type: DataTypes.TEXT,
@@ -79,8 +116,9 @@ export const defineModels = (sequelize: Sequelize) => {
       },
     },
     {
-      tableName: 'Products',
+      tableName: 'products', // 使用小写表名
       timestamps: true,
+      underscored: false, // 保持驼峰命名
     },
   );
 
@@ -103,8 +141,9 @@ export const defineModels = (sequelize: Sequelize) => {
       },
     },
     {
-      tableName: 'Categories',
+      tableName: 'categories', // 使用小写表名
       timestamps: true,
+      underscored: false,
     },
   );
 

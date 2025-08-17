@@ -1,18 +1,15 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { successResponse, errorResponse } from '../utils/response';
-import { getModels, getSequelize } from '../utils/sequelize-simple';
+import { Product, Category, ProductImage, Review, sequelize } from '../models';
+import { Op } from 'sequelize';
 
 export const getProducts = async (
   event: APIGatewayProxyEvent,
 ): Promise<APIGatewayProxyResult> => {
   try {
-    console.log('=== GET PRODUCTS (REAL ORM) ===');
+    console.log('=== GET PRODUCTS (ORM) ===');
     console.log('Request path:', event.path);
 
-    // 获取 Sequelize 模型
-    const { Product, Category } = await getModels();
-
-    // 使用真正的 Sequelize ORM 查询
     const products = await Product.findAll({
       include: [
         {
@@ -20,36 +17,46 @@ export const getProducts = async (
           as: 'category',
           attributes: ['id', 'name'],
         },
+        {
+          model: ProductImage,
+          as: 'productImages',
+          attributes: ['id', 'imageUrl', 'altText', 'isPrimary', 'createdAt'],
+        },
       ],
-      order: [['createdAt', 'DESC']],
+      attributes: {
+        include: [
+          // Number of ratings
+          [
+            sequelize.literal(
+              '(SELECT COUNT(*) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
+            ),
+            'reviewCount',
+          ],
+          // Average rating
+          [
+            sequelize.literal(
+              '(SELECT AVG(rating) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
+            ),
+            'averageRating',
+          ],
+        ],
+      },
+      order: [['createdAt', 'ASC']],
     });
 
-    // 格式化数据，添加计算属性
-    const formattedProducts = products.map((product: any) => {
-      const data = product.toJSON();
-      return {
-        ...data,
-        price: parseFloat(data.price),
-        originalPrice: data.originalPrice
-          ? parseFloat(data.originalPrice)
-          : null,
-        category: data.category?.name || 'Uncategorized',
-        // ORM 计算属性
-        inStock: data.stock > 0,
-        discountPercentage:
-          data.originalPrice && data.originalPrice > 0
-            ? Math.round(
-                (1 - parseFloat(data.price) / parseFloat(data.originalPrice)) *
-                  100,
-              )
-            : 0,
-      };
+    // Format average rating (exactly like backend)
+    const formattedProducts = products.map((product) => {
+      const productJson = product.toJSON();
+      productJson.averageRating = productJson.averageRating
+        ? parseFloat(productJson.averageRating).toFixed(1)
+        : 0;
+      return productJson;
     });
 
-    console.log(`✅ REAL ORM: Returning ${formattedProducts.length} products`);
+    console.log(`✅ ORM: Returning ${formattedProducts.length} products`);
     return successResponse(formattedProducts, 200, event);
   } catch (error) {
-    console.error('❌ REAL ORM Error fetching products:', error);
+    console.error('❌ ORM Error fetching products:', error);
     return errorResponse('Failed to fetch products', 500, null, event);
   }
 };
@@ -58,13 +65,9 @@ export const listAll = async (
   event: APIGatewayProxyEvent,
 ): Promise<APIGatewayProxyResult> => {
   try {
-    console.log('=== LIST ALL PRODUCTS (REAL ORM) ===');
+    console.log('=== LIST ALL PRODUCTS (ORM) ===');
     console.log('Request path:', event.path);
 
-    const sequelize = await getSequelize();
-    const { Product, Category } = await getModels();
-
-    // 使用 Sequelize ORM 获取产品
     const products = await Product.findAll({
       include: [
         {
@@ -72,16 +75,35 @@ export const listAll = async (
           as: 'category',
           attributes: ['id', 'name'],
         },
+        {
+          model: ProductImage,
+          as: 'productImages',
+          attributes: ['id', 'imageUrl', 'altText', 'isPrimary', 'createdAt'],
+        },
       ],
-      order: [['createdAt', 'DESC']],
+      attributes: {
+        include: [
+          // Number of ratings
+          [
+            sequelize.literal(
+              '(SELECT COUNT(*) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
+            ),
+            'reviewCount',
+          ],
+          // Average rating
+          [
+            sequelize.literal(
+              '(SELECT AVG(rating) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
+            ),
+            'averageRating',
+          ],
+        ],
+      },
+      order: [['createdAt', 'ASC']],
     });
 
-    // 使用 Sequelize 聚合查询获取分类统计
-    const categoryStats = await Category.findAll({
-      attributes: [
-        'name',
-        [sequelize.fn('COUNT', sequelize.col('products.id')), 'productCount'],
-      ],
+    // Get category statistics
+    const categories = await Category.findAll({
       include: [
         {
           model: Product,
@@ -89,55 +111,55 @@ export const listAll = async (
           attributes: [],
         },
       ],
+      attributes: [
+        'name',
+        [sequelize.fn('COUNT', sequelize.col('products.id')), 'productCount'],
+      ],
       group: ['Category.id', 'Category.name'],
-      raw: true,
+      order: [['name', 'ASC']],
     });
 
-    // 格式化产品数据
-    const formattedProducts = products.map((product: any) => {
-      const data = product.toJSON();
-      return {
-        ...data,
-        price: parseFloat(data.price),
-        originalPrice: data.originalPrice
-          ? parseFloat(data.originalPrice)
-          : null,
-        category: data.category?.name || 'Uncategorized',
-        inStock: data.stock > 0,
-        discountPercentage:
-          data.originalPrice && data.originalPrice > 0
-            ? Math.round(
-                (1 - parseFloat(data.price) / parseFloat(data.originalPrice)) *
-                  100,
-              )
-            : 0,
-      };
+    // Format average rating
+    const formattedProducts = products.map((product) => {
+      const productJson = product.toJSON();
+      productJson.averageRating = productJson.averageRating
+        ? parseFloat(productJson.averageRating).toFixed(1)
+        : 0;
+      return productJson;
     });
 
     const response = {
       products: formattedProducts,
       total: formattedProducts.length,
-      inStockCount: formattedProducts.filter((p) => p.inStock).length,
-      categories: categoryStats.map((cat: any) => ({
-        name: cat.name,
-        productCount: parseInt(cat.productCount),
-      })),
+      inStockCount: formattedProducts.filter((p: any) => p.stockQuantity > 0)
+        .length,
+      categories: categories.map((cat: any) => {
+        const catData = cat.toJSON();
+        return {
+          name: catData.name,
+          productCount: parseInt(catData.productCount || '0'),
+        };
+      }),
       priceRange:
         formattedProducts.length > 0
           ? {
-              min: Math.min(...formattedProducts.map((p) => p.price)),
-              max: Math.max(...formattedProducts.map((p) => p.price)),
+              min: Math.min(
+                ...formattedProducts.map((p: any) => parseFloat(p.price)),
+              ),
+              max: Math.max(
+                ...formattedProducts.map((p: any) => parseFloat(p.price)),
+              ),
             }
           : { min: 0, max: 0 },
       timestamp: new Date().toISOString(),
     };
 
     console.log(
-      `✅ REAL ORM: Returning detailed info for ${formattedProducts.length} products`,
+      `✅ ORM: Returning detailed info for ${formattedProducts.length} products`,
     );
     return successResponse(response, 200, event);
   } catch (error) {
-    console.error('❌ REAL ORM Error listing all products:', error);
+    console.error('❌ ORM Error listing all products:', error);
     return errorResponse('Failed to list all products', 500, null, event);
   }
 };
@@ -146,16 +168,13 @@ export const getProduct = async (
   event: APIGatewayProxyEvent,
 ): Promise<APIGatewayProxyResult> => {
   try {
-    console.log('=== GET SINGLE PRODUCT (REAL ORM) ===');
+    console.log('=== GET SINGLE PRODUCT (ORM) ===');
     const { id } = event.pathParameters || {};
 
     if (!id) {
       return errorResponse('Product ID is required', 400, null, event);
     }
 
-    const { Product, Category } = await getModels();
-
-    // 使用 Sequelize ORM 的 findByPk
     const product = await Product.findByPk(id, {
       include: [
         {
@@ -163,33 +182,47 @@ export const getProduct = async (
           as: 'category',
           attributes: ['id', 'name'],
         },
+        {
+          model: ProductImage,
+          as: 'productImages',
+          attributes: ['id', 'imageUrl', 'altText', 'isPrimary', 'createdAt'],
+        },
       ],
+      attributes: {
+        include: [
+          // Number of ratings
+          [
+            sequelize.literal(
+              '(SELECT COUNT(*) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
+            ),
+            'reviewCount',
+          ],
+          // Average rating
+          [
+            sequelize.literal(
+              '(SELECT AVG(rating) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
+            ),
+            'averageRating',
+          ],
+        ],
+      },
     });
 
     if (!product) {
       return errorResponse(`Product with ID ${id} not found`, 404, null, event);
     }
 
-    const data = (product as any).toJSON();
-    const formattedProduct = {
-      ...data,
-      price: parseFloat(data.price),
-      originalPrice: data.originalPrice ? parseFloat(data.originalPrice) : null,
-      category: data.category?.name || 'Uncategorized',
-      inStock: data.stock > 0,
-      discountPercentage:
-        data.originalPrice && data.originalPrice > 0
-          ? Math.round(
-              (1 - parseFloat(data.price) / parseFloat(data.originalPrice)) *
-                100,
-            )
-          : 0,
-    };
+    const productData = product.toJSON();
 
-    console.log(`✅ REAL ORM: Found product "${formattedProduct.name}"`);
-    return successResponse(formattedProduct, 200, event);
+    // Format average rating
+    productData.averageRating = productData.averageRating
+      ? parseFloat(productData.averageRating).toFixed(1)
+      : 0;
+
+    console.log(`✅ ORM: Found product "${productData.name}"`);
+    return successResponse(productData, 200, event);
   } catch (error) {
-    console.error('❌ REAL ORM Error fetching product:', error);
+    console.error('❌ ORM Error fetching product:', error);
     return errorResponse('Failed to fetch product', 500, null, event);
   }
 };
@@ -198,7 +231,7 @@ export const createProduct = async (
   event: APIGatewayProxyEvent,
 ): Promise<APIGatewayProxyResult> => {
   try {
-    console.log('=== CREATE PRODUCT (REAL ORM) ===');
+    console.log('=== CREATE PRODUCT (ORM) ===');
 
     const body = JSON.parse(event.body || '{}');
     const {
@@ -206,70 +239,55 @@ export const createProduct = async (
       description,
       price,
       originalPrice,
-      categoryId,
-      stock,
-      imageUrl,
+      category,
+      stockQuantity,
+      isFeatured,
+      isHotSale,
+      isNewArrival,
+      isFlashSale,
+      flashSaleEndsAt,
     } = body;
 
-    if (!name || !description || !price || !categoryId) {
+    if (!name || !description || !price || !category) {
       return errorResponse(
-        'Name, description, price, and categoryId are required',
+        'Name, description, price, and category are required',
         400,
         null,
         event,
       );
     }
 
-    const { Product, Category } = await getModels();
+    const categoryRecord = await Category.findOne({
+      where: { name: category },
+    });
 
-    // 使用 Sequelize ORM 验证分类存在
-    const category = await Category.findByPk(categoryId);
-    if (!category) {
-      return errorResponse('Invalid categoryId', 400, null, event);
+    if (!categoryRecord) {
+      return errorResponse('Category not found', 400, null, event);
     }
 
-    // 使用 Sequelize ORM 创建产品
-    const newProduct = await Product.create({
+    const product = await Product.create({
       name,
       description,
       price: parseFloat(price),
-      originalPrice: originalPrice ? parseFloat(originalPrice) : null,
-      categoryId: parseInt(categoryId),
-      stock: stock || 0,
-      imageUrl: imageUrl || null,
+      originalPrice: originalPrice
+        ? parseFloat(originalPrice)
+        : parseFloat(price),
+      discountPercentage: originalPrice
+        ? Math.round((1 - parseFloat(price) / parseFloat(originalPrice)) * 100)
+        : 0,
+      categoryId: categoryRecord.id,
+      stockQuantity: stockQuantity || 0,
+      isFeatured: isFeatured || false,
+      isNewArrival: isNewArrival || false,
+      isHotSale: isHotSale || false,
+      isFlashSale: isFlashSale || false,
+      flashSaleEndsAt: flashSaleEndsAt || null,
     });
 
-    // 重新获取包含分类信息的产品
-    const productWithCategory = await Product.findByPk((newProduct as any).id, {
-      include: [
-        {
-          model: Category,
-          as: 'category',
-          attributes: ['id', 'name'],
-        },
-      ],
-    });
-
-    const data = (productWithCategory as any).toJSON();
-    const formattedProduct = {
-      ...data,
-      price: parseFloat(data.price),
-      originalPrice: data.originalPrice ? parseFloat(data.originalPrice) : null,
-      category: data.category?.name || 'Uncategorized',
-      inStock: data.stock > 0,
-      discountPercentage:
-        data.originalPrice && data.originalPrice > 0
-          ? Math.round(
-              (1 - parseFloat(data.price) / parseFloat(data.originalPrice)) *
-                100,
-            )
-          : 0,
-    };
-
-    console.log(`✅ REAL ORM: Created product "${formattedProduct.name}"`);
-    return successResponse(formattedProduct, 201, event);
+    console.log(`✅ ORM: Created product "${product.name}"`);
+    return successResponse(product.toJSON(), 201, event);
   } catch (error) {
-    console.error('❌ REAL ORM Error creating product:', error);
+    console.error('❌ ORM Error creating product:', error);
     return errorResponse('Failed to create product', 500, null, event);
   }
 };
@@ -278,7 +296,7 @@ export const updateProduct = async (
   event: APIGatewayProxyEvent,
 ): Promise<APIGatewayProxyResult> => {
   try {
-    console.log('=== UPDATE PRODUCT (REAL ORM) ===');
+    console.log('=== UPDATE PRODUCT (ORM) ===');
     const { id } = event.pathParameters || {};
 
     if (!id) {
@@ -286,74 +304,58 @@ export const updateProduct = async (
     }
 
     const body = JSON.parse(event.body || '{}');
-    const { Product, Category } = await getModels();
+    const { category: categoryName, ...otherUpdates } = body;
 
-    // 使用 Sequelize ORM 查找产品
-    const product = await Product.findByPk(id);
+    const product = await Product.findByPk(id, {
+      include: [{ model: ProductImage, as: 'productImages' }],
+    });
+
     if (!product) {
       return errorResponse(`Product with ID ${id} not found`, 404, null, event);
     }
 
-    // 准备更新数据
-    const updateData: any = {};
-    if (body.name !== undefined) updateData.name = body.name;
-    if (body.description !== undefined)
-      updateData.description = body.description;
-    if (body.price !== undefined) updateData.price = parseFloat(body.price);
-    if (body.originalPrice !== undefined) {
-      updateData.originalPrice = body.originalPrice
-        ? parseFloat(body.originalPrice)
-        : null;
-    }
-    if (body.categoryId !== undefined) {
-      // 验证分类存在
-      const category = await Category.findByPk(body.categoryId);
-      if (!category) {
-        return errorResponse('Invalid categoryId', 400, null, event);
+    // Update other product attributes
+    const updates: { [key: string]: any } = { ...otherUpdates };
+    if (categoryName) {
+      const category = await Category.findOne({
+        where: { name: categoryName },
+      });
+      if (category) {
+        updates.categoryId = category.id;
+      } else {
+        return errorResponse('Category not found', 400, null, event);
       }
-      updateData.categoryId = parseInt(body.categoryId);
-    }
-    if (body.stock !== undefined) updateData.stock = parseInt(body.stock);
-    if (body.imageUrl !== undefined) updateData.imageUrl = body.imageUrl;
-
-    if (Object.keys(updateData).length === 0) {
-      return errorResponse('No fields to update', 400, null, event);
     }
 
-    // 使用 Sequelize ORM 更新
-    await (product as any).update(updateData);
+    if (updates.price !== undefined || updates.originalPrice !== undefined) {
+      const price =
+        updates.price !== undefined ? parseFloat(updates.price) : product.price;
+      const originalPrice =
+        updates.originalPrice !== undefined
+          ? parseFloat(updates.originalPrice)
+          : product.originalPrice;
+      updates.discountPercentage = originalPrice
+        ? Math.round((1 - price / originalPrice) * 100)
+        : 0;
+    }
 
-    // 重新获取更新后的产品
+    Object.keys(updates).forEach(
+      (key) => updates[key] === undefined && delete updates[key],
+    );
+
+    await product.update(updates);
+
     const updatedProduct = await Product.findByPk(id, {
       include: [
-        {
-          model: Category,
-          as: 'category',
-          attributes: ['id', 'name'],
-        },
+        { model: Category, as: 'category' },
+        { model: ProductImage, as: 'productImages' },
       ],
     });
 
-    const data = (updatedProduct as any).toJSON();
-    const formattedProduct = {
-      ...data,
-      price: parseFloat(data.price),
-      originalPrice: data.originalPrice ? parseFloat(data.originalPrice) : null,
-      category: data.category?.name || 'Uncategorized',
-      inStock: data.stock > 0,
-      discountPercentage:
-        data.originalPrice && data.originalPrice > 0
-          ? Math.round(
-              (1 - parseFloat(data.price) / parseFloat(data.originalPrice)) *
-                100,
-            )
-          : 0,
-    };
-
-    console.log(`✅ REAL ORM: Updated product "${formattedProduct.name}"`);
-    return successResponse(formattedProduct, 200, event);
+    console.log(`✅ ORM: Updated product "${product.name}"`);
+    return successResponse(updatedProduct?.toJSON(), 200, event);
   } catch (error) {
-    console.error('❌ REAL ORM Error updating product:', error);
+    console.error('❌ ORM Error updating product:', error);
     return errorResponse('Failed to update product', 500, null, event);
   }
 };
@@ -362,52 +364,152 @@ export const deleteProduct = async (
   event: APIGatewayProxyEvent,
 ): Promise<APIGatewayProxyResult> => {
   try {
-    console.log('=== DELETE PRODUCT (REAL ORM) ===');
+    console.log('=== DELETE PRODUCT (ORM) ===');
     const { id } = event.pathParameters || {};
 
     if (!id) {
       return errorResponse('Product ID is required', 400, null, event);
     }
 
-    const { Product, Category } = await getModels();
-
-    // 使用 Sequelize ORM 查找产品
     const product = await Product.findByPk(id, {
-      include: [
-        {
-          model: Category,
-          as: 'category',
-          attributes: ['id', 'name'],
-        },
-      ],
+      include: [{ model: ProductImage, as: 'productImages' }],
     });
 
     if (!product) {
       return errorResponse(`Product with ID ${id} not found`, 404, null, event);
     }
 
-    const data = (product as any).toJSON();
-    const deletedProductInfo = {
-      id: data.id,
-      name: data.name,
-      category: data.category?.name || 'Uncategorized',
-    };
+    // Delete all associated image database records
+    await ProductImage.destroy({
+      where: { productId: product.id },
+    });
 
-    // 使用 Sequelize ORM 删除
-    await (product as any).destroy();
+    // Delete the product itself
+    await product.destroy();
 
-    console.log(`✅ REAL ORM: Deleted product "${deletedProductInfo.name}"`);
+    console.log(`✅ ORM: Deleted product "${product.name}"`);
     return successResponse(
-      {
-        message: 'Product deleted successfully',
-        id,
-        deletedProduct: deletedProductInfo,
-      },
+      { message: 'Product deleted successfully' },
       200,
       event,
     );
   } catch (error) {
-    console.error('❌ REAL ORM Error deleting product:', error);
+    console.error('❌ ORM Error deleting product:', error);
     return errorResponse('Failed to delete product', 500, null, event);
+  }
+};
+
+export const searchProductsByStr = async (
+  event: APIGatewayProxyEvent,
+): Promise<APIGatewayProxyResult> => {
+  try {
+    const body = JSON.parse(event.body || '{}');
+    const { query } = body;
+
+    if (!query || typeof query !== 'string') {
+      return errorResponse('Query parameter is required', 400, null, event);
+    }
+
+    const products = await Product.findAll({
+      where: {
+        [Op.or]: [
+          { name: { [Op.iLike]: `%${query}%` } },
+          { description: { [Op.iLike]: `%${query}%` } },
+        ],
+      },
+      include: [
+        {
+          model: Category,
+          as: 'category',
+          where: {
+            name: { [Op.iLike]: `%${query}%` },
+          },
+          required: false,
+        },
+        {
+          model: ProductImage,
+          as: 'productImages',
+        },
+      ],
+      attributes: {
+        include: [
+          // Number of ratings
+          [
+            sequelize.literal(
+              '(SELECT COUNT(*) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
+            ),
+            'reviewCount',
+          ],
+          // Average rating
+          [
+            sequelize.literal(
+              '(SELECT AVG(rating) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
+            ),
+            'averageRating',
+          ],
+        ],
+      },
+    });
+
+    return successResponse(products, 200, event);
+  } catch (error) {
+    console.error('Error searching products:', error);
+    return errorResponse('Failed to search products', 500, null, event);
+  }
+};
+
+export const searchByCategory = async (
+  event: APIGatewayProxyEvent,
+): Promise<APIGatewayProxyResult> => {
+  try {
+    const { category } = event.pathParameters || {};
+
+    if (!category || typeof category !== 'string') {
+      return errorResponse('Category parameter is required', 400, null, event);
+    }
+
+    const products = await Product.findAll({
+      include: [
+        {
+          model: Category,
+          as: 'category',
+          where: {
+            name: { [Op.iLike]: `%${category}%` },
+          },
+        },
+        {
+          model: ProductImage,
+          as: 'productImages',
+        },
+      ],
+      attributes: {
+        include: [
+          // Number of ratings
+          [
+            sequelize.literal(
+              '(SELECT COUNT(*) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
+            ),
+            'reviewCount',
+          ],
+          // Average rating
+          [
+            sequelize.literal(
+              '(SELECT AVG(rating) FROM "reviews" WHERE "reviews"."productId" = "Product"."id")',
+            ),
+            'averageRating',
+          ],
+        ],
+      },
+    });
+
+    return successResponse(products, 200, event);
+  } catch (error) {
+    console.error('Error searching products by category:', error);
+    return errorResponse(
+      'Failed to search products by category',
+      500,
+      null,
+      event,
+    );
   }
 };
