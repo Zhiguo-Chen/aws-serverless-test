@@ -36,5 +36,5 @@ module.exports = {
     path: path.resolve(__dirname, '.webpack'),
     filename: '[name].js',
   },
-  externals: ['aws-sdk', 'pg-native', 'sqlite3', 'tedious'],
+  externals: ['aws-sdk', 'pg-native'],
 };

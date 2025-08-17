@@ -202,7 +202,7 @@ export const authorizer = async (
         Statement: [
           {
             Action: 'execute-api:Invoke',
-            Effect: 'Allow',
+            Effect: 'Allow' as const,
             Resource: event.methodArn,
           },
         ],

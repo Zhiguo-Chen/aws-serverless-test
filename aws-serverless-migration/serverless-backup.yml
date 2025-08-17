@@ -1,0 +1,295 @@
+service: ecommerce-serverless
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: ${opt:region, 'ap-northeast-1'}
+  stage: ${opt:stage, 'dev'}
+
+  # VPC 配置 (Lambda 需要在 VPC 内访问 RDS)
+  vpc:
+    securityGroupIds:
+      - ${env:SECURITY_GROUP_ID, 'sg-03174d2c2e890a3ed'}
+    subnetIds:
+      - ${env:SUBNET_ID_1, 'subnet-003c3d2b7025ce507'}
+      - ${env:SUBNET_ID_2, 'subnet-0be2bf2163b044539'}
+      - ${env:SUBNET_ID_3, 'subnet-0981380be2d557511'}
+
+  # 全局 CORS 配置
+  httpApi:
+    cors:
+      allowedOrigins:
+        - https://my-demo.camdvr.org
+        - https://icy-sky-08145be00.6.azurestaticapps.net
+        - http://localhost:3001
+        - http://127.0.0.1:3001
+      allowedHeaders:
+        - Content-Type
+        - Authorization
+        - X-Amz-Date
+        - X-Api-Key
+      allowedMethods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - OPTIONS
+      allowCredentials: true
+
+  environment:
+    STAGE: ${self:provider.stage}
+    # PostgreSQL (RDS via RDS Proxy)
+    DB_HOST: ${env:DB_HOST, 'ecommerce-postgres-proxy.proxy-czagks6ss4zh.ap-northeast-1.rds.amazonaws.com'}
+    DB_NAME: ${env:DB_NAME, 'postgres'}
+    DB_USER: ${env:DB_USER, 'postgres'}
+    DB_PASSWORD: ${env:DB_PASSWORD, 'Welcome321'}
+    DB_PORT: ${env:DB_PORT, '5432'}
+    DB_SSL: ${env:DB_SSL, 'true'}
+    # MongoDB (DocumentDB)
+    MONGODB_URI: ${env:MONGODB_URI, 'mongodb://localhost:27017/ecommerce_dev'}
+    # Other env vars
+    JWT_SECRET: ${env:JWT_SECRET, 'development-jwt-secret-key'}
+    # AI API Keys
+    OPENAI_API_KEY: ${env:OPENAI_API_KEY, ''}
+    GEMINI_API_KEY: ${env:GEMINI_API_KEY, ''}
+
+  iam:
+    role:
+      statements:
+        # RDS 权限
+        - Effect: Allow
+          Action:
+            - rds:DescribeDBInstances
+            - rds:DescribeDBClusters
+            - rds-db:connect
+          Resource: '*'
+        # VPC 权限 (Lambda 在 VPC 中运行需要)
+        - Effect: Allow
+          Action:
+            - ec2:CreateNetworkInterface
+            - ec2:DescribeNetworkInterfaces
+            - ec2:DeleteNetworkInterface
+            - ec2:AttachNetworkInterface
+            - ec2:DetachNetworkInterface
+          Resource: '*'
+
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules:
+      forceInclude:
+        - pg
+        - pg-hstore
+      forceExclude:
+        - aws-sdk
+  serverless-offline:
+    httpPort: 3000
+    lambdaPort: 3001
+    host: 0.0.0.0
+
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-webpack
+  - serverless-offline
+
+functions:
+  # Health check
+  health:
+    handler: src/handlers/health.check
+    events:
+      - http:
+          path: /health
+          method: get
+          cors: true
+
+  # Auth functions
+  login:
+    handler: src/handlers/auth.login
+    events:
+      - http:
+          path: /api/login
+          method: post
+          cors: true
+
+  register:
+    handler: src/handlers/auth.register
+    events:
+      - http:
+          path: /api/register
+          method: post
+          cors: true
+
+  # Category functions
+  getCategories:
+    handler: src/handlers/categories.getCategories
+    events:
+      - http:
+          path: /api/categories
+          method: get
+          cors: true
+
+  getCategory:
+    handler: src/handlers/categories.getCategory
+    events:
+      - http:
+          path: /api/categories/{id}
+          method: get
+          cors: true
+
+  createCategory:
+    handler: src/handlers/categories.createCategory
+    events:
+      - http:
+          path: /api/categories
+          method: post
+          cors: true
+
+  updateCategory:
+    handler: src/handlers/categories.updateCategory
+    events:
+      - http:
+          path: /api/categories/{id}
+          method: put
+          cors: true
+
+  deleteCategory:
+    handler: src/handlers/categories.deleteCategory
+    events:
+      - http:
+          path: /api/categories/{id}
+          method: delete
+          cors: true
+
+  # Product functions
+  getProducts:
+    handler: src/handlers/products.getProducts
+    events:
+      - http:
+          path: /api/products
+          method: get
+          cors: true
+
+  listAllProducts:
+    handler: src/handlers/products.listAll
+    events:
+      - http:
+          path: /api/products/list-all
+          method: get
+          cors: true
+
+  getProduct:
+    handler: src/handlers/products.getProduct
+    events:
+      - http:
+          path: /api/products/{id}
+          method: get
+          cors: true
+
+  createProduct:
+    handler: src/handlers/products.createProduct
+    events:
+      - http:
+          path: /api/products
+          method: post
+          cors: true
+    timeout: 30
+
+  updateProduct:
+    handler: src/handlers/products.updateProduct
+    events:
+      - http:
+          path: /api/products/{id}
+          method: put
+          cors: true
+    timeout: 30
+
+  deleteProduct:
+    handler: src/handlers/products.deleteProduct
+    events:
+      - http:
+          path: /api/products/{id}
+          method: delete
+          cors: true
+
+  # Cart functions
+  getCart:
+    handler: src/handlers/cart.getCart
+    events:
+      - http:
+          path: /api/cart
+          method: get
+          cors: true
+          authorizer:
+            name: authorizerFunc
+            type: request
+
+  addToCart:
+    handler: src/handlers/cart.addToCart
+    events:
+      - http:
+          path: /api/cart
+          method: post
+          cors: true
+          authorizer:
+            name: authorizerFunc
+            type: request
+
+  # Order functions
+  createOrder:
+    handler: src/handlers/orders.createOrder
+    events:
+      - http:
+          path: /api/order
+          method: post
+          cors: true
+          authorizer:
+            name: authorizerFunc
+            type: request
+
+  # Chat functions
+  chatMessage:
+    handler: src/handlers/chat.handleMessage
+    events:
+      - http:
+          path: /api/chat/message
+          method: post
+          cors: true
+    timeout: 30
+    memorySize: 512
+
+  getChatHistory:
+    handler: src/handlers/chat.getChatHistory
+    events:
+      - http:
+          path: /api/chat/history/{sessionId}
+          method: get
+          cors: true
+          authorizer:
+            name: authorizerFunc
+            type: request
+
+  clearChatHistory:
+    handler: src/handlers/chat.clearChatHistory
+    events:
+      - http:
+          path: /api/chat/history/{sessionId}
+          method: delete
+          cors: true
+          authorizer:
+            name: authorizerFunc
+            type: request
+
+  # CORS preflight handler
+  corsHandler:
+    handler: src/handlers/cors.corsHandler
+    events:
+      - http:
+          path: /api/{proxy+}
+          method: options
+          cors: true
+
+  # Authorizer
+  authorizerFunc:
+    handler: src/handlers/auth.authorizer

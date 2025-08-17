@@ -4,9 +4,18 @@ frameworkVersion: '3'
 
 provider:
   name: aws
-  runtime: nodejs18.x
-  region: ${opt:region, 'us-east-1'}
+  runtime: nodejs20.x
+  region: ${opt:region, 'ap-northeast-1'}
   stage: ${opt:stage, 'dev'}
+
+  # VPC 配置 (Lambda 需要在 VPC 内访问 RDS)
+  vpc:
+    securityGroupIds:
+      - ${env:SECURITY_GROUP_ID, 'sg-03174d2c2e890a3ed'}
+    subnetIds:
+      - ${env:SUBNET_ID_1, 'subnet-003c3d2b7025ce507'}
+      - ${env:SUBNET_ID_2, 'subnet-0be2bf2163b044539'}
+      - ${env:SUBNET_ID_3, 'subnet-0981380be2d557511'}
 
   # 全局 CORS 配置
   httpApi:
@@ -31,51 +40,72 @@ provider:
 
   environment:
     STAGE: ${self:provider.stage}
-    # PostgreSQL (RDS)
-    DB_HOST: ${env:DB_HOST, 'localhost'}
-    DB_NAME: ${env:DB_NAME, 'ecommerce_dev'}
+    # PostgreSQL (RDS via RDS Proxy)
+    DB_HOST: ${env:DB_HOST, 'ecommerce-postgres-proxy.proxy-czagks6ss4zh.ap-northeast-1.rds.amazonaws.com'}
+    DB_NAME: ${env:DB_NAME, 'postgres'}
     DB_USER: ${env:DB_USER, 'postgres'}
-    DB_PASSWORD: ${env:DB_PASSWORD, 'password'}
+    DB_PASSWORD: ${env:DB_PASSWORD, 'Welcome321'}
     DB_PORT: ${env:DB_PORT, '5432'}
+    DB_SSL: ${env:DB_SSL, 'true'}
     # MongoDB (DocumentDB)
     MONGODB_URI: ${env:MONGODB_URI, 'mongodb://localhost:27017/ecommerce_dev'}
-    # S3 for file storage
-    S3_BUCKET: ${self:custom.s3Bucket}
     # Other env vars
     JWT_SECRET: ${env:JWT_SECRET, 'development-jwt-secret-key'}
     # AI API Keys
     OPENAI_API_KEY: ${env:OPENAI_API_KEY, ''}
     GEMINI_API_KEY: ${env:GEMINI_API_KEY, ''}
-    GROK_API_KEY: ${env:GROK_API_KEY, ''}
-    XAI_API_KEY: ${env:XAI_API_KEY, ''}
 
   iam:
     role:
       statements:
-        - Effect: Allow
-          Action:
-            - s3:GetObject
-            - s3:PutObject
-            - s3:DeleteObject
-            - s3:ListBucket
-          Resource:
-            - 'arn:aws:s3:::${self:custom.s3Bucket}'
-            - 'arn:aws:s3:::${self:custom.s3Bucket}/*'
+        # RDS 权限
         - Effect: Allow
           Action:
             - rds:DescribeDBInstances
+            - rds:DescribeDBClusters
+            - rds-db:connect
+          Resource: '*'
+        # VPC 权限 (Lambda 在 VPC 中运行需要)
+        - Effect: Allow
+          Action:
+            - ec2:CreateNetworkInterface
+            - ec2:DescribeNetworkInterfaces
+            - ec2:DeleteNetworkInterface
+            - ec2:AttachNetworkInterface
+            - ec2:DetachNetworkInterface
           Resource: '*'
 
+  # 确保必要的 node_modules 被打包
+  package:
+    include:
+      - node_modules/pg/**
+      - node_modules/pg-hstore/**
+      - node_modules/sequelize/**
+      - node_modules/reflect-metadata/**
+    exclude:
+      - node_modules/aws-sdk/**
+      - node_modules/pg-native/**
+      - .git/**
+      - .vscode/**
+      - tests/**
+      - '*.md'
+
 custom:
-  s3Bucket: ${self:service}-${self:provider.stage}-uploads
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules:
       forceInclude:
         - pg
         - pg-hstore
+        - sequelize
       forceExclude:
         - aws-sdk
+        - pg-native
+        - mysql2
+        - mariadb
+        - oracledb
+        - mssql
+    packager: npm
   serverless-offline:
     httpPort: 3000
     lambdaPort: 3001
@@ -87,6 +117,15 @@ plugins:
   - serverless-offline
 
 functions:
+  # Health check
+  health:
+    handler: src/handlers/health.check
+    events:
+      - http:
+          path: /health
+          method: get
+          cors: true
+
   # Auth functions
   login:
     handler: src/handlers/auth.login
@@ -264,32 +303,6 @@ functions:
             name: authorizerFunc
             type: request
 
-  # File upload
-  uploadImage:
-    handler: src/handlers/upload.uploadImage
-    events:
-      - http:
-          path: /api/upload
-          method: post
-          cors: true
-    timeout: 30
-
-  getSignedUploadUrl:
-    handler: src/handlers/upload.getSignedUploadUrl
-    events:
-      - http:
-          path: /api/upload/signed-url
-          method: post
-          cors: true
-
-  deleteImage:
-    handler: src/handlers/upload.deleteImage
-    events:
-      - http:
-          path: /api/upload/{key+}
-          method: delete
-          cors: true
-
   # CORS preflight handler
   corsHandler:
     handler: src/handlers/cors.corsHandler
@@ -302,63 +315,3 @@ functions:
   # Authorizer
   authorizerFunc:
     handler: src/handlers/auth.authorizer
-
-  # Health check
-  health:
-    handler: src/handlers/health.check
-    events:
-      - http:
-          path: /health
-          method: get
-          cors: true
-
-resources:
-  Resources:
-    # S3 bucket for file uploads
-    UploadsBucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: ${self:custom.s3Bucket}
-        CorsConfiguration:
-          CorsRules:
-            - AllowedHeaders:
-                - '*'
-              AllowedMethods:
-                - GET
-                - PUT
-                - POST
-                - DELETE
-              AllowedOrigins:
-                - '*'
-              MaxAge: 3000
-
-    # CloudFront distribution for S3
-    CloudFrontDistribution:
-      Type: AWS::CloudFront::Distribution
-      Properties:
-        DistributionConfig:
-          Origins:
-            - DomainName: ${self:custom.s3Bucket}.s3.amazonaws.com
-              Id: S3Origin
-              S3OriginConfig:
-                OriginAccessIdentity: !Ref OriginAccessIdentity
-          Enabled: true
-          DefaultCacheBehavior:
-            TargetOriginId: S3Origin
-            ViewerProtocolPolicy: redirect-to-https
-            AllowedMethods:
-              - GET
-              - HEAD
-            CachedMethods:
-              - GET
-              - HEAD
-            ForwardedValues:
-              QueryString: false
-              Cookies:
-                Forward: none
-
-    OriginAccessIdentity:
-      Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
-      Properties:
-        CloudFrontOriginAccessIdentityConfig:
-          Comment: OAI for uploads bucket
