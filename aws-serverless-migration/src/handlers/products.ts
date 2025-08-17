@@ -77,7 +77,7 @@ export const listAll = async (
         },
         {
           model: ProductImage,
-          as: 'productImages',
+          as: 'productImages', // Ensure it matches your association alias
           attributes: ['id', 'imageUrl', 'altText', 'isPrimary', 'createdAt'],
         },
       ],
@@ -102,23 +102,6 @@ export const listAll = async (
       order: [['createdAt', 'ASC']],
     });
 
-    // Get category statistics
-    const categories = await Category.findAll({
-      include: [
-        {
-          model: Product,
-          as: 'products',
-          attributes: [],
-        },
-      ],
-      attributes: [
-        'name',
-        [sequelize.fn('COUNT', sequelize.col('products.id')), 'productCount'],
-      ],
-      group: ['Category.id', 'Category.name'],
-      order: [['name', 'ASC']],
-    });
-
     // Format average rating
     const formattedProducts = products.map((product) => {
       const productJson = product.toJSON();
@@ -128,36 +111,10 @@ export const listAll = async (
       return productJson;
     });
 
-    const response = {
-      products: formattedProducts,
-      total: formattedProducts.length,
-      inStockCount: formattedProducts.filter((p: any) => p.stockQuantity > 0)
-        .length,
-      categories: categories.map((cat: any) => {
-        const catData = cat.toJSON();
-        return {
-          name: catData.name,
-          productCount: parseInt(catData.productCount || '0'),
-        };
-      }),
-      priceRange:
-        formattedProducts.length > 0
-          ? {
-              min: Math.min(
-                ...formattedProducts.map((p: any) => parseFloat(p.price)),
-              ),
-              max: Math.max(
-                ...formattedProducts.map((p: any) => parseFloat(p.price)),
-              ),
-            }
-          : { min: 0, max: 0 },
-      timestamp: new Date().toISOString(),
-    };
-
     console.log(
       `✅ ORM: Returning detailed info for ${formattedProducts.length} products`,
     );
-    return successResponse(response, 200, event);
+    return successResponse(formattedProducts, 200, event);
   } catch (error) {
     console.error('❌ ORM Error listing all products:', error);
     return errorResponse('Failed to list all products', 500, null, event);
